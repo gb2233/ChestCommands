@@ -4,10 +4,13 @@ import com.gmail.filoghost.chestcommands.internal.Variable;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -27,6 +30,8 @@ public class Icon {
     private Map<Enchantment, Integer> enchantments;
     private Color color;
     private String skullOwner;
+    private DyeColor bannerColour;
+    private List<Pattern> bannerPatterns;
     private ClickHandler clickHandler;
 
     private Set<Variable> nameVariables;
@@ -179,6 +184,22 @@ public class Icon {
         this.skullOwner = skullOwner;
     }
 
+    public DyeColor getBannerColour() {
+        return bannerColour;
+    }
+
+    public void setBannerColour(DyeColor bannerColour) {
+        this.bannerColour = bannerColour;
+    }
+
+    public List<Pattern> getBannerPatterns() {
+        return bannerPatterns;
+    }
+
+    public void setBannerPatterns(List<Pattern> bannerPatterns) {
+        this.bannerPatterns = bannerPatterns;
+    }
+
     public void setCloseOnClick(boolean closeOnClick) {
         this.closeOnClick = closeOnClick;
     }
@@ -276,6 +297,14 @@ public class Icon {
 
         if (skullOwner != null && itemMeta instanceof SkullMeta) {
             ((SkullMeta) itemMeta).setOwner(skullOwner);
+        }
+
+        if (bannerColour != null && itemMeta instanceof BannerMeta) {
+            BannerMeta bannerMeta = (BannerMeta) itemMeta;
+            bannerMeta.setBaseColor(bannerColour);
+            if (bannerPatterns != null) {
+                ((BannerMeta) itemMeta).setPatterns(bannerPatterns);
+            }
         }
 
         itemStack.setItemMeta(itemMeta);

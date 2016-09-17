@@ -59,6 +59,22 @@ public class IconSerializer {
 
         icon.setSkullOwner(section.getString(Nodes.SKULL_OWNER));
 
+        if (section.isSet(Nodes.BANNER_COLOUR)) {
+            try {
+                icon.setBannerColour(Utils.parseDyeColor(section.getString(Nodes.BANNER_COLOUR)));
+            } catch (FormatException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid BASE-COLOUR: " + e.getMessage());
+            }
+        }
+
+        if (section.isSet(Nodes.BANNER_PATTERNS)) {
+            try {
+                icon.setBannerPatterns(Utils.parseBannerPatternList(section.getStringList(Nodes.BANNER_PATTERNS)));
+            } catch (FormatException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid PATTERN-LIST: " + e.getMessage());
+            }
+        }
+
         icon.setPermission(section.getString(Nodes.PERMISSION));
         icon.setPermissionMessage(Utils.addColors(section.getString(Nodes.PERMISSION_MESSAGE)));
         icon.setViewPermission(section.getString(Nodes.VIEW_PERMISSION));
@@ -171,25 +187,26 @@ public class IconSerializer {
     private static class Nodes {
 
         public static final
-        String ID = "ID",
-                DATA_VALUE = "DATA-VALUE",
-                AMOUNT = "AMOUNT",
-                NAME = "NAME",
-                LORE = "LORE",
-                ENCHANT = "ENCHANTMENT",
-                COLOR = "COLOR",
-                SKULL_OWNER = "SKULL-OWNER",
-                COMMAND = "COMMAND",
-                PRICE = "PRICE",
-                POINTS = "POINTS",
-                EXP_LEVELS = "LEVELS",
-                REQUIRED_ITEM = "REQUIRED-ITEM",
-                PERMISSION = "PERMISSION",
-                PERMISSION_MESSAGE = "PERMISSION-MESSAGE",
-                VIEW_PERMISSION = "VIEW-PERMISSION",
-                KEEP_OPEN = "KEEP-OPEN",
-                POSITION_X = "POSITION-X",
-                POSITION_Y = "POSITION-Y";
+        String ID = "ID";
+        public static final String DATA_VALUE = "DATA-VALUE";
+        public static final String AMOUNT = "AMOUNT";
+        public static final String NAME = "NAME";
+        public static final String LORE = "LORE";
+        public static final String ENCHANT = "ENCHANTMENT";
+        public static final String COLOR = "COLOR";
+        public static final String SKULL_OWNER = "SKULL-OWNER";
+        public static final String BANNER_COLOUR = "BANNER-COLOUR";
+        public static final String BANNER_PATTERNS = "BANNER-PATTERNS";
+        public static final String COMMAND = "COMMAND";
+        public static final String PRICE = "PRICE";
+        public static final String EXP_LEVELS = "LEVELS";
+        public static final String REQUIRED_ITEM = "REQUIRED-ITEM";
+        public static final String PERMISSION = "PERMISSION";
+        public static final String PERMISSION_MESSAGE = "PERMISSION-MESSAGE";
+        public static final String VIEW_PERMISSION = "VIEW-PERMISSION";
+        public static final String KEEP_OPEN = "KEEP-OPEN";
+        public static final String POSITION_X = "POSITION-X";
+        public static final String POSITION_Y = "POSITION-Y";
     }
 
     public static class Coords {
