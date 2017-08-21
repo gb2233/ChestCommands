@@ -46,7 +46,8 @@ public class Icon {
     }
 
     public boolean hasVariables() {
-        return nameVariables != null || loreVariables != null;
+        return nameVariables != null || loreVariables != null
+                || PlaceholderAPIBridge.hasVariable(name) || PlaceholderAPIBridge.hasVariable(lore);
     }
 
     public Material getMaterial() {
