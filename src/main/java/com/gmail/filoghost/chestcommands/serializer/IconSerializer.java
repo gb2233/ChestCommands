@@ -145,13 +145,6 @@ public class IconSerializer {
 			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has a negative PRICE: " + price);
 		}
 		
-		int points = section.getInt(Nodes.POINTS);
-		if (points > 0) {
-			icon.setPlayerPointsPrice(points);
-		} else if (points < 0) {
-			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative POINTS: " + points);
-		}
-		
 		int levels = section.getInt(Nodes.EXP_LEVELS);
 		if (levels > 0) {
 			icon.setExpLevelsPrice(levels);

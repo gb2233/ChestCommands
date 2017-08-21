@@ -13,9 +13,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
-import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.command.CommandFramework;
 import com.gmail.filoghost.chestcommands.command.CommandHandler;
 import com.gmail.filoghost.chestcommands.config.AsciiPlaceholders;
@@ -74,14 +72,6 @@ public class ChestCommands extends JavaPlugin {
 		
 		if (!EconomyBridge.setupEconomy()) {
 			getLogger().warning("Vault with a compatible economy plugin was not found! Icons with a PRICE or commands that give money will not work.");
-		}
-		
-		if (BarAPIBridge.setupPlugin()) {
-			getLogger().info("Hooked BarAPI");
-		}
-		
-		if (PlayerPointsBridge.setupPlugin()) {
-			getLogger().info("Hooked PlayerPoints");
 		}
 		
 		AttributeRemover.setup();
