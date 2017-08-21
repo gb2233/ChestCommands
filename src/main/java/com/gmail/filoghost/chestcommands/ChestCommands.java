@@ -54,8 +54,7 @@ public class ChestCommands extends JavaPlugin {
 	private static Set<BoundItem> boundItems;
 	
 	private static int lastReloadErrors;
-	private static String newVersion;
-	
+
 	private static AttributeRemover attributeRemover;
 	
 	@Override
@@ -265,14 +264,6 @@ public class ChestCommands extends JavaPlugin {
 	
 	public static Lang getLang() {
 		return lang;
-	}
-
-	public static boolean hasNewVersion() {
-		return newVersion != null;
-	}
-	
-	public static String getNewVersion() {
-		return newVersion;
 	}
 	
 	public static Map<String, ExtendedIconMenu> getFileNameToMenuMap() {
