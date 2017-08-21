@@ -298,7 +298,12 @@ public class Icon {
         }
 
         if (skullOwner != null && itemMeta instanceof SkullMeta) {
-            ((SkullMeta) itemMeta).setOwner(skullOwner);
+            SkullMeta skullMeta = (SkullMeta) itemMeta;
+            if(skullOwner.equalsIgnoreCase("{player}")) {
+                skullMeta.setOwner(pov.getName());
+            } else {
+                skullMeta.setOwner(skullOwner);
+            }
         }
 
         if (bannerColour != null && itemMeta instanceof BannerMeta) {
