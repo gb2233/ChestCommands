@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class EnchantmentSerializer {
 
-    private static Map<String, Enchantment> enchantmentsMap = new HashMap<String, Enchantment>();
+    private static Map<String, Enchantment> enchantmentsMap = new HashMap<>();
 
     static {
         enchantmentsMap.put(formatLowercase("Protection"), Enchantment.PROTECTION_ENVIRONMENTAL);
@@ -50,7 +50,7 @@ public class EnchantmentSerializer {
     }
 
     public static Map<Enchantment, Integer> loadEnchantments(String input, String iconName, String menuFileName, ErrorLogger errorLogger) {
-        Map<Enchantment, Integer> output = new HashMap<Enchantment, Integer>();
+        Map<Enchantment, Integer> output = new HashMap<>();
 
         if (input == null || input.isEmpty()) {
             return output;

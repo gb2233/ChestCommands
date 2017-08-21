@@ -3,6 +3,7 @@ package com.gmail.filoghost.chestcommands.api;
 import com.gmail.filoghost.chestcommands.ChestCommands;
 import org.bukkit.entity.Player;
 
+@SuppressWarnings("unused")
 public class ChestCommandsAPI {
 
     /**

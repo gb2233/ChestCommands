@@ -14,7 +14,7 @@ public abstract class IconCommand {
 
     public IconCommand(String command) {
         this.command = AsciiPlaceholders.placeholdersToSymbols(command).trim();
-        this.containedVariables = new ArrayList<Variable>();
+        this.containedVariables = new ArrayList<>();
 
         for (Variable variable : Variable.values()) {
             if (command.contains(variable.getText())) {

@@ -28,11 +28,11 @@ public class SpecialConfig {
         this.header = header;
     }
 
-    public void load() throws IOException, InvalidConfigurationException, Exception {
+    public void load() throws IOException, InvalidConfigurationException, IllegalAccessException {
 
         // Check if the configuration was initialized.
         if (defaultValuesMap == null) {
-            defaultValuesMap = new HashMap<String, Object>();
+            defaultValuesMap = new HashMap<>();
 
             // Put the values in the default values map.
             for (Field field : getClass().getDeclaredFields()) {

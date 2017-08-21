@@ -11,9 +11,9 @@ public enum ClickType {
     public static ClickType fromOptions(boolean left, boolean right) {
         if (left && right) {
             return BOTH;
-        } else if (left && !right) {
+        } else if (left) {
             return LEFT;
-        } else if (!left && right) {
+        } else if (right) {
             return RIGHT;
         } else {
             return null;
@@ -23,11 +23,8 @@ public enum ClickType {
     public boolean isValidInteract(Action action) {
         if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
             return this == LEFT || this == BOTH;
-        } else if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            return this == RIGHT || this == BOTH;
-        } else {
-            return false;
-        }
+        } else
+            return (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) && (this == RIGHT || this == BOTH);
     }
 
 }

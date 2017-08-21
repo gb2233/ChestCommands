@@ -19,7 +19,7 @@ public class AsciiPlaceholders {
     private static Map<String, String> placeholders = Utils.newHashMap();
 
 
-    public static void load(ErrorLogger errorLogger) throws IOException, Exception {
+    public static void load(ErrorLogger errorLogger) throws IOException {
 
         placeholders.clear();
         File file = new File(ChestCommands.getInstance().getDataFolder(), "placeholders.yml");

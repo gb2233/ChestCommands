@@ -48,8 +48,7 @@ public class RequiredItem {
     }
 
     public boolean isValidDataValue(short data) {
-        if (!isDurabilityRestrictive) return true;
-        return data == this.dataValue;
+        return !isDurabilityRestrictive || data == this.dataValue;
     }
 
     public boolean hasItem(Player player) {
@@ -72,7 +71,7 @@ public class RequiredItem {
         int itemsToTake = amount; //start from amount and decrease
 
         ItemStack[] contents = player.getInventory().getContents();
-        ItemStack current = null;
+        ItemStack current;
 
 
         for (int i = 0; i < contents.length; i++) {

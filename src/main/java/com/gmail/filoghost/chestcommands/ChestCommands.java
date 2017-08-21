@@ -52,8 +52,6 @@ public class ChestCommands extends JavaPlugin {
 
     private static int lastReloadErrors;
 
-    private static AttributeRemover attributeRemover;
-
     public static void closeAllMenus() {
         for (Player player : VersionUtils.getOnlinePlayers()) {
             if (player.getOpenInventory() != null) {
@@ -94,10 +92,6 @@ public class ChestCommands extends JavaPlugin {
 
     public static void setLastReloadErrors(int lastReloadErrors) {
         ChestCommands.lastReloadErrors = lastReloadErrors;
-    }
-
-    public static AttributeRemover getAttributeRemover() {
-        return attributeRemover;
     }
 
     @Override

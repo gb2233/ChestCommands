@@ -42,7 +42,7 @@ public enum Variable {
 
     private String text;
 
-    private Variable(String text) {
+    Variable(String text) {
         this.text = text;
     }
 

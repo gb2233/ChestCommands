@@ -8,6 +8,6 @@ public interface ClickHandler {
      * @param player - the player that clicked on the icon.
      * @return true if the menu should be closed, false otherwise.
      */
-    public boolean onClick(Player player);
+    boolean onClick(Player player);
 
 }

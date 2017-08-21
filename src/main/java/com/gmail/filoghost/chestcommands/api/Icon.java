@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.*;
 import java.util.Map.Entry;
 
+@SuppressWarnings("unused")
 public class Icon {
 
     protected boolean closeOnClick;
@@ -33,7 +34,7 @@ public class Icon {
     private ItemStack cachedItem; // When there are no variables, we don't recreate the item.
 
     public Icon() {
-        enchantments = new HashMap<Enchantment, Integer>();
+        enchantments = new HashMap<>();
         closeOnClick = true;
     }
 
@@ -80,7 +81,7 @@ public class Icon {
                 if (name.contains(variable.getText())) {
 
                     if (nameVariables == null) {
-                        nameVariables = new HashSet<Variable>();
+                        nameVariables = new HashSet<>();
                     }
 
                     nameVariables.add(variable);
@@ -117,13 +118,13 @@ public class Icon {
                     if (lore.get(i).contains(variable.getText())) {
 
                         if (loreVariables == null) {
-                            loreVariables = new HashMap<Integer, Set<Variable>>();
+                            loreVariables = new HashMap<>();
                         }
 
                         Set<Variable> lineVariables = loreVariables.get(i);
 
                         if (lineVariables == null) {
-                            lineVariables = new HashSet<Variable>();
+                            lineVariables = new HashSet<>();
                             loreVariables.put(i, lineVariables);
                         }
 
@@ -135,7 +136,7 @@ public class Icon {
     }
 
     public Map<Enchantment, Integer> getEnchantments() {
-        return new HashMap<Enchantment, Integer>(enchantments);
+        return new HashMap<>(enchantments);
     }
 
     public void setEnchantments(Map<Enchantment, Integer> enchantments) {

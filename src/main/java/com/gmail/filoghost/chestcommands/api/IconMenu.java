@@ -18,6 +18,7 @@ import java.util.Arrays;
  *    ...
  * 
  */
+@SuppressWarnings("unused")
 public class IconMenu {
 
     protected final String title;

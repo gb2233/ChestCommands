@@ -225,7 +225,7 @@ public class Utils {
         }
     }
 
-    public static List<String> readLines(File file) throws IOException, Exception {
+    public static List<String> readLines(File file) throws IOException {
         BufferedReader br = null;
 
         try {
@@ -248,7 +248,7 @@ public class Utils {
             if (br != null) {
                 try {
                     br.close();
-                } catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
         }
@@ -288,34 +288,15 @@ public class Utils {
     }
 
     public static <T> Set<T> newHashSet() {
-        return new HashSet<T>();
+        return new HashSet<>();
     }
 
     public static <T, V> Map<T, V> newHashMap() {
-        return new HashMap<T, V>();
+        return new HashMap<>();
     }
 
     public static <T> List<T> newArrayList() {
-        return new ArrayList<T>();
-    }
-
-    public static String join(Iterable<?> iterable, String separator) {
-        StringBuilder builder = new StringBuilder();
-        Iterator<?> iter = iterable.iterator();
-
-        boolean first = true;
-
-        while (iter.hasNext()) {
-            if (first) {
-                first = false;
-            } else {
-                builder.append(separator);
-            }
-
-            builder.append(iter.next());
-        }
-
-        return builder.toString();
+        return new ArrayList<>();
     }
 
     public static boolean isClassLoaded(String name) {

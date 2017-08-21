@@ -168,19 +168,6 @@ public class IconSerializer {
         return output.toString();
     }
 
-//	/**
-//	 * Reads a list of strings or a single String as list.
-//	 */
-//	private static List<String> readAsList(ConfigurationSection section, String node) {
-//		if (section.isList(node)) {
-//			return section.getStringList(node);
-//		} else if (section.isString(node)) {
-//			return Arrays.asList(section.getString(node));
-//		} else {
-//			return null;
-//		}
-//	}
-
     private static class Nodes {
 
         public static final
