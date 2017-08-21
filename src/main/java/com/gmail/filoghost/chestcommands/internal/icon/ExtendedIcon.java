@@ -3,6 +3,7 @@ package com.gmail.filoghost.chestcommands.internal.icon;
 import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.api.Icon;
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.internal.RequiredItem;
@@ -121,11 +122,11 @@ public class ExtendedIcon extends Icon {
     }
 
     public String calculateName(Player pov) {
-        return super.calculateName(pov);
+        return PlaceholderAPIBridge.replace(pov, super.calculateName(pov));
     }
 
     public List<String> calculateLore(Player pov) {
-        return super.calculateLore(pov);
+        return PlaceholderAPIBridge.replace(pov, super.calculateLore(pov));
     }
 
     @SuppressWarnings("deprecation")

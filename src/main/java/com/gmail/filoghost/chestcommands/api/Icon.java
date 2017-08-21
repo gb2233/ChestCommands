@@ -1,7 +1,9 @@
 package com.gmail.filoghost.chestcommands.api;
 
+import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
 import com.gmail.filoghost.chestcommands.internal.Variable;
 import com.gmail.filoghost.chestcommands.util.Utils;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -320,6 +322,9 @@ public class Icon {
             // If there are no variables, cache the item.
             cachedItem = itemStack;
         }
+
+        // Apply placeholders
+        itemStack = PlaceholderAPIBridge.replace(pov, itemStack);
 
         return itemStack;
     }

@@ -2,7 +2,7 @@ name: ChestCommands
 main: com.gmail.filoghost.chestcommands.ChestCommands
 version: ${project.version}
 authors: [filoghost, sgdc3]
-softdepend: [Vault]
+softdepend: [Vault, PlaceholderAPI]
 
 commands:
    chestcommands:

@@ -1,6 +1,7 @@
 package com.gmail.filoghost.chestcommands;
 
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
 import com.gmail.filoghost.chestcommands.command.CommandFramework;
 import com.gmail.filoghost.chestcommands.command.CommandHandler;
 import com.gmail.filoghost.chestcommands.config.AsciiPlaceholders;
@@ -111,6 +112,10 @@ public class ChestCommands extends JavaPlugin {
 
         if (!EconomyBridge.setupEconomy()) {
             getLogger().warning("Vault with a compatible economy plugin was not found! Icons with a PRICE or commands that give money will not work.");
+        }
+
+        if (PlaceholderAPIBridge.setup()) {
+            getLogger().warning("PlaceholderAPI was found! External placeholders can be used.");
         }
 
         AttributeRemover.setup();
