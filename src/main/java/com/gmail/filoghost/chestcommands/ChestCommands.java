@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.gmail.filoghost.chestcommands.SimpleUpdater.ResponseHandler;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
@@ -86,32 +86,8 @@ public class ChestCommands extends JavaPlugin {
 		}
 		
 		AttributeRemover.setup();
-		
-		if (settings.update_notifications) {
-			new SimpleUpdater(this, 56919).checkForUpdates(new ResponseHandler() {
-				
-				@Override
-				public void onUpdateFound(String newVersion) {
-					ChestCommands.newVersion = newVersion;
-					
-					if (settings.use_console_colors) {
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + "Found a new version: " + newVersion + ChatColor.WHITE + " (yours: v" + getDescription().getVersion() + ")");
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "Download it on Bukkit Dev:");
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "dev.bukkit.org/bukkit-plugins/chest-commands");
-					} else {
-						getLogger().info("Found a new version available: " + newVersion);
-						getLogger().info("Download it on Bukkit Dev:");
-						getLogger().info("dev.bukkit.org/bukkit-plugins/chest-commands");
-					}
-				}
-			});
-		}
-		
-		try {
-			new MetricsLite(this).start();
-		} catch (IOException e) {
-			// Metrics failed.
-		}
+
+		new MetricsLite(this);
 		
 		Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
