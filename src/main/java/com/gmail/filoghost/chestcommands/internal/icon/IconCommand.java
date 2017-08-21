@@ -33,7 +33,7 @@ public abstract class IconCommand {
         }
 
         // Process PlaceholderAPI variables
-        commandCopy = PlaceholderAPIBridge.replace(executor, command);
+        commandCopy = PlaceholderAPIBridge.replace(executor, commandCopy);
 
         return commandCopy;
     }
