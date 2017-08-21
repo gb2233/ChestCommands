@@ -29,7 +29,7 @@ public class ErrorLoggerTask implements Runnable {
         }
         lines.add(ChatColor.RED + "#-------------------------------------------------------------#");
 
-        String output = Utils.join(lines, "\n");
+        String output = String.join("\n", lines);
 
         if (ChestCommands.getSettings().use_console_colors) {
             Bukkit.getConsoleSender().sendMessage(output);
