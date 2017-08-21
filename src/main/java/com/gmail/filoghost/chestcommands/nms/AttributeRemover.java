@@ -106,7 +106,7 @@ public class AttributeRemover {
                 nbtSetMethod.invoke(nbtCompound, "AttributeModifiers", nbtList);
                 return (ItemStack) asCraftMirrorMethod.invoke(null, nmsItemstack);
 
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
 
