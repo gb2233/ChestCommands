@@ -115,7 +115,7 @@ public class ChestCommands extends JavaPlugin {
         }
 
         if (PlaceholderAPIBridge.setup()) {
-            getLogger().warning("PlaceholderAPI was found! External placeholders can be used.");
+            getLogger().info("PlaceholderAPI was found! External placeholders can be used.");
         }
 
         AttributeRemover.setup();
