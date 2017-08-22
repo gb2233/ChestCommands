@@ -25,7 +25,7 @@ public class ExtendedIcon extends Icon {
     private boolean permissionNegated;
     private boolean viewPermissionNegated;
 
-    private double moneyPrice;
+    private String moneyPrice;
     private int expLevelsPrice;
     private RequiredItem requiredItem;
 
@@ -97,11 +97,11 @@ public class ExtendedIcon extends Icon {
         this.viewPermission = viewPermission;
     }
 
-    public double getMoneyPrice() {
+    public String getMoneyPrice() {
         return moneyPrice;
     }
 
-    public void setMoneyPrice(double moneyPrice) {
+    public void setMoneyPrice(String moneyPrice) {
         this.moneyPrice = moneyPrice;
     }
 
@@ -144,14 +144,26 @@ public class ExtendedIcon extends Icon {
             return closeOnClick;
         }
 
-        if (moneyPrice > 0) {
+        double price = 0;
+        if (moneyPrice != null) {
             if (!EconomyBridge.hasValidEconomy()) {
                 player.sendMessage(ChatColor.RED + "This command has a price, but Vault with a compatible economy plugin was not found. For security, the command has been blocked. Please inform the staff.");
                 return closeOnClick;
             }
 
-            if (!EconomyBridge.hasMoney(player, moneyPrice)) {
-                player.sendMessage(ChestCommands.getLang().no_money.replace("{money}", EconomyBridge.formatMoney(moneyPrice)));
+            String parsedPrice = PlaceholderAPIBridge.replace(player, moneyPrice);
+
+            try {
+                price = Double.parseDouble(parsedPrice);
+            } catch (NumberFormatException e) {
+                String errorMessage = ChatColor.RED + "Error while parsing icon click price! " + parsedPrice + " isn't a valid number!";
+                player.sendMessage(errorMessage);
+                ChestCommands.getInstance().getLogger().warning(errorMessage);
+                return closeOnClick; // Error
+            }
+
+            if (price != 0 && !EconomyBridge.hasMoney(player, price)) {
+                player.sendMessage(ChestCommands.getLang().no_money.replace("{money}", EconomyBridge.formatMoney(price)));
                 return closeOnClick;
             }
         }
@@ -180,11 +192,12 @@ public class ExtendedIcon extends Icon {
 
         boolean changedVariables = false; // To update the placeholders.
 
-        if (moneyPrice > 0) {
-            if (!EconomyBridge.takeMoney(player, moneyPrice)) {
+        if (price > 0) {
+            if (!EconomyBridge.takeMoney(player, price)) {
                 player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
                 return closeOnClick;
             }
+            player.sendMessage(ChestCommands.getLang().money_taken.replace("{money}", EconomyBridge.formatMoney(price)));
             changedVariables = true;
         }
 

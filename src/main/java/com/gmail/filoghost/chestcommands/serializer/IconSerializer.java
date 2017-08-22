@@ -103,12 +103,15 @@ public class IconSerializer {
             icon.setClickHandler(new CommandsClickHandler(commands, closeOnClick));
         }
 
-        double price = section.getDouble(Nodes.PRICE);
+        String price = section.getString(Nodes.PRICE);
+        icon.setMoneyPrice(price);
+        /*
         if (price > 0.0) {
             icon.setMoneyPrice(price);
         } else if (price < 0.0) {
             errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has a negative PRICE: " + price);
         }
+        */
 
         int levels = section.getInt(Nodes.EXP_LEVELS);
         if (levels > 0) {
