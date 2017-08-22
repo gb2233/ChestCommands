@@ -19,6 +19,7 @@ public class CommandSerializer {
     static {
         commandTypesMap.put(commandPattern("console:"), ConsoleIconCommand.class);
         commandTypesMap.put(commandPattern("(open|menu):"), OpenIconCommand.class);
+        commandTypesMap.put(commandPattern("refresh:"), RefreshIconCommand.class);
         commandTypesMap.put(commandPattern("server:?"), ServerIconCommand.class); // The colon is optional.
         commandTypesMap.put(commandPattern("tell:"), TellIconCommand.class);
         commandTypesMap.put(commandPattern("broadcast:"), BroadcastIconCommand.class);

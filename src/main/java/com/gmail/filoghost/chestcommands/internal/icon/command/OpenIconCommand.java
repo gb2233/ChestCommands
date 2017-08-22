@@ -30,7 +30,7 @@ public class OpenIconCommand extends IconCommand {
                         menu.sendNoPermissionMessage(player);
                     }
                 }
-            }.runTask(ChestCommands.getInstance());
+            }.runTaskLater(ChestCommands.getInstance(), 3);
         } else {
             player.sendMessage(ChatColor.RED + "Menu not found! Please inform the staff.");
         }
