@@ -38,6 +38,6 @@ public abstract class IconCommand {
         return commandCopy;
     }
 
-    public abstract void execute(Player player);
+    public abstract boolean execute(Player player);
 
 }

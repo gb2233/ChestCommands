@@ -11,8 +11,9 @@ public class ConsoleIconCommand extends IconCommand {
     }
 
     @Override
-    public void execute(Player player) {
+    public boolean execute(Player player) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getParsedCommand(player));
+        return true;
     }
 
 }

@@ -31,7 +31,9 @@ public class CommandsClickHandler implements ClickHandler {
     public boolean onClick(Player player) {
         if (commands != null && commands.size() > 0) {
             for (IconCommand command : commands) {
-                command.execute(player);
+                if(!command.execute(player)) {
+                    break;
+                }
             }
         }
 

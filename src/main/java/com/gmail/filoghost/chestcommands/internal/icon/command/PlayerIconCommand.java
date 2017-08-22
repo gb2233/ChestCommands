@@ -10,8 +10,9 @@ public class PlayerIconCommand extends IconCommand {
     }
 
     @Override
-    public void execute(Player player) {
+    public boolean execute(Player player) {
         player.chat('/' + getParsedCommand(player));
+        return true;
     }
 
 }

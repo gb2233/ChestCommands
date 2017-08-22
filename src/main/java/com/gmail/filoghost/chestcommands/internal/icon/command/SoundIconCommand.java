@@ -1,5 +1,6 @@
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import org.bukkit.ChatColor;
@@ -8,23 +9,24 @@ import org.bukkit.entity.Player;
 
 public class SoundIconCommand extends IconCommand {
 
-    private Sound sound;
-    private float pitch;
-    private float volume;
-    private String errorMessage;
-
     public SoundIconCommand(String command) {
         super(command);
+    }
 
-        pitch = 1.0f;
-        volume = 1.0f;
+    @Override
+    public boolean execute(Player player) {
 
-        String[] split = command.split(",");
+        float pitch = 1.0f;
+        float volume = 1.0f;
 
-        sound = Utils.matchSound(split[0]);
+        String[] split = getParsedCommand(player).split(",");
+
+        Sound sound = Utils.matchSound(split[0]);
         if (sound == null) {
-            errorMessage = ChatColor.RED + "Invalid sound \"" + split[0].trim() + "\".";
-            return;
+            String errorMessage = ChatColor.RED + "Invalid sound \"" + split[0].trim() + "\".";
+            player.sendMessage(errorMessage);
+            ChestCommands.getInstance().getLogger().warning(errorMessage);
+            return true; // A missing sound can't cause any damage
         }
 
         if (split.length > 1) {
@@ -40,16 +42,9 @@ public class SoundIconCommand extends IconCommand {
             } catch (NumberFormatException ignored) {
             }
         }
-    }
-
-    @Override
-    public void execute(Player player) {
-        if (errorMessage != null) {
-            player.sendMessage(errorMessage);
-            return;
-        }
 
         player.playSound(player.getLocation(), sound, volume, pitch);
+        return true;
     }
 
 }

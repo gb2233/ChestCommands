@@ -11,8 +11,9 @@ public class ServerIconCommand extends IconCommand {
     }
 
     @Override
-    public void execute(Player player) {
-        BungeeCordUtils.connect(player, command);
+    public boolean execute(Player player) {
+        BungeeCordUtils.connect(player, getParsedCommand(player));
+        return true;
     }
 
 }

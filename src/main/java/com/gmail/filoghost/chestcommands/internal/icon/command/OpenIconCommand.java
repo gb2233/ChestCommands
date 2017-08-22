@@ -14,8 +14,9 @@ public class OpenIconCommand extends IconCommand {
     }
 
     @Override
-    public void execute(final Player player) {
-        final ExtendedIconMenu menu = ChestCommands.getFileNameToMenuMap().get(command.toLowerCase());
+    public boolean execute(final Player player) {
+        String parsedCommand = getParsedCommand(player);
+        final ExtendedIconMenu menu = ChestCommands.getFileNameToMenuMap().get(parsedCommand.toLowerCase());
         if (menu != null) {
 
             // Delay the task, since this command is executed in ClickInventoryEvent
@@ -32,8 +33,12 @@ public class OpenIconCommand extends IconCommand {
                 }
             }.runTaskLater(ChestCommands.getInstance(), 3);
         } else {
-            player.sendMessage(ChatColor.RED + "Menu not found! Please inform the staff.");
+            String errorMessage = ChatColor.RED + "Menu " + parsedCommand + " not found! Please inform the staff.";
+            player.sendMessage(errorMessage);
+            ChestCommands.getInstance().getLogger().warning(errorMessage);
+            return false;
         }
+        return true;
     }
 
 }

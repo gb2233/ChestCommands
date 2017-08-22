@@ -4,6 +4,7 @@ import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -16,13 +17,15 @@ public class RefreshIconCommand extends IconCommand {
     }
 
     @Override
-    public void execute(Player player) {
+    public boolean execute(Player player) {
+        String parsedCommand = getParsedCommand(player);
         int delay;
         try {
-            delay = Integer.parseInt(command.trim());
+            delay = Integer.parseInt(parsedCommand.trim());
         } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return;
+            String errorMessage = ChatColor.RED + "Invalid refresh delay! " + parsedCommand;
+            ChestCommands.getInstance().getLogger().warning(errorMessage);
+            return false;
         }
         new BukkitRunnable() {
 
@@ -43,5 +46,6 @@ public class RefreshIconCommand extends IconCommand {
                 }
             }
         }.runTaskLater(ChestCommands.getInstance(), delay);
+        return true;
     }
 }
