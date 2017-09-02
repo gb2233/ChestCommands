@@ -7,6 +7,7 @@ import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -254,6 +255,10 @@ public class Utils {
                 }
             }
         }
+    }
+
+    public static EntityType parseEntityType(String input) throws IllegalArgumentException {
+        return EntityType.valueOf(input.replaceAll(" ", "_").toUpperCase());
     }
 
     public static Color parseColor(String input) throws FormatException {

@@ -10,12 +10,10 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -31,6 +29,7 @@ public class Icon {
     private List<String> lore;
     private Map<Enchantment, Integer> enchantments;
     private Color color;
+    private EntityType eggType;
     private String skullOwner;
     private DyeColor bannerColour;
     private List<Pattern> bannerPatterns;
@@ -179,6 +178,14 @@ public class Icon {
         this.color = color;
     }
 
+    public EntityType getEggType() {
+        return eggType;
+    }
+
+    public void setEggType(EntityType eggType) {
+        this.eggType = eggType;
+    }
+
     public String getSkullOwner() {
         return skullOwner;
     }
@@ -296,6 +303,10 @@ public class Icon {
 
         if (color != null && itemMeta instanceof LeatherArmorMeta) {
             ((LeatherArmorMeta) itemMeta).setColor(color);
+        }
+
+        if (eggType != null && itemMeta instanceof SpawnEggMeta) {
+            ((SpawnEggMeta) itemMeta).setSpawnedType(eggType);
         }
 
         if (skullOwner != null && itemMeta instanceof SkullMeta) {

@@ -57,6 +57,14 @@ public class IconSerializer {
             }
         }
 
+        if (section.isSet(Nodes.EGG_TYPE)) {
+            try {
+                icon.setEggType(Utils.parseEntityType(section.getString(Nodes.EGG_TYPE)));
+            } catch (IllegalArgumentException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid EGG-TYPE: " + e.getMessage());
+            }
+        }
+
         icon.setSkullOwner(section.getString(Nodes.SKULL_OWNER));
 
         if (section.isSet(Nodes.BANNER_COLOUR)) {
@@ -105,20 +113,9 @@ public class IconSerializer {
 
         String price = section.getString(Nodes.PRICE);
         icon.setMoneyPrice(price);
-        /*
-        if (price > 0.0) {
-            icon.setMoneyPrice(price);
-        } else if (price < 0.0) {
-            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has a negative PRICE: " + price);
-        }
-        */
 
-        int levels = section.getInt(Nodes.EXP_LEVELS);
-        if (levels > 0) {
-            icon.setExpLevelsPrice(levels);
-        } else if (levels < 0) {
-            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative LEVELS: " + levels);
-        }
+        String levels = section.getString(Nodes.EXP_LEVELS);
+        icon.setExpLevelsPrice(levels);
 
         if (section.isSet(Nodes.REQUIRED_ITEM)) {
             try {
@@ -197,6 +194,7 @@ public class IconSerializer {
         public static final String LORE = "LORE";
         public static final String ENCHANT = "ENCHANTMENT";
         public static final String COLOR = "COLOR";
+        public static final String EGG_TYPE = "EGG-TYPE";
         public static final String SKULL_OWNER = "SKULL-OWNER";
         public static final String BANNER_COLOUR = "BANNER-COLOUR";
         public static final String BANNER_PATTERNS = "BANNER-PATTERNS";

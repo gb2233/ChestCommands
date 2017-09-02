@@ -26,7 +26,7 @@ public class ExtendedIcon extends Icon {
     private boolean viewPermissionNegated;
 
     private String moneyPrice;
-    private int expLevelsPrice;
+    private String expLevelsPrice;
     private RequiredItem requiredItem;
 
     public ExtendedIcon() {
@@ -57,10 +57,6 @@ public class ExtendedIcon extends Icon {
             }
         }
         this.permission = permission;
-    }
-
-    public String getPermissionMessage() {
-        return permissionMessage;
     }
 
     public void setPermissionMessage(String permissionMessage) {
@@ -105,11 +101,11 @@ public class ExtendedIcon extends Icon {
         this.moneyPrice = moneyPrice;
     }
 
-    public int getExpLevelsPrice() {
+    public String getExpLevelsPrice() {
         return expLevelsPrice;
     }
 
-    public void setExpLevelsPrice(int expLevelsPrice) {
+    public void setExpLevelsPrice(String expLevelsPrice) {
         this.expLevelsPrice = expLevelsPrice;
     }
 
@@ -156,7 +152,7 @@ public class ExtendedIcon extends Icon {
             try {
                 price = Double.parseDouble(parsedPrice);
             } catch (NumberFormatException e) {
-                String errorMessage = ChatColor.RED + "Error while parsing icon click price! " + parsedPrice + " isn't a valid number!";
+                String errorMessage = ChatColor.RED + "Error while parsing icon click money price! " + parsedPrice + " isn't a valid number!";
                 player.sendMessage(errorMessage);
                 ChestCommands.getInstance().getLogger().warning(errorMessage);
                 return closeOnClick; // Error
@@ -168,9 +164,23 @@ public class ExtendedIcon extends Icon {
             }
         }
 
-        if (expLevelsPrice > 0) {
-            if (player.getLevel() < expLevelsPrice) {
-                player.sendMessage(ChestCommands.getLang().no_exp.replace("{levels}", Integer.toString(expLevelsPrice)));
+        int exp = 0;
+        if(expLevelsPrice != null) {
+            String parsedExp = PlaceholderAPIBridge.replace(player, expLevelsPrice);
+
+            try {
+                exp = Integer.parseInt(parsedExp);
+            } catch (NumberFormatException e) {
+                String errorMessage = ChatColor.RED + "Error while parsing icon click level price! " + parsedExp + " isn't a valid number!";
+                player.sendMessage(errorMessage);
+                ChestCommands.getInstance().getLogger().warning(errorMessage);
+                return closeOnClick; // Error
+            }
+        }
+
+        if (exp > 0) {
+            if (player.getLevel() < exp) {
+                player.sendMessage(ChestCommands.getLang().no_exp.replace("{levels}", Integer.toString(exp)));
                 return closeOnClick;
             }
         }
@@ -201,8 +211,8 @@ public class ExtendedIcon extends Icon {
             changedVariables = true;
         }
 
-        if (expLevelsPrice > 0) {
-            player.setLevel(player.getLevel() - expLevelsPrice);
+        if (exp > 0) {
+            player.setLevel(player.getLevel() - exp);
         }
 
         if (requiredItem != null) {
