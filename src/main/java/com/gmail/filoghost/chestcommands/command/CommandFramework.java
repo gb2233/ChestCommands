@@ -7,6 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
+
 /**
  * Wrapper for the default command executor.
  */
@@ -144,6 +146,11 @@ public abstract class CommandFramework implements CommandExecutor {
 
         public static void minLength(Object[] array, int minLength, String msg) {
             if (array.length < minLength) {
+                throw new CommandException(msg);
+            }
+        }
+        public static void dbEnabled(String msg) {
+            if (!ChestCommands.GetConfig().getBoolean("use-mysql")) {
                 throw new CommandException(msg);
             }
         }
