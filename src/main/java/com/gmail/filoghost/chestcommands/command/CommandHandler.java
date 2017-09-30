@@ -157,10 +157,10 @@ public class CommandHandler extends CommandFramework {
 	        for(String fName : menuList) {
 	            String txtConfig = "";
 	            try {
-	            BufferedReader reader = new BufferedReader(new FileReader (new File(menuFolder,fName + ".yml")));
-	            String line = null;
-	            StringBuilder stringBuilder = new StringBuilder();
-	            String ls = System.getProperty("line.separator");
+		            BufferedReader reader = new BufferedReader(new FileReader (new File(menuFolder,fName + ".yml")));
+		            String line = null;
+		            StringBuilder stringBuilder = new StringBuilder();
+		            String ls = System.getProperty("line.separator");
 	                while((line = reader.readLine()) != null) {
 	                    stringBuilder.append(line);
 	                    stringBuilder.append(ls);
@@ -173,7 +173,7 @@ public class CommandHandler extends CommandFramework {
 	            }
 	            byte[] encodedBytes = Base64.getEncoder().encode(txtConfig.getBytes());
 	            String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
-	            String queryText = "INSERT INTO `ChestCommands`(`FILENAME`, `CFGSTRING`) VALUES (\"" + fName + "\",\"" + encodedString + "\") ON DUPLICATE KEY UPDATE `CFGSTRING` = \"" + encodedString + "\";";
+	            String queryText = "INSERT INTO `" + ChestCommands.GetMysqlCreds().GetTableName() + "`(`FILENAME`, `CFGSTRING`) VALUES (\"" + fName + "\",\"" + encodedString + "\") ON DUPLICATE KEY UPDATE `CFGSTRING` = \"" + encodedString + "\";";
 	            statement.executeUpdate(queryText);
 	        }
 	        } catch (SQLException e) {

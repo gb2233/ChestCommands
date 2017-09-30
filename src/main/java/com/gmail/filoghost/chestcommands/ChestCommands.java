@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -269,8 +270,9 @@ public class ChestCommands extends JavaPlugin {
 
 		creds = new MysqlData(config.getString("db.host"), config.getInt("db.port"), config.getString("db.database"), config.getString("db.username"), config.getString("db.password"), config.getString("db.table-name"));
 		if(config.getBoolean("use-mysql")) {
-			try {     
+			try {
 	            openConnection();
+				createIfNonExistent();
 	            if(config.getString("action-on-start").equalsIgnoreCase("import")) {
 	            	CommandHandler.Import(menuList);
 	            	instance.getLogger().info("Import on startup was successful");
@@ -326,6 +328,16 @@ public class ChestCommands extends JavaPlugin {
 		}
 	
 	}	
+	public static void createIfNonExistent() {
+		try {
+	        Statement statement = ChestCommands.GetConnection().createStatement();
+            String queryText = "CREATE TABLE IF NOT EXISTS `" + ChestCommands.GetMysqlCreds().GetTableName() + "` ( `FILENAME` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , `CFGSTRING` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , PRIMARY KEY (`FILENAME`));";
+            statement.executeUpdate(queryText);
+		} catch (SQLException e) {
+            e.printStackTrace();
+        }
+		
+	}
 	public static MysqlData GetMysqlCreds() {
 		return creds;
 	}

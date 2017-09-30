@@ -6,7 +6,7 @@
 
     <groupId>com.gmail.filoghost</groupId>
     <artifactId>chestcommands</artifactId>
-    <version>3.1.5-SNAPSHOT</version>
+    <version>3.1.6-SNAPSHOT-BM</version>
     <packaging>jar</packaging>
 
     <properties>
