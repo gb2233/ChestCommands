@@ -52,6 +52,7 @@ public class EconomyBridge {
     public static boolean takeMoney(Player player, double amount) {
         if (!hasValidEconomy()) throw new IllegalStateException("Economy plugin was not found!");
         if (amount < 0.0) throw new IllegalArgumentException("Invalid amount of money: " + amount);
+        if(player.hasPermission("chestcommands.economy.bypass")) return true;
 
         EconomyResponse response = economy.withdrawPlayer(player.getName(), player.getWorld().getName(), amount);
         boolean result = response.transactionSuccess();
