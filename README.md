@@ -1,9 +1,6 @@
 ChestCommands
 ===================
 
-A fork of the popular ChestCommands plugin
-
-Dev Builds: http://ci.xephi.fr/job/ChestCommands/
-
-Original plugin by @filoghost
 Bukkit Page: http://dev.bukkit.org/bukkit-plugins/chest-commands
+
+Chest Commands is free software/open source, and is distributed under the [GPL 3.0 License](https://opensource.org/licenses/GPL-3.0). It contains third-party code, see the included THIRD-PARTY.txt file for the license information on third-party code.
