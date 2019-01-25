@@ -187,6 +187,9 @@ public class Utils {
     }
 
     public static String formatMaterial(Material material) {
+        if(material == null) {
+            return ChestCommands.getLang().any;
+        }
         return StringUtils.capitalizeFully(material.toString().replace("_", " "));
     }
 
