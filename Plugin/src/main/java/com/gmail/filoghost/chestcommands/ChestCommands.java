@@ -16,17 +16,24 @@ package com.gmail.filoghost.chestcommands;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.gmail.filoghost.chestcommands.util.*;
 import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import com.gmail.filoghost.chestcommands.SimpleUpdater.ResponseHandler;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
@@ -50,10 +57,6 @@ import com.gmail.filoghost.chestcommands.serializer.CommandSerializer;
 import com.gmail.filoghost.chestcommands.serializer.MenuSerializer;
 import com.gmail.filoghost.chestcommands.task.ErrorLoggerTask;
 import com.gmail.filoghost.chestcommands.task.RefreshMenusTask;
-import com.gmail.filoghost.chestcommands.util.CaseInsensitiveMap;
-import com.gmail.filoghost.chestcommands.util.ErrorLogger;
-import com.gmail.filoghost.chestcommands.util.Utils;
-import com.gmail.filoghost.chestcommands.util.VersionUtils;
 
 public class ChestCommands extends JavaPlugin {
 	
@@ -70,6 +73,12 @@ public class ChestCommands extends JavaPlugin {
 	
 	private static int lastReloadErrors;
 	private static String newVersion;
+	private static Connection connection;
+	private static MysqlData creds;
+	private String decodedConfig;
+	private static Configuration config;
+	private static List<String> menuList;
+	private static File menusFolder;
 	
 	@Override
 	public void onEnable() {
@@ -79,6 +88,7 @@ public class ChestCommands extends JavaPlugin {
 		}
 		
 		instance = this;
+		config = instance.getConfig();
 		fileNameToMenuMap = CaseInsensitiveMap.create();
 		commandsToMenuMap = CaseInsensitiveMap.create();
 		boundItems = Utils.newHashSet();
@@ -146,6 +156,12 @@ public class ChestCommands extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		closeAllMenus();
+		try {
+			if(connection.isValid(4))
+				connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -194,7 +210,7 @@ public class ChestCommands extends JavaPlugin {
 		}
 		
 		// Load the menus
-		File menusFolder = new File(getDataFolder(), "menu");
+		menusFolder = new File(getDataFolder(), "menu");
 		
 		if (!menusFolder.isDirectory()) {
 			// Create the directory with the default menu
@@ -249,15 +265,48 @@ public class ChestCommands extends JavaPlugin {
 				boundItems.add(boundItem);
 			}
 		}
-		
+
+		menuList = config.getStringList("menus");
+
+		creds = new MysqlData(config.getString("db.host"), config.getInt("db.port"), config.getString("db.database"), config.getString("db.username"), config.getString("db.password"), config.getString("db.table-name"));
+		if(config.getBoolean("use-mysql")) {
+			try {
+				openConnection();
+                createIfNonExistent();
+				if(config.getString("action-on-start").equalsIgnoreCase("import")) {
+					CommandHandler.Import(menuList);
+					instance.getLogger().info("Import on startup was successful");
+				}
+				else if(config.getString("action-on-start").equalsIgnoreCase("export")) {
+					CommandHandler.Export(menuList);
+					instance.getLogger().info("Export on startup was successful");
+				}
+
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
 		// Register the BungeeCord plugin channel
 		if (!Bukkit.getMessenger().isOutgoingChannelRegistered(this, "BungeeCord")) {
 			Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		}
 	}
-	
-	
-	
+
+
+    public static void createIfNonExistent() {
+        try {
+            Statement statement = ChestCommands.GetConnection().createStatement();
+            String queryText = "CREATE TABLE IF NOT EXISTS `" + ChestCommands.GetMysqlCreds().GetTableName() + "` ( `FILENAME` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , `CFGSTRING` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , PRIMARY KEY (`FILENAME`));";
+            statement.executeUpdate(queryText);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 	/**
 	 * Loads all the configuration files recursively into a list.
 	 */
@@ -274,9 +323,37 @@ public class ChestCommands extends JavaPlugin {
 		}
 		return list;
 	}
-	
-	
-	
+
+
+	private void openConnection() throws SQLException, ClassNotFoundException {
+		if (connection != null && !connection.isClosed()) {
+			return;
+		}
+		synchronized (this) {
+			if (connection != null && !connection.isClosed()) {
+				return;
+			}
+			Class.forName("com.mysql.jdbc.Driver");
+			connection = DriverManager.getConnection("jdbc:mysql://" + creds.GetHost() + ":" + creds.GetPort() + "/" + creds.GetDatabase(), creds.GetUsername(), creds.GetPassword());
+		}
+
+	}
+	public static MysqlData GetMysqlCreds() {
+		return creds;
+	}
+	public static List<String> GetMenuList() {
+		return menuList;
+	}
+	public static Connection GetConnection() {
+		return connection;
+	}
+	public static Configuration GetConfig() {
+		return config;
+	}
+	public static ChestCommands GetInstance() {
+		return instance;
+	}
+
 	public static void closeAllMenus() {
 		for (Player player : VersionUtils.getOnlinePlayers()) {
 			if (player.getOpenInventory() != null) {

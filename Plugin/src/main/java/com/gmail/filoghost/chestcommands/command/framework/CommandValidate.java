@@ -14,6 +14,8 @@
  */
 package com.gmail.filoghost.chestcommands.command.framework;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
+
 public class CommandValidate {
 
 	public static void notNull(Object o, String msg) {
@@ -78,6 +80,12 @@ public class CommandValidate {
 	
 	public static void minLength(Object[] array, int minLength, String msg) {
 		if (array.length < minLength) {
+			throw new CommandException(msg);
+		}
+	}
+
+	public static void dbEnabled(String msg) {
+		if (!ChestCommands.GetConfig().getBoolean("use-mysql")) {
 			throw new CommandException(msg);
 		}
 	}
