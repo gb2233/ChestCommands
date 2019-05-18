@@ -213,6 +213,28 @@ nbt-tags:
   POSITION-Y: 2
 
 
+condition:
+  NAME: '&aCondition'
+  LORE:
+    - 'The command will run when the level is higher than 5.'
+  ID: grass
+  COMMAND: "condition: %player_level% > 5; tell: &aYou did it"
+  POSITION-X: 7
+  POSITION-Y: 2
+
+
+banner:
+  NAME: '&bBanner'
+  LORE:
+    - 'An introduction with banners'
+  ID: banner
+  BANNER-COLOUR: PINK
+  BANNER-PATTERNS:
+    - "CREEPER:BLACK"
+  POSITION-X: 8
+  POSITION-Y: 2
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp

@@ -154,6 +154,7 @@ public final class MaterialsRegistry {
 		tryAddMaterialAlias("lilypad", "WATER_LILY");
 		tryAddMaterialAlias("command block", "COMMAND");
 		tryAddMaterialAlias("dye", "INK_SACK");
+		tryAddMaterialAlias("banner", "PINK_BANNER");
 	}
 
 }
