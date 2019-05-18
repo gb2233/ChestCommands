@@ -28,7 +28,7 @@ public class OpenIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(final Player player) {
+	public boolean execute(final Player player) {
 		String target = hasVariables ? getParsedCommand(player) : command;
 		final ExtendedIconMenu menu = ChestCommands.getFileNameToMenuMap().get(target.toLowerCase());
 		if (menu != null) {
@@ -47,8 +47,10 @@ public class OpenIconCommand extends IconCommand {
 				}
 			});
 
+			return true;
 		} else {
 			player.sendMessage(ChatColor.RED + "Menu not found! Please inform the staff.");
+			return false;
 		}
 	}
 

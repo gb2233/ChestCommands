@@ -26,8 +26,9 @@ public class BroadcastIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(Player player) {
+	public boolean execute(Player player) {
 		Bukkit.broadcastMessage(getParsedCommand(player));
+		return true;
 	}
 
 }

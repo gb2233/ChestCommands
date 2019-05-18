@@ -32,6 +32,6 @@ public abstract class IconCommand {
 		return hasVariables ? VariableManager.setVariables(command, executor) : command;
 	}
 
-	public abstract void execute(Player player);
+	public abstract boolean execute(Player player);
 
 }

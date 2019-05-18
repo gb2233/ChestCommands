@@ -44,16 +44,17 @@ public class GiveIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(Player player) {
+	public boolean execute(Player player) {
 		if (hasVariables) {
 			parseItem(getParsedCommand(player));
 		}
 		if (errorMessage != null) {
 			player.sendMessage(errorMessage);
-			return;
+			return false;
 		}
 
 		player.getInventory().addItem(itemToGive.clone());
+		return true;
 	}
 
 }

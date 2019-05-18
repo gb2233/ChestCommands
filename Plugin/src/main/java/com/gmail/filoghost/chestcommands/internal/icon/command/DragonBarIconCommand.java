@@ -46,12 +46,15 @@ public class DragonBarIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(Player player) {
+	public boolean execute(Player player) {
 		if (hasVariables) {
 			parseBar(getParsedCommand(player));
 		}
 		if (BarAPIBridge.hasValidPlugin()) {
 			BarAPIBridge.setMessage(player, message, seconds);
+			return true;
+		} else {
+			return false;
 		}
 	}
 

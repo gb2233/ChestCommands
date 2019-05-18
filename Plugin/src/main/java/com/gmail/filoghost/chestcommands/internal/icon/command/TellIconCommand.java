@@ -25,8 +25,9 @@ public class TellIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(Player player) {
+	public boolean execute(Player player) {
 		player.sendMessage(getParsedCommand(player));
+		return true;
 	}
 
 }

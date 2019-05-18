@@ -63,16 +63,17 @@ public class SoundIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(Player player) {
+	public boolean execute(Player player) {
 		if (hasVariables) {
 			parseSound(getParsedCommand(player));
 		}
 		if (errorMessage != null) {
 			player.sendMessage(errorMessage);
-			return;
+			return true;
 		}
 
 		player.playSound(player.getLocation(), sound, volume, pitch);
+		return true;
 	}
 
 }

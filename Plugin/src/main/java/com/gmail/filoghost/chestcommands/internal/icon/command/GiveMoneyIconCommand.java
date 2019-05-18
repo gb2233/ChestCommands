@@ -42,19 +42,21 @@ public class GiveMoneyIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(Player player) {
+	public boolean execute(Player player) {
 		if (hasVariables) {
 			parseMoney(getParsedCommand(player));
 		}
 		if (errorMessage != null) {
 			player.sendMessage(errorMessage);
-			return;
+			return false;
 		}
 
 		if (EconomyBridge.hasValidEconomy()) {
 			EconomyBridge.giveMoney(player, moneyToGive);
+			return true;
 		} else {
 			player.sendMessage(ChatColor.RED + "Vault with a compatible economy plugin not found. Please inform the staff.");
+			return false;
 		}
 	}
 

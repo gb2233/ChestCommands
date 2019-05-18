@@ -24,7 +24,7 @@ public class OpIconCommand extends IconCommand {
 	}
 
 	@Override
-	public void execute(Player player) {
+	public boolean execute(Player player) {
 
 		if (player.isOp()) {
 			player.chat("/" + getParsedCommand(player));
@@ -34,6 +34,7 @@ public class OpIconCommand extends IconCommand {
 			player.chat("/" + getParsedCommand(player));
 			player.setOp(false);
 		}
+		return true;
 	}
 
 }
