@@ -18,6 +18,7 @@ import com.gmail.filoghost.chestcommands.SimpleUpdater.ResponseHandler;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
+import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.command.CommandHandler;
 import com.gmail.filoghost.chestcommands.command.framework.CommandFramework;
 import com.gmail.filoghost.chestcommands.config.AsciiPlaceholders;
@@ -94,6 +95,10 @@ public class ChestCommands extends JavaPlugin {
 
 		if (PlaceholderAPIBridge.setupPlugin()) {
 			getLogger().info("Hooked PlaceholderAPI");
+		}
+
+		if (PlayerPointsBridge.setupPlugin()) {
+			getLogger().info("Hooked PlayerPoints");
 		}
 
 		if (settings.update_notifications) {

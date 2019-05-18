@@ -15,6 +15,7 @@
 package com.gmail.filoghost.chestcommands.internal;
 
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -29,6 +30,16 @@ public enum Variable {
 	ONLINE("{online}") {
 		public String getReplacement(Player executor) {
 			return String.valueOf(CachedGetters.getOnlinePlayers());
+		}
+	},
+
+	POINTS("{points}") {
+		public String getReplacement(Player executor) {
+			if (PlayerPointsBridge.hasValidPlugin()) {
+				return String.valueOf(PlayerPointsBridge.getPoints(executor));
+			} else {
+				return "[PLAYER POINTS PLUGIN NOT FOUND]";
+			}
 		}
 	},
 

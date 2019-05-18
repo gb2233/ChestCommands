@@ -39,6 +39,7 @@ public class CommandSerializer {
 		commandTypesMap.put(commandPattern("broadcast:"), BroadcastIconCommand.class);
 		commandTypesMap.put(commandPattern("give:"), GiveIconCommand.class);
 		commandTypesMap.put(commandPattern("give-?money:"), GiveMoneyIconCommand.class);
+		commandTypesMap.put(commandPattern("give-?points:"), GivePointsIconCommand.class);
 		commandTypesMap.put(commandPattern("sound:"), SoundIconCommand.class);
 		commandTypesMap.put(commandPattern("dragon-?bar:"), DragonBarIconCommand.class);
 		commandTypesMap.put(commandPattern("condition:"), ConditionIconCommand.class);
