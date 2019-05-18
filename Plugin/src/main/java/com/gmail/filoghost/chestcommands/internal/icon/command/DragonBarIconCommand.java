@@ -52,10 +52,8 @@ public class DragonBarIconCommand extends IconCommand {
 		}
 		if (BarAPIBridge.hasValidPlugin()) {
 			BarAPIBridge.setMessage(player, message, seconds);
-			return true;
-		} else {
-			return false;
 		}
+		return true;
 	}
 
 }

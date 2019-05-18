@@ -30,9 +30,12 @@ public class OpIconCommand extends IconCommand {
 			player.chat("/" + getParsedCommand(player));
 
 		} else {
-			player.setOp(true);
-			player.chat("/" + getParsedCommand(player));
-			player.setOp(false);
+			try {
+				player.setOp(true);
+				player.chat("/" + getParsedCommand(player));
+			} finally {
+				player.setOp(false);
+			}
 		}
 		return true;
 	}
