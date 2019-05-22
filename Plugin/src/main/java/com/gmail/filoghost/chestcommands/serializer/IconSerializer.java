@@ -30,61 +30,6 @@ import java.util.List;
 
 public class IconSerializer {
 
-	private static class Nodes {
-
-		public static final String
-				ID = "ID",
-				AMOUNT = "AMOUNT",
-				DATA_VALUE = "DATA-VALUE",
-				DURABILITY = "DURABILITY",
-				NBT_DATA = "NBT-DATA",
-				NAME = "NAME",
-				LORE = "LORE",
-				ENCHANT = "ENCHANTMENT",
-				COLOR = "COLOR",
-				SKULL_OWNER = "SKULL-OWNER",
-				BANNER_COLOR = "BANNER-COLOUR",
-				BANNER_PATTERNS = "BANNER-PATTERNS",
-				COMMAND = "COMMAND",
-				PRICE = "PRICE",
-				POINTS = "POINTS",
-				EXP_LEVELS = "LEVELS",
-				REQUIRED_ITEM = "REQUIRED-ITEM",
-				PERMISSION = "PERMISSION",
-				PERMISSION_MESSAGE = "PERMISSION-MESSAGE",
-				VIEW_PERMISSION = "VIEW-PERMISSION",
-				KEEP_OPEN = "KEEP-OPEN",
-				POSITION_X = "POSITION-X",
-				POSITION_Y = "POSITION-Y";
-	}
-
-	public static class Coords {
-
-		private Integer x, y;
-
-		protected Coords(Integer x, Integer y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		public boolean isSetX() {
-			return x != null;
-		}
-
-		public boolean isSetY() {
-			return y != null;
-		}
-
-		public Integer getX() {
-			return x;
-		}
-
-		public Integer getY() {
-			return y;
-		}
-	}
-
-
 	public static Icon loadIconFromSection(ConfigurationSection section, String iconName, String menuFileName, ErrorLogger errorLogger) {
 		Validate.notNull(section, "ConfigurationSection cannot be null");
 
@@ -198,6 +143,13 @@ public class IconSerializer {
 			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative POINTS: " + points);
 		}
 
+		long tokens = section.getLong(Nodes.TOKENS);
+		if (tokens > 0) {
+			icon.setTokenManagerPrice(tokens);
+		} else if (tokens < 0) {
+			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative TOKENS: " + points);
+		}
+
 		int levels = section.getInt(Nodes.EXP_LEVELS);
 		if (levels > 0) {
 			icon.setExpLevelsPrice(levels);
@@ -219,6 +171,61 @@ public class IconSerializer {
 		}
 
 		return icon;
+	}
+
+	public static class Coords {
+
+		private Integer x, y;
+
+		protected Coords(Integer x, Integer y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public boolean isSetX() {
+			return x != null;
+		}
+
+		public boolean isSetY() {
+			return y != null;
+		}
+
+		public Integer getX() {
+			return x;
+		}
+
+		public Integer getY() {
+			return y;
+		}
+	}
+
+	private static class Nodes {
+
+		public static final String
+				ID = "ID",
+				AMOUNT = "AMOUNT",
+				DATA_VALUE = "DATA-VALUE",
+				DURABILITY = "DURABILITY",
+				NBT_DATA = "NBT-DATA",
+				NAME = "NAME",
+				LORE = "LORE",
+				ENCHANT = "ENCHANTMENT",
+				COLOR = "COLOR",
+				SKULL_OWNER = "SKULL-OWNER",
+				BANNER_COLOR = "BANNER-COLOUR",
+				BANNER_PATTERNS = "BANNER-PATTERNS",
+				COMMAND = "COMMAND",
+				PRICE = "PRICE",
+				POINTS = "POINTS",
+				TOKENS = "TOKENS",
+				EXP_LEVELS = "LEVELS",
+				REQUIRED_ITEM = "REQUIRED-ITEM",
+				PERMISSION = "PERMISSION",
+				PERMISSION_MESSAGE = "PERMISSION-MESSAGE",
+				VIEW_PERMISSION = "VIEW-PERMISSION",
+				KEEP_OPEN = "KEEP-OPEN",
+				POSITION_X = "POSITION-X",
+				POSITION_Y = "POSITION-Y";
 	}
 
 

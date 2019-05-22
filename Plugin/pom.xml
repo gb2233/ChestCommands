@@ -37,6 +37,11 @@
 			<id>placeholderapi-repo</id>
 			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
+
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -88,6 +93,12 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/PlayerPoints.jar</systemPath>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.Realizedd</groupId>
+			<artifactId>TokenManager</artifactId>
+			<version>3.2.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -134,6 +145,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

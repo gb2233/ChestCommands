@@ -18,6 +18,7 @@ import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.api.Icon;
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
+import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.internal.RequiredItem;
@@ -43,6 +44,7 @@ public class ExtendedIcon extends Icon {
 	private int expLevelsPrice;
 	private RequiredItem requiredItem;
 	private int playerPointsPrice;
+	private long tokenManagerPrice;
 
 	public ExtendedIcon() {
 		super();
@@ -126,6 +128,14 @@ public class ExtendedIcon extends Icon {
 
 	public void setPlayerPointsPrice(int playerPointsPrice) {
 		this.playerPointsPrice = playerPointsPrice;
+	}
+
+	public long getTokenManagerPrice() {
+		return tokenManagerPrice;
+	}
+
+	public void setTokenManagerPrice(long tokenManagerPrice) {
+		this.tokenManagerPrice = tokenManagerPrice;
 	}
 
 	public int getExpLevelsPrice() {
@@ -235,6 +245,14 @@ public class ExtendedIcon extends Icon {
 			changedVariables = true;
 		}
 
+		if (tokenManagerPrice > 0) {
+			if (!TokenManagerBridge.takeTokens(player, tokenManagerPrice)) {
+				player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
+				return closeOnClick;
+			}
+			changedVariables = true;
+		}
+
 		if (requiredItem != null) {
 			requiredItem.takeItem(player);
 		}
@@ -255,6 +273,4 @@ public class ExtendedIcon extends Icon {
 
 		return super.onClick(player);
 	}
-
-
 }

@@ -43,6 +43,7 @@ public class CommandSerializer {
 		commandTypesMap.put(commandPattern("sound:"), SoundIconCommand.class);
 		commandTypesMap.put(commandPattern("dragon-?bar:"), DragonBarIconCommand.class);
 		commandTypesMap.put(commandPattern("condition:"), ConditionIconCommand.class);
+		commandTypesMap.put(commandPattern("give-?tokens:"), GiveTokensIconCommand.class);
 	}
 
 	private static Pattern commandPattern(String regex) {

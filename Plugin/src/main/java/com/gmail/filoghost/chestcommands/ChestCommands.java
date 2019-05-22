@@ -14,11 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands;
 
-import com.gmail.filoghost.chestcommands.SimpleUpdater.ResponseHandler;
-import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
-import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
-import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
-import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
+import com.gmail.filoghost.chestcommands.bridge.*;
 import com.gmail.filoghost.chestcommands.command.CommandHandler;
 import com.gmail.filoghost.chestcommands.command.framework.CommandFramework;
 import com.gmail.filoghost.chestcommands.config.AsciiPlaceholders;
@@ -101,22 +97,22 @@ public class ChestCommands extends JavaPlugin {
 			getLogger().info("Hooked PlayerPoints");
 		}
 
-		if (settings.update_notifications) {
-			new SimpleUpdater(this, 56919).checkForUpdates(new ResponseHandler() {
+        if (TokenManagerBridge.setupPlugin()) {
+            getLogger().info("Hooked TokenManager");
+        }
 
-				@Override
-				public void onUpdateFound(String newVersion) {
-					ChestCommands.newVersion = newVersion;
+        if (settings.update_notifications) {
+            new SimpleUpdater(this, 56919).checkForUpdates(newVersion -> {
+                ChestCommands.newVersion = newVersion;
 
-					if (settings.use_console_colors) {
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + "Found a new version: " + newVersion + ChatColor.WHITE + " (yours: v" + getDescription().getVersion() + ")");
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "Download it on Bukkit Dev:");
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "dev.bukkit.org/bukkit-plugins/chest-commands");
-					} else {
-						getLogger().info("Found a new version available: " + newVersion);
-						getLogger().info("Download it on Bukkit Dev:");
-						getLogger().info("dev.bukkit.org/bukkit-plugins/chest-commands");
-					}
+                if (settings.use_console_colors) {
+                    Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + "Found a new version: " + newVersion + ChatColor.WHITE + " (yours: v" + getDescription().getVersion() + ")");
+                    Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "Download it on Bukkit Dev:");
+                    Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "dev.bukkit.org/bukkit-plugins/chest-commands");
+                } else {
+                    getLogger().info("Found a new version available: " + newVersion);
+                    getLogger().info("Download it on Bukkit Dev:");
+                    getLogger().info("dev.bukkit.org/bukkit-plugins/chest-commands");
 				}
 			});
 		}
