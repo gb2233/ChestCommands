@@ -37,11 +37,6 @@
 			<id>placeholderapi-repo</id>
 			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
-
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
@@ -98,6 +93,9 @@
 			<groupId>com.github.Realizedd</groupId>
 			<artifactId>TokenManager</artifactId>
 			<version>3.2.3</version>
+			<optional>true</optional>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/TokenManager.jar</systemPath>
 		</dependency>
 	</dependencies>
 
