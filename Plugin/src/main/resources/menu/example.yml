@@ -235,6 +235,56 @@ banner:
   POSITION-Y: 2
 
 
+tokens-give:
+  COMMAND: 'tell: &aYou have paid 50 tokens for this command!; give: diamond_block'
+  NAME: '&eTokens'
+  LORE:
+    - 'This command will be executed'
+    - 'only if you have at least 50 tokens!'
+    - 'It gives you a diamond block.'
+  ID: diamond_block
+  TOKENS: 50
+  POSITION-X: 9
+  POSITION-Y: 2
+
+
+tokens-take:
+  REQUIRED-ITEM: 'diamond_block'
+  COMMAND: 'tell: &aYou have been paid 50 tokens; givetokens: 50'
+  NAME: '&Tokens & Required item'
+  LORE:
+    - 'This command is the opposite of the previous.'
+    - 'It will take you a diamond block and give you 50 tokens.'
+  ID: diamond_block
+  POSITION-X: 1
+  POSITION-Y: 3
+
+
+points-give:
+  COMMAND: 'tell: &aYou have paid 50 points for this command!; give: gold_block'
+  NAME: '&ePoints'
+  LORE:
+    - 'This command will be executed'
+    - 'only if you have at least 50 tokens!'
+    - 'It gives you a gold block.'
+  ID: gold_block
+  POINTS: 50
+  POSITION-X: 2
+  POSITION-Y: 3
+
+
+points-take:
+  REQUIRED-ITEM: 'gold_block'
+  COMMAND: 'tell: &aYou have been paid 50 points; givepoints: 50'
+  NAME: '&ePoints & Required item'
+  LORE:
+    - 'This command is the opposite of the previous.'
+    - 'It will take you a gold block and give you 50 points.'
+  ID: gold_block
+  POSITION-X: 3
+  POSITION-Y: 3
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
