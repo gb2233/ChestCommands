@@ -201,6 +201,18 @@ public class ExtendedIcon extends Icon {
 			}
 		}
 
+		if (tokenManagerPrice > 0) {
+			if (!TokenManagerBridge.hasValidPlugin()) {
+				player.sendMessage(ChatColor.RED + "This command has a price in tokens, but the plugin TokenManager was not found. For security, the command has been blocked. Please inform the staff.");
+				return closeOnClick;
+			}
+
+			if (!TokenManagerBridge.hasTokens(player, tokenManagerPrice)) {
+				player.sendMessage(ChestCommands.getLang().no_tokens.replace("{tokens}", Long.toString(tokenManagerPrice)));
+				return closeOnClick;
+			}
+		}
+
 		if (expLevelsPrice > 0) {
 			if (player.getLevel() < expLevelsPrice) {
 				player.sendMessage(ChestCommands.getLang().no_exp.replace("{levels}", Integer.toString(expLevelsPrice)));
@@ -221,7 +233,7 @@ public class ExtendedIcon extends Icon {
 			}
 		}
 
-		// Take the money, the points and the required item
+		// Take the money, the points, the tokens and the required item
 
 		boolean changedVariables = false; // To update the placeholders
 

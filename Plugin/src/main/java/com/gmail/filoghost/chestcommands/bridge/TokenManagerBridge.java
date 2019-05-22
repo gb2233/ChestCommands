@@ -11,13 +11,13 @@ public class TokenManagerBridge {
     private static TokenManager tokenManager;
 
     public static boolean setupPlugin() {
-        Plugin pointsPlugin = Bukkit.getPluginManager().getPlugin("TokenManager");
+        Plugin tokenPlugin = Bukkit.getPluginManager().getPlugin("TokenManager");
 
-        if (pointsPlugin == null) {
+        if (tokenPlugin == null) {
             return false;
         }
 
-        tokenManager = (TokenManager) pointsPlugin;
+        tokenManager = (TokenManager) tokenPlugin;
         return true;
     }
 
