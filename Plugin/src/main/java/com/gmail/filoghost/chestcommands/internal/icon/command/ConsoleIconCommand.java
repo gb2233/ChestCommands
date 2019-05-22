@@ -20,14 +20,14 @@ import org.bukkit.entity.Player;
 
 public class ConsoleIconCommand extends IconCommand {
 
-	public ConsoleIconCommand(String command) {
-		super(command);
-	}
+    public ConsoleIconCommand(String command) {
+        super(command);
+    }
 
-	@Override
-	public boolean execute(Player player) {
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getParsedCommand(player));
-		return true;
-	}
+    @Override
+    public boolean execute(Player player) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getParsedCommand(player));
+        return true;
+    }
 
 }

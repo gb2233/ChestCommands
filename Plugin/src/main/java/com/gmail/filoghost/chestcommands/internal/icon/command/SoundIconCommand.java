@@ -22,58 +22,58 @@ import org.bukkit.entity.Player;
 
 public class SoundIconCommand extends IconCommand {
 
-	private Sound sound;
-	private float pitch;
-	private float volume;
-	private String errorMessage;
+    private Sound sound;
+    private float pitch;
+    private float volume;
+    private String errorMessage;
 
-	public SoundIconCommand(String command) {
-		super(command);
-		if (!hasVariables) {
-			parseSound(super.command);
-		}
-	}
+    public SoundIconCommand(String command) {
+        super(command);
+        if (!hasVariables) {
+            parseSound(super.command);
+        }
+    }
 
-	private void parseSound(String command) {
-		errorMessage = null;
-		pitch = 1.0f;
-		volume = 1.0f;
+    private void parseSound(String command) {
+        errorMessage = null;
+        pitch = 1.0f;
+        volume = 1.0f;
 
-		String[] split = command.split(",");
+        String[] split = command.split(",");
 
-		sound = BukkitUtils.matchSound(split[0]);
-		if (sound == null) {
-			errorMessage = ChatColor.RED + "Invalid sound \"" + split[0].trim() + "\".";
-			return;
-		}
+        sound = BukkitUtils.matchSound(split[0]);
+        if (sound == null) {
+            errorMessage = ChatColor.RED + "Invalid sound \"" + split[0].trim() + "\".";
+            return;
+        }
 
-		if (split.length > 1) {
-			try {
-				pitch = Float.parseFloat(split[1].trim());
-			} catch (NumberFormatException e) {
-			}
-		}
+        if (split.length > 1) {
+            try {
+                pitch = Float.parseFloat(split[1].trim());
+            } catch (NumberFormatException e) {
+            }
+        }
 
-		if (split.length > 2) {
-			try {
-				volume = Float.parseFloat(split[2].trim());
-			} catch (NumberFormatException e) {
-			}
-		}
-	}
+        if (split.length > 2) {
+            try {
+                volume = Float.parseFloat(split[2].trim());
+            } catch (NumberFormatException e) {
+            }
+        }
+    }
 
-	@Override
-	public boolean execute(Player player) {
-		if (hasVariables) {
-			parseSound(getParsedCommand(player));
-		}
-		if (errorMessage != null) {
-			player.sendMessage(errorMessage);
-			return true;
-		}
+    @Override
+    public boolean execute(Player player) {
+        if (hasVariables) {
+            parseSound(getParsedCommand(player));
+        }
+        if (errorMessage != null) {
+            player.sendMessage(errorMessage);
+            return true;
+        }
 
-		player.playSound(player.getLocation(), sound, volume, pitch);
-		return true;
-	}
+        player.playSound(player.getLocation(), sound, volume, pitch);
+        return true;
+    }
 
 }

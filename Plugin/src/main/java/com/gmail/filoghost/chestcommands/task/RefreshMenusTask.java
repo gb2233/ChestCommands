@@ -23,35 +23,35 @@ import org.bukkit.inventory.InventoryView;
 
 public class RefreshMenusTask implements Runnable {
 
-	private long elapsedTenths;
+    private long elapsedTenths;
 
-	@Override
-	public void run() {
+    @Override
+    public void run() {
 
-		for (Player player : BukkitUtils.getOnlinePlayers()) {
+        for (Player player : BukkitUtils.getOnlinePlayers()) {
 
-			InventoryView view = player.getOpenInventory();
-			if (view == null) {
-				return;
-			}
+            InventoryView view = player.getOpenInventory();
+            if (view == null) {
+                return;
+            }
 
-			Inventory topInventory = view.getTopInventory();
-			if (topInventory.getHolder() instanceof MenuInventoryHolder) {
-				MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
+            Inventory topInventory = view.getTopInventory();
+            if (topInventory.getHolder() instanceof MenuInventoryHolder) {
+                MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
 
-				if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
-					ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
+                if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
+                    ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
 
-					if (extMenu.getRefreshTicks() > 0) {
-						if (elapsedTenths % extMenu.getRefreshTicks() == 0) {
-							extMenu.refresh(player, topInventory);
-						}
-					}
-				}
-			}
-		}
+                    if (extMenu.getRefreshTicks() > 0) {
+                        if (elapsedTenths % extMenu.getRefreshTicks() == 0) {
+                            extMenu.refresh(player, topInventory);
+                        }
+                    }
+                }
+            }
+        }
 
-		elapsedTenths++;
-	}
+        elapsedTenths++;
+    }
 
 }

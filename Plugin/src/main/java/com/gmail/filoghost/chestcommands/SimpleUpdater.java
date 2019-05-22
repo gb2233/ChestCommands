@@ -37,185 +37,179 @@ import java.util.regex.Pattern;
  */
 public final class SimpleUpdater {
 
-	private static Pattern VERSION_PATTERN = Pattern.compile("v?([0-9\\.]+)");
+    private static Pattern VERSION_PATTERN = Pattern.compile("v?([0-9\\.]+)");
 
-	private Plugin plugin;
-	private int projectId;
-
-
-	public SimpleUpdater(Plugin plugin, int projectId) {
-		if (plugin == null) {
-			throw new NullPointerException("Plugin cannot be null");
-		}
-
-		this.plugin = plugin;
-		this.projectId = projectId;
-	}
+    private Plugin plugin;
+    private int projectId;
 
 
-	/**
-	 * This method creates a new async thread to check for updates.
-	 *
-	 * @param responseHandler the response handler
-	 */
-	public void checkForUpdates(final ResponseHandler responseHandler) {
-		Thread updaterThread = new Thread(new Runnable() {
+    public SimpleUpdater(Plugin plugin, int projectId) {
+        if (plugin == null) {
+            throw new NullPointerException("Plugin cannot be null");
+        }
 
-			@Override
-			public void run() {
-
-				try {
-					JSONArray filesArray = (JSONArray) readJson("https://api.curseforge.com/servermods/files?projectIds=" + projectId);
-
-					if (filesArray.size() == 0) {
-						// The array cannot be empty, there must be at least one file.
-						// The project ID is not valid or curse returned a wrong response.
-						return;
-					}
-
-					String updateName = (String) ((JSONObject) filesArray.get(filesArray.size() - 1)).get("name");
-					final PluginVersion remoteVersion = new PluginVersion(updateName);
-					PluginVersion localVersion = new PluginVersion(plugin.getDescription().getVersion());
-
-					if (remoteVersion.isNewerThan(localVersion)) {
-						Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-							@Override
-							public void run() {
-								responseHandler.onUpdateFound(remoteVersion.toString());
-							}
-						});
-					}
-
-				} catch (IOException e) {
-					plugin.getLogger().warning("Could not contact BukkitDev to check for updates.");
-				} catch (InvalidVersionException e) {
-					plugin.getLogger().warning("Could not check for updates because of a version format error: " + e.getMessage() + ".");
-					plugin.getLogger().warning("Please notify the author of this error.");
-				} catch (Exception e) {
-					e.printStackTrace();
-					plugin.getLogger().warning("Unable to check for updates: unhandled exception.");
-				}
-
-			}
-		});
-
-		updaterThread.start();
-	}
+        this.plugin = plugin;
+        this.projectId = projectId;
+    }
 
 
-	private Object readJson(String url) throws MalformedURLException, IOException {
-		URLConnection conn = new URL(url).openConnection();
-		conn.setConnectTimeout(5000);
-		conn.setReadTimeout(8000);
-		conn.addRequestProperty("User-Agent", "Updater (by filoghost)");
-		conn.setDoOutput(true);
+    /**
+     * This method creates a new async thread to check for updates.
+     *
+     * @param responseHandler the response handler
+     */
+    public void checkForUpdates(final ResponseHandler responseHandler) {
+        Thread updaterThread = new Thread(new Runnable() {
 
-		return JSONValue.parse(new BufferedReader(new InputStreamReader(conn.getInputStream())));
-	}
+            @Override
+            public void run() {
 
+                try {
+                    JSONArray filesArray = (JSONArray) readJson("https://api.curseforge.com/servermods/files?projectIds=" + projectId);
 
-	private static class PluginVersion {
+                    if (filesArray.size() == 0) {
+                        // The array cannot be empty, there must be at least one file.
+                        // The project ID is not valid or curse returned a wrong response.
+                        return;
+                    }
 
-		// The version extracted from a string, e.g. "Chest Commands v1.3" becomes [1, 3]
-		private int[] versionNumbers;
-		private boolean isDevBuild;
+                    String updateName = (String) ((JSONObject) filesArray.get(filesArray.size() - 1)).get("name");
+                    final PluginVersion remoteVersion = new PluginVersion(updateName);
+                    PluginVersion localVersion = new PluginVersion(plugin.getDescription().getVersion());
 
+                    if (remoteVersion.isNewerThan(localVersion)) {
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
-		public PluginVersion(String input) throws InvalidVersionException {
-			if (input == null) {
-				throw new InvalidVersionException("input was null");
-			}
+                            @Override
+                            public void run() {
+                                responseHandler.onUpdateFound(remoteVersion.toString());
+                            }
+                        });
+                    }
 
-			Matcher matcher = VERSION_PATTERN.matcher(input);
+                } catch (IOException e) {
+                    plugin.getLogger().warning("Could not contact BukkitDev to check for updates.");
+                } catch (InvalidVersionException e) {
+                    plugin.getLogger().warning("Could not check for updates because of a version format error: " + e.getMessage() + ".");
+                    plugin.getLogger().warning("Please notify the author of this error.");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    plugin.getLogger().warning("Unable to check for updates: unhandled exception.");
+                }
 
-			if (!matcher.find()) {
-				throw new InvalidVersionException("version pattern not found in \"" + input + "\"");
-			}
+            }
+        });
 
-			// Get the first group of the matcher (without the "v")
-			String version = matcher.group(1);
-
-			// Replace multiple full stops (probably typos) with a single full stop, and split the version with them
-			String[] versionParts = version.replaceAll("[\\.]{2,}", ".").split("\\.");
-
-			// Convert the strings to integers in order to compare them
-			this.versionNumbers = new int[versionParts.length];
-			for (int i = 0; i < versionParts.length; i++) {
-				try {
-					this.versionNumbers[i] = Integer.parseInt(versionParts[i]);
-				} catch (NumberFormatException e) {
-					throw new InvalidVersionException("invalid number in \"" + input + "\"");
-				}
-			}
-
-			this.isDevBuild = input.contains("SNAPSHOT");
-		}
-
-
-		/**
-		 * Compares this version with another version, using the array "versionNumbers".
-		 * Examples:
-		 * v1.12 is newer than v1.2 ([1, 12] is newer than [1, 2])
-		 * v2.01 is equal to v2.1 ([2, 1] is equal to [2, 1])
-		 *
-		 * @return true if this version is newer than the other, false if equal or older
-		 */
-		public boolean isNewerThan(PluginVersion other) {
-			int longest = Math.max(this.versionNumbers.length, other.versionNumbers.length);
-
-			for (int i = 0; i < longest; i++) {
-				int thisVersionPart = i < this.versionNumbers.length ? this.versionNumbers[i] : 0;
-				int otherVersionPart = i < other.versionNumbers.length ? other.versionNumbers[i] : 0;
-				int diff = thisVersionPart - otherVersionPart;
-
-				if (diff > 0) {
-					return true;
-				} else if (diff < 0) {
-					return false;
-				}
-
-				// Continue the loop until diff = 0
-			}
-
-			// If we get here, they're the same version, check dev builds.
-			// This version is newer only if it's not a dev build and the other is.
-			if (other.isDevBuild && !this.isDevBuild) {
-				return true;
-			}
-
-			return false;
-		}
+        updaterThread.start();
+    }
 
 
-		@Override
-		public String toString() {
-			return "v" + Ints.join(".", versionNumbers);
-		}
+    private Object readJson(String url) throws IOException {
+        URLConnection conn = new URL(url).openConnection();
+        conn.setConnectTimeout(5000);
+        conn.setReadTimeout(8000);
+        conn.addRequestProperty("User-Agent", "Updater (by filoghost)");
+        conn.setDoOutput(true);
 
-	}
-
-
-	private static class InvalidVersionException extends Exception {
-
-		private static final long serialVersionUID = 1L;
-
-		public InvalidVersionException(String message) {
-			super(message);
-		}
-
-	}
+        return JSONValue.parse(new BufferedReader(new InputStreamReader(conn.getInputStream())));
+    }
 
 
-	public interface ResponseHandler {
+    public interface ResponseHandler {
 
-		/**
-		 * Called when the updater finds a new version.
-		 *
-		 * @param newVersion - the new version
-		 */
-		public void onUpdateFound(final String newVersion);
+        /**
+         * Called when the updater finds a new version.
+         *
+         * @param newVersion - the new version
+         */
+        void onUpdateFound(final String newVersion);
 
-	}
+    }
+
+    private static class PluginVersion {
+
+        // The version extracted from a string, e.g. "Chest Commands v1.3" becomes [1, 3]
+        private int[] versionNumbers;
+        private boolean isDevBuild;
+
+
+        public PluginVersion(String input) throws InvalidVersionException {
+            if (input == null) {
+                throw new InvalidVersionException("input was null");
+            }
+
+            Matcher matcher = VERSION_PATTERN.matcher(input);
+
+            if (!matcher.find()) {
+                throw new InvalidVersionException("version pattern not found in \"" + input + "\"");
+            }
+
+            // Get the first group of the matcher (without the "v")
+            String version = matcher.group(1);
+
+            // Replace multiple full stops (probably typos) with a single full stop, and split the version with them
+            String[] versionParts = version.replaceAll("[\\.]{2,}", ".").split("\\.");
+
+            // Convert the strings to integers in order to compare them
+            this.versionNumbers = new int[versionParts.length];
+            for (int i = 0; i < versionParts.length; i++) {
+                try {
+                    this.versionNumbers[i] = Integer.parseInt(versionParts[i]);
+                } catch (NumberFormatException e) {
+                    throw new InvalidVersionException("invalid number in \"" + input + "\"");
+                }
+            }
+
+            this.isDevBuild = input.contains("SNAPSHOT");
+        }
+
+
+        /**
+         * Compares this version with another version, using the array "versionNumbers".
+         * Examples:
+         * v1.12 is newer than v1.2 ([1, 12] is newer than [1, 2])
+         * v2.01 is equal to v2.1 ([2, 1] is equal to [2, 1])
+         *
+         * @return true if this version is newer than the other, false if equal or older
+         */
+        public boolean isNewerThan(PluginVersion other) {
+            int longest = Math.max(this.versionNumbers.length, other.versionNumbers.length);
+
+            for (int i = 0; i < longest; i++) {
+                int thisVersionPart = i < this.versionNumbers.length ? this.versionNumbers[i] : 0;
+                int otherVersionPart = i < other.versionNumbers.length ? other.versionNumbers[i] : 0;
+                int diff = thisVersionPart - otherVersionPart;
+
+                if (diff > 0) {
+                    return true;
+                } else if (diff < 0) {
+                    return false;
+                }
+
+                // Continue the loop until diff = 0
+            }
+
+            // If we get here, they're the same version, check dev builds.
+            // This version is newer only if it's not a dev build and the other is.
+            return other.isDevBuild && !this.isDevBuild;
+        }
+
+
+        @Override
+        public String toString() {
+            return "v" + Ints.join(".", versionNumbers);
+        }
+
+    }
+
+    private static class InvalidVersionException extends Exception {
+
+        private static final long serialVersionUID = 1L;
+
+        public InvalidVersionException(String message) {
+            super(message);
+        }
+
+    }
 
 }

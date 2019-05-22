@@ -34,73 +34,73 @@ import java.util.Arrays;
  */
 public class IconMenu {
 
-	protected final String title;
-	protected final Icon[] icons;
+    protected final String title;
+    protected final Icon[] icons;
 
 
-	public IconMenu(String title, int rows) {
-		this.title = title;
-		icons = new Icon[rows * 9];
-	}
+    public IconMenu(String title, int rows) {
+        this.title = title;
+        icons = new Icon[rows * 9];
+    }
 
-	public void setIcon(int x, int y, Icon icon) {
-		int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
-		if (slot >= 0 && slot < icons.length) {
-			icons[slot] = icon;
-		}
-	}
+    public void setIcon(int x, int y, Icon icon) {
+        int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
+        if (slot >= 0 && slot < icons.length) {
+            icons[slot] = icon;
+        }
+    }
 
-	public void setIconRaw(int slot, Icon icon) {
-		if (slot >= 0 && slot < icons.length) {
-			icons[slot] = icon;
-		}
-	}
+    public void setIconRaw(int slot, Icon icon) {
+        if (slot >= 0 && slot < icons.length) {
+            icons[slot] = icon;
+        }
+    }
 
-	public Icon getIcon(int x, int y) {
-		int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
-		if (slot >= 0 && slot < icons.length) {
-			return icons[slot];
-		}
+    public Icon getIcon(int x, int y) {
+        int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
+        if (slot >= 0 && slot < icons.length) {
+            return icons[slot];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public Icon getIconRaw(int slot) {
-		if (slot >= 0 && slot < icons.length) {
-			return icons[slot];
-		}
+    public Icon getIconRaw(int slot) {
+        if (slot >= 0 && slot < icons.length) {
+            return icons[slot];
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public int getRows() {
-		return icons.length / 9;
-	}
+    public int getRows() {
+        return icons.length / 9;
+    }
 
-	public int getSize() {
-		return icons.length;
-	}
+    public int getSize() {
+        return icons.length;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void open(Player player) {
-		Validate.notNull(player, "Player cannot be null");
+    public void open(Player player) {
+        Validate.notNull(player, "Player cannot be null");
 
-		Inventory inventory = Bukkit.createInventory(new MenuInventoryHolder(this), icons.length, title);
+        Inventory inventory = Bukkit.createInventory(new MenuInventoryHolder(this), icons.length, title);
 
-		for (int i = 0; i < icons.length; i++) {
-			if (icons[i] != null) {
-				inventory.setItem(i, ItemUtils.hideAttributes(icons[i].createItemstack(player)));
-			}
-		}
+        for (int i = 0; i < icons.length; i++) {
+            if (icons[i] != null) {
+                inventory.setItem(i, ItemUtils.hideAttributes(icons[i].createItemstack(player)));
+            }
+        }
 
-		player.openInventory(inventory);
-	}
+        player.openInventory(inventory);
+    }
 
-	@Override
-	public String toString() {
-		return "IconMenu [title=" + title + ", icons=" + Arrays.toString(icons) + "]";
-	}
+    @Override
+    public String toString() {
+        return "IconMenu [title=" + title + ", icons=" + Arrays.toString(icons) + "]";
+    }
 }

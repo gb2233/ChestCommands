@@ -19,14 +19,14 @@ import org.bukkit.entity.Player;
 
 public class PlayerIconCommand extends IconCommand {
 
-	public PlayerIconCommand(String command) {
-		super(command);
-	}
+    public PlayerIconCommand(String command) {
+        super(command);
+    }
 
-	@Override
-	public boolean execute(Player player) {
-		player.chat('/' + getParsedCommand(player));
-		return true;
-	}
+    @Override
+    public boolean execute(Player player) {
+        player.chat('/' + getParsedCommand(player));
+        return true;
+    }
 
 }

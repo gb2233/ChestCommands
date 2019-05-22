@@ -20,14 +20,14 @@ import org.bukkit.entity.Player;
 
 public class ServerIconCommand extends IconCommand {
 
-	public ServerIconCommand(String command) {
-		super(command);
-	}
+    public ServerIconCommand(String command) {
+        super(command);
+    }
 
-	@Override
-	public boolean execute(Player player) {
-		BungeeCordUtils.connect(player, hasVariables ? getParsedCommand(player) : command);
-		return true;
-	}
+    @Override
+    public boolean execute(Player player) {
+        BungeeCordUtils.connect(player, hasVariables ? getParsedCommand(player) : command);
+        return true;
+    }
 
 }

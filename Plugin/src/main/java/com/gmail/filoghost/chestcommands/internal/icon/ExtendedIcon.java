@@ -33,256 +33,256 @@ import java.util.List;
 
 public class ExtendedIcon extends Icon {
 
-	private String permission;
-	private String permissionMessage;
-	private String viewPermission;
+    private String permission;
+    private String permissionMessage;
+    private String viewPermission;
 
-	private boolean permissionNegated;
-	private boolean viewPermissionNegated;
+    private boolean permissionNegated;
+    private boolean viewPermissionNegated;
 
-	private double moneyPrice;
-	private int expLevelsPrice;
-	private RequiredItem requiredItem;
-	private int playerPointsPrice;
-	private long tokenManagerPrice;
+    private double moneyPrice;
+    private int expLevelsPrice;
+    private RequiredItem requiredItem;
+    private int playerPointsPrice;
+    private long tokenManagerPrice;
 
-	public ExtendedIcon() {
-		super();
-	}
+    public ExtendedIcon() {
+        super();
+    }
 
-	public boolean canClickIcon(Player player) {
-		if (permission == null) {
-			return true;
-		}
+    public boolean canClickIcon(Player player) {
+        if (permission == null) {
+            return true;
+        }
 
-		if (permissionNegated) {
-			return !player.hasPermission(permission);
-		} else {
-			return player.hasPermission(permission);
-		}
-	}
+        if (permissionNegated) {
+            return !player.hasPermission(permission);
+        } else {
+            return player.hasPermission(permission);
+        }
+    }
 
-	public void setPermission(String permission) {
-		if (StringUtils.isNullOrEmpty(permission)) {
-			permission = null;
-		}
+    public void setPermission(String permission) {
+        if (StringUtils.isNullOrEmpty(permission)) {
+            permission = null;
+        }
 
-		if (permission != null) {
-			if (permission.startsWith("-")) {
-				permissionNegated = true;
-				permission = permission.substring(1, permission.length()).trim();
-			}
-		}
-		this.permission = permission;
-	}
+        if (permission != null) {
+            if (permission.startsWith("-")) {
+                permissionNegated = true;
+                permission = permission.substring(1).trim();
+            }
+        }
+        this.permission = permission;
+    }
 
-	public String getPermissionMessage() {
-		return permissionMessage;
-	}
+    public String getPermissionMessage() {
+        return permissionMessage;
+    }
 
-	public void setPermissionMessage(String permissionMessage) {
-		this.permissionMessage = permissionMessage;
-	}
+    public void setPermissionMessage(String permissionMessage) {
+        this.permissionMessage = permissionMessage;
+    }
 
-	public boolean hasViewPermission() {
-		return viewPermission != null;
-	}
+    public boolean hasViewPermission() {
+        return viewPermission != null;
+    }
 
-	public boolean canViewIcon(Player player) {
-		if (viewPermission == null) {
-			return true;
-		}
+    public boolean canViewIcon(Player player) {
+        if (viewPermission == null) {
+            return true;
+        }
 
-		if (viewPermissionNegated) {
-			return !player.hasPermission(viewPermission);
-		} else {
-			return player.hasPermission(viewPermission);
-		}
-	}
+        if (viewPermissionNegated) {
+            return !player.hasPermission(viewPermission);
+        } else {
+            return player.hasPermission(viewPermission);
+        }
+    }
 
-	public void setViewPermission(String viewPermission) {
-		if (StringUtils.isNullOrEmpty(viewPermission)) {
-			viewPermission = null;
-		}
+    public void setViewPermission(String viewPermission) {
+        if (StringUtils.isNullOrEmpty(viewPermission)) {
+            viewPermission = null;
+        }
 
-		if (viewPermission != null) {
-			if (viewPermission.startsWith("-")) {
-				viewPermissionNegated = true;
-				viewPermission = viewPermission.substring(1, viewPermission.length()).trim();
-			}
-		}
-		this.viewPermission = viewPermission;
-	}
+        if (viewPermission != null) {
+            if (viewPermission.startsWith("-")) {
+                viewPermissionNegated = true;
+                viewPermission = viewPermission.substring(1).trim();
+            }
+        }
+        this.viewPermission = viewPermission;
+    }
 
-	public double getMoneyPrice() {
-		return moneyPrice;
-	}
+    public double getMoneyPrice() {
+        return moneyPrice;
+    }
 
-	public void setMoneyPrice(double moneyPrice) {
-		this.moneyPrice = moneyPrice;
-	}
+    public void setMoneyPrice(double moneyPrice) {
+        this.moneyPrice = moneyPrice;
+    }
 
-	public int getPlayerPointsPrice() {
-		return playerPointsPrice;
-	}
+    public int getPlayerPointsPrice() {
+        return playerPointsPrice;
+    }
 
-	public void setPlayerPointsPrice(int playerPointsPrice) {
-		this.playerPointsPrice = playerPointsPrice;
-	}
+    public void setPlayerPointsPrice(int playerPointsPrice) {
+        this.playerPointsPrice = playerPointsPrice;
+    }
 
-	public long getTokenManagerPrice() {
-		return tokenManagerPrice;
-	}
+    public long getTokenManagerPrice() {
+        return tokenManagerPrice;
+    }
 
-	public void setTokenManagerPrice(long tokenManagerPrice) {
-		this.tokenManagerPrice = tokenManagerPrice;
-	}
+    public void setTokenManagerPrice(long tokenManagerPrice) {
+        this.tokenManagerPrice = tokenManagerPrice;
+    }
 
-	public int getExpLevelsPrice() {
-		return expLevelsPrice;
-	}
+    public int getExpLevelsPrice() {
+        return expLevelsPrice;
+    }
 
-	public void setExpLevelsPrice(int expLevelsPrice) {
-		this.expLevelsPrice = expLevelsPrice;
-	}
+    public void setExpLevelsPrice(int expLevelsPrice) {
+        this.expLevelsPrice = expLevelsPrice;
+    }
 
-	public RequiredItem getRequiredItem() {
-		return requiredItem;
-	}
+    public RequiredItem getRequiredItem() {
+        return requiredItem;
+    }
 
-	public void setRequiredItem(RequiredItem requiredItem) {
-		this.requiredItem = requiredItem;
-	}
+    public void setRequiredItem(RequiredItem requiredItem) {
+        this.requiredItem = requiredItem;
+    }
 
-	public String calculateName(Player pov) {
-		return super.calculateName(pov);
-	}
+    public String calculateName(Player pov) {
+        return super.calculateName(pov);
+    }
 
-	public List<String> calculateLore(Player pov) {
-		return super.calculateLore(pov);
-	}
+    public List<String> calculateLore(Player pov) {
+        return super.calculateLore(pov);
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public boolean onClick(Player player) {
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean onClick(Player player) {
 
-		// Check all the requirements
+        // Check all the requirements
 
-		if (!canClickIcon(player)) {
-			if (permissionMessage != null) {
-				player.sendMessage(permissionMessage);
-			} else {
-				player.sendMessage(ChestCommands.getLang().default_no_icon_permission);
-			}
-			return closeOnClick;
-		}
+        if (!canClickIcon(player)) {
+            if (permissionMessage != null) {
+                player.sendMessage(permissionMessage);
+            } else {
+                player.sendMessage(ChestCommands.getLang().default_no_icon_permission);
+            }
+            return closeOnClick;
+        }
 
-		if (moneyPrice > 0) {
-			if (!EconomyBridge.hasValidEconomy()) {
-				player.sendMessage(ChatColor.RED + "This command has a price, but Vault with a compatible economy plugin was not found. For security, the command has been blocked. Please inform the staff.");
-				return closeOnClick;
-			}
+        if (moneyPrice > 0) {
+            if (!EconomyBridge.hasValidEconomy()) {
+                player.sendMessage(ChatColor.RED + "This command has a price, but Vault with a compatible economy plugin was not found. For security, the command has been blocked. Please inform the staff.");
+                return closeOnClick;
+            }
 
-			if (!EconomyBridge.hasMoney(player, moneyPrice)) {
-				player.sendMessage(ChestCommands.getLang().no_money.replace("{money}", EconomyBridge.formatMoney(moneyPrice)));
-				return closeOnClick;
-			}
-		}
+            if (!EconomyBridge.hasMoney(player, moneyPrice)) {
+                player.sendMessage(ChestCommands.getLang().no_money.replace("{money}", EconomyBridge.formatMoney(moneyPrice)));
+                return closeOnClick;
+            }
+        }
 
-		if (playerPointsPrice > 0) {
-			if (!PlayerPointsBridge.hasValidPlugin()) {
-				player.sendMessage(ChatColor.RED + "This command has a price in points, but the plugin PlayerPoints was not found. For security, the command has been blocked. Please inform the staff.");
-				return closeOnClick;
-			}
+        if (playerPointsPrice > 0) {
+            if (!PlayerPointsBridge.hasValidPlugin()) {
+                player.sendMessage(ChatColor.RED + "This command has a price in points, but the plugin PlayerPoints was not found. For security, the command has been blocked. Please inform the staff.");
+                return closeOnClick;
+            }
 
-			if (!PlayerPointsBridge.hasPoints(player, playerPointsPrice)) {
-				player.sendMessage(ChestCommands.getLang().no_points.replace("{points}", Integer.toString(playerPointsPrice)));
-				return closeOnClick;
-			}
-		}
+            if (!PlayerPointsBridge.hasPoints(player, playerPointsPrice)) {
+                player.sendMessage(ChestCommands.getLang().no_points.replace("{points}", Integer.toString(playerPointsPrice)));
+                return closeOnClick;
+            }
+        }
 
-		if (tokenManagerPrice > 0) {
-			if (!TokenManagerBridge.hasValidPlugin()) {
-				player.sendMessage(ChatColor.RED + "This command has a price in tokens, but the plugin TokenManager was not found. For security, the command has been blocked. Please inform the staff.");
-				return closeOnClick;
-			}
+        if (tokenManagerPrice > 0) {
+            if (!TokenManagerBridge.hasValidPlugin()) {
+                player.sendMessage(ChatColor.RED + "This command has a price in tokens, but the plugin TokenManager was not found. For security, the command has been blocked. Please inform the staff.");
+                return closeOnClick;
+            }
 
-			if (!TokenManagerBridge.hasTokens(player, tokenManagerPrice)) {
-				player.sendMessage(ChestCommands.getLang().no_tokens.replace("{tokens}", Long.toString(tokenManagerPrice)));
-				return closeOnClick;
-			}
-		}
+            if (!TokenManagerBridge.hasTokens(player, tokenManagerPrice)) {
+                player.sendMessage(ChestCommands.getLang().no_tokens.replace("{tokens}", Long.toString(tokenManagerPrice)));
+                return closeOnClick;
+            }
+        }
 
-		if (expLevelsPrice > 0) {
-			if (player.getLevel() < expLevelsPrice) {
-				player.sendMessage(ChestCommands.getLang().no_exp.replace("{levels}", Integer.toString(expLevelsPrice)));
-				return closeOnClick;
-			}
-		}
+        if (expLevelsPrice > 0) {
+            if (player.getLevel() < expLevelsPrice) {
+                player.sendMessage(ChestCommands.getLang().no_exp.replace("{levels}", Integer.toString(expLevelsPrice)));
+                return closeOnClick;
+            }
+        }
 
-		if (requiredItem != null) {
+        if (requiredItem != null) {
 
-			if (!requiredItem.hasItem(player)) {
-				player.sendMessage(ChestCommands.getLang().no_required_item
-						.replace("{material}", MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
-						.replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
-						.replace("{amount}", Integer.toString(requiredItem.getAmount()))
-						.replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short.toString(requiredItem.getDataValue()) : ChestCommands.getLang().any)
-				);
-				return closeOnClick;
-			}
-		}
+            if (!requiredItem.hasItem(player)) {
+                player.sendMessage(ChestCommands.getLang().no_required_item
+                        .replace("{material}", MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
+                        .replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
+                        .replace("{amount}", Integer.toString(requiredItem.getAmount()))
+                        .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short.toString(requiredItem.getDataValue()) : ChestCommands.getLang().any)
+                );
+                return closeOnClick;
+            }
+        }
 
-		// Take the money, the points, the tokens and the required item
+        // Take the money, the points, the tokens and the required item
 
-		boolean changedVariables = false; // To update the placeholders
+        boolean changedVariables = false; // To update the placeholders
 
-		if (moneyPrice > 0) {
-			if (!EconomyBridge.takeMoney(player, moneyPrice)) {
-				player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
-				return closeOnClick;
-			}
-			changedVariables = true;
-		}
+        if (moneyPrice > 0) {
+            if (!EconomyBridge.takeMoney(player, moneyPrice)) {
+                player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
+                return closeOnClick;
+            }
+            changedVariables = true;
+        }
 
-		if (expLevelsPrice > 0) {
-			player.setLevel(player.getLevel() - expLevelsPrice);
-		}
+        if (expLevelsPrice > 0) {
+            player.setLevel(player.getLevel() - expLevelsPrice);
+        }
 
-		if (playerPointsPrice > 0) {
-			if (!PlayerPointsBridge.takePoints(player, playerPointsPrice)) {
-				player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
-				return closeOnClick;
-			}
-			changedVariables = true;
-		}
+        if (playerPointsPrice > 0) {
+            if (!PlayerPointsBridge.takePoints(player, playerPointsPrice)) {
+                player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
+                return closeOnClick;
+            }
+            changedVariables = true;
+        }
 
-		if (tokenManagerPrice > 0) {
-			if (!TokenManagerBridge.takeTokens(player, tokenManagerPrice)) {
-				player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
-				return closeOnClick;
-			}
-			changedVariables = true;
-		}
+        if (tokenManagerPrice > 0) {
+            if (!TokenManagerBridge.takeTokens(player, tokenManagerPrice)) {
+                player.sendMessage(ChatColor.RED + "Error: the transaction couldn't be executed. Please inform the staff.");
+                return closeOnClick;
+            }
+            changedVariables = true;
+        }
 
-		if (requiredItem != null) {
-			requiredItem.takeItem(player);
-		}
+        if (requiredItem != null) {
+            requiredItem.takeItem(player);
+        }
 
-		if (changedVariables) {
-			InventoryView view = player.getOpenInventory();
-			if (view != null) {
-				Inventory topInventory = view.getTopInventory();
-				if (topInventory.getHolder() instanceof MenuInventoryHolder) {
-					MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
+        if (changedVariables) {
+            InventoryView view = player.getOpenInventory();
+            if (view != null) {
+                Inventory topInventory = view.getTopInventory();
+                if (topInventory.getHolder() instanceof MenuInventoryHolder) {
+                    MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
 
-					if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
-						((ExtendedIconMenu) menuHolder.getIconMenu()).refresh(player, topInventory);
-					}
-				}
-			}
-		}
+                    if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
+                        ((ExtendedIconMenu) menuHolder.getIconMenu()).refresh(player, topInventory);
+                    }
+                }
+            }
+        }
 
-		return super.onClick(player);
-	}
+        return super.onClick(player);
+    }
 }

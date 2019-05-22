@@ -5,62 +5,62 @@ package com.gmail.filoghost.chestcommands.util.nbt;
  */
 public final class NBTString extends NBTTag implements Cloneable {
 
-	private String value;
+    private String value;
 
-	public NBTString(String value) {
-		setValue(value);
-	}
+    public NBTString(String value) {
+        setValue(value);
+    }
 
-	@Override
-	public String getValue() {
-		return value;
-	}
+    /**
+     * Converts a regular string into a Mojangson string by surrounding it with quotes and escaping backslashes and
+     * quotes inside it.
+     *
+     * @param str the string
+     * @return the Mojangson string
+     */
+    public static String toMSONString(String str) {
+        StringBuilder builder = new StringBuilder("\"");
+        char[] chars = str.toCharArray();
+        for (char c : chars) {
+            if ((c == '\\') || (c == '"')) {
+                builder.append('\\');
+            }
+            builder.append(c);
+        }
+        return builder.append('\"').toString();
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    @Override
+    public String getValue() {
+        return value;
+    }
 
-	@Override
-	public NBTType getType() {
-		return NBTType.STRING;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	// MISC
+    // MISC
 
-	@Override
-	public int hashCode() {
-		return value.hashCode();
-	}
+    @Override
+    public NBTType getType() {
+        return NBTType.STRING;
+    }
 
-	@Override
-	public String toMSONString() {
-		return toMSONString(value);
-	}
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
 
-	@Override
-	public NBTString clone() {
-		return new NBTString(value);
-	}
+    @Override
+    public String toMSONString() {
+        return toMSONString(value);
+    }
 
-	// UTIL
+    // UTIL
 
-	/**
-	 * Converts a regular string into a Mojangson string by surrounding it with quotes and escaping backslashes and
-	 * quotes inside it.
-	 *
-	 * @param str the string
-	 * @return the Mojangson string
-	 */
-	public static String toMSONString(String str) {
-		StringBuilder builder = new StringBuilder("\"");
-		char[] chars = str.toCharArray();
-		for (char c : chars) {
-			if ((c == '\\') || (c == '"')) {
-				builder.append('\\');
-			}
-			builder.append(c);
-		}
-		return builder.append('\"').toString();
-	}
+    @Override
+    public NBTString clone() {
+        return new NBTString(value);
+    }
 
 }

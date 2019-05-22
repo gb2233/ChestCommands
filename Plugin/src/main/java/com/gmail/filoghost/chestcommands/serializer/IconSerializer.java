@@ -30,220 +30,219 @@ import java.util.List;
 
 public class IconSerializer {
 
-	public static Icon loadIconFromSection(ConfigurationSection section, String iconName, String menuFileName, ErrorLogger errorLogger) {
-		Validate.notNull(section, "ConfigurationSection cannot be null");
+    public static Icon loadIconFromSection(ConfigurationSection section, String iconName, String menuFileName, ErrorLogger errorLogger) {
+        Validate.notNull(section, "ConfigurationSection cannot be null");
 
-		// The icon is valid even without a Material
-		ExtendedIcon icon = new ExtendedIcon();
+        // The icon is valid even without a Material
+        ExtendedIcon icon = new ExtendedIcon();
 
-		if (section.isSet(Nodes.ID)) {
-			try {
-				ItemStackReader itemReader = new ItemStackReader(section.getString(Nodes.ID), true);
-				icon.setMaterial(itemReader.getMaterial());
-				icon.setDataValue(itemReader.getDataValue());
-				icon.setAmount(itemReader.getAmount());
-			} catch (FormatException e) {
-				errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid ID: " + e.getMessage());
-			}
-		}
+        if (section.isSet(Nodes.ID)) {
+            try {
+                ItemStackReader itemReader = new ItemStackReader(section.getString(Nodes.ID), true);
+                icon.setMaterial(itemReader.getMaterial());
+                icon.setDataValue(itemReader.getDataValue());
+                icon.setAmount(itemReader.getAmount());
+            } catch (FormatException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid ID: " + e.getMessage());
+            }
+        }
 
-		if (section.isSet(Nodes.AMOUNT)) {
-			icon.setAmount(section.getInt(Nodes.AMOUNT));
-		}
+        if (section.isSet(Nodes.AMOUNT)) {
+            icon.setAmount(section.getInt(Nodes.AMOUNT));
+        }
 
-		if (section.isSet(Nodes.DURABILITY)) {
-			icon.setDataValue((short) section.getInt(Nodes.DURABILITY));
-		} else if (section.isSet(Nodes.DATA_VALUE)) { // Alias
-			icon.setDataValue((short) section.getInt(Nodes.DATA_VALUE));
-		}
+        if (section.isSet(Nodes.DURABILITY)) {
+            icon.setDataValue((short) section.getInt(Nodes.DURABILITY));
+        } else if (section.isSet(Nodes.DATA_VALUE)) { // Alias
+            icon.setDataValue((short) section.getInt(Nodes.DATA_VALUE));
+        }
 
-		if (section.isSet(Nodes.NBT_DATA)) {
-			String nbtData = section.getString(Nodes.NBT_DATA);
-			try {
-				// Check that NBT has valid syntax before applying it to the icon
-				MojangsonParser.parse(nbtData);
-				icon.setNBTData(nbtData);
-			} catch (MojangsonParseException e) {
-				errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid NBT-DATA: " + e.getMessage());
-			}
-		}
+        if (section.isSet(Nodes.NBT_DATA)) {
+            String nbtData = section.getString(Nodes.NBT_DATA);
+            try {
+                // Check that NBT has valid syntax before applying it to the icon
+                MojangsonParser.parse(nbtData);
+                icon.setNBTData(nbtData);
+            } catch (MojangsonParseException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid NBT-DATA: " + e.getMessage());
+            }
+        }
 
-		icon.setName(AsciiPlaceholders.placeholdersToSymbols(FormatUtils.colorizeName(section.getString(Nodes.NAME))));
-		icon.setLore(AsciiPlaceholders.placeholdersToSymbols(FormatUtils.colorizeLore(section.getStringList(Nodes.LORE))));
+        icon.setName(AsciiPlaceholders.placeholdersToSymbols(FormatUtils.colorizeName(section.getString(Nodes.NAME))));
+        icon.setLore(AsciiPlaceholders.placeholdersToSymbols(FormatUtils.colorizeLore(section.getStringList(Nodes.LORE))));
 
-		if (section.isSet(Nodes.ENCHANT)) {
-			icon.setEnchantments(EnchantmentSerializer.loadEnchantments(section.getString(Nodes.ENCHANT), iconName, menuFileName, errorLogger));
-		}
+        if (section.isSet(Nodes.ENCHANT)) {
+            icon.setEnchantments(EnchantmentSerializer.loadEnchantments(section.getString(Nodes.ENCHANT), iconName, menuFileName, errorLogger));
+        }
 
-		if (section.isSet(Nodes.COLOR)) {
-			try {
-				icon.setColor(ItemUtils.parseColor(section.getString(Nodes.COLOR)));
-			} catch (FormatException e) {
-				errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid COLOR: " + e.getMessage());
-			}
-		}
+        if (section.isSet(Nodes.COLOR)) {
+            try {
+                icon.setColor(ItemUtils.parseColor(section.getString(Nodes.COLOR)));
+            } catch (FormatException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid COLOR: " + e.getMessage());
+            }
+        }
 
-		icon.setSkullOwner(section.getString(Nodes.SKULL_OWNER));
+        icon.setSkullOwner(section.getString(Nodes.SKULL_OWNER));
 
-		if (section.isSet(Nodes.BANNER_COLOR)) {
-			try {
-				icon.setBannerColor(ItemUtils.parseDyeColor(section.getString(Nodes.BANNER_COLOR)));
-			} catch (FormatException e) {
-				errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid BASE-COLOUR: " + e.getMessage());
-			}
-		}
+        if (section.isSet(Nodes.BANNER_COLOR)) {
+            try {
+                icon.setBannerColor(ItemUtils.parseDyeColor(section.getString(Nodes.BANNER_COLOR)));
+            } catch (FormatException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid BASE-COLOUR: " + e.getMessage());
+            }
+        }
 
-		if (section.isSet(Nodes.BANNER_PATTERNS)) {
-			try {
-				icon.setBannerPatterns(ItemUtils.parseBannerPatternList(section.getStringList(Nodes.BANNER_PATTERNS)));
-			} catch (FormatException e) {
-				errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid PATTERN-LIST: " + e.getMessage());
-			}
-		}
+        if (section.isSet(Nodes.BANNER_PATTERNS)) {
+            try {
+                icon.setBannerPatterns(ItemUtils.parseBannerPatternList(section.getStringList(Nodes.BANNER_PATTERNS)));
+            } catch (FormatException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid PATTERN-LIST: " + e.getMessage());
+            }
+        }
 
-		icon.setPermission(section.getString(Nodes.PERMISSION));
-		icon.setPermissionMessage(FormatUtils.addColors(section.getString(Nodes.PERMISSION_MESSAGE)));
-		icon.setViewPermission(section.getString(Nodes.VIEW_PERMISSION));
+        icon.setPermission(section.getString(Nodes.PERMISSION));
+        icon.setPermissionMessage(FormatUtils.addColors(section.getString(Nodes.PERMISSION_MESSAGE)));
+        icon.setViewPermission(section.getString(Nodes.VIEW_PERMISSION));
 
-		boolean closeOnClick = !section.getBoolean(Nodes.KEEP_OPEN);
-		icon.setCloseOnClick(closeOnClick);
+        boolean closeOnClick = !section.getBoolean(Nodes.KEEP_OPEN);
+        icon.setCloseOnClick(closeOnClick);
 
-		if (section.isSet(Nodes.COMMAND)) {
+        if (section.isSet(Nodes.COMMAND)) {
 
-			List<IconCommand> commands;
+            List<IconCommand> commands;
 
-			if (section.isList(Nodes.COMMAND)) {
-				commands = Utils.newArrayList();
+            if (section.isList(Nodes.COMMAND)) {
+                commands = Utils.newArrayList();
 
-				for (String commandString : section.getStringList(Nodes.COMMAND)) {
-					if (commandString.isEmpty()) {
-						continue;
-					}
-					commands.add(CommandSerializer.matchCommand(commandString));
-				}
+                for (String commandString : section.getStringList(Nodes.COMMAND)) {
+                    if (commandString.isEmpty()) {
+                        continue;
+                    }
+                    commands.add(CommandSerializer.matchCommand(commandString));
+                }
 
-			} else {
-				commands = CommandSerializer.readCommands(section.getString(Nodes.COMMAND));
-			}
+            } else {
+                commands = CommandSerializer.readCommands(section.getString(Nodes.COMMAND));
+            }
 
-			icon.setClickHandler(new CommandsClickHandler(commands, closeOnClick));
-		}
+            icon.setClickHandler(new CommandsClickHandler(commands, closeOnClick));
+        }
 
-		double price = section.getDouble(Nodes.PRICE);
-		if (price > 0.0) {
-			icon.setMoneyPrice(price);
-		} else if (price < 0.0) {
-			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has a negative PRICE: " + price);
-		}
+        double price = section.getDouble(Nodes.PRICE);
+        if (price > 0.0) {
+            icon.setMoneyPrice(price);
+        } else if (price < 0.0) {
+            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has a negative PRICE: " + price);
+        }
 
-		int points = section.getInt(Nodes.POINTS);
-		if (points > 0) {
-			icon.setPlayerPointsPrice(points);
-		} else if (points < 0) {
-			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative POINTS: " + points);
-		}
+        int points = section.getInt(Nodes.POINTS);
+        if (points > 0) {
+            icon.setPlayerPointsPrice(points);
+        } else if (points < 0) {
+            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative POINTS: " + points);
+        }
 
-		long tokens = section.getLong(Nodes.TOKENS);
-		if (tokens > 0) {
-			icon.setTokenManagerPrice(tokens);
-		} else if (tokens < 0) {
-			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative TOKENS: " + points);
-		}
+        long tokens = section.getLong(Nodes.TOKENS);
+        if (tokens > 0) {
+            icon.setTokenManagerPrice(tokens);
+        } else if (tokens < 0) {
+            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative TOKENS: " + points);
+        }
 
-		int levels = section.getInt(Nodes.EXP_LEVELS);
-		if (levels > 0) {
-			icon.setExpLevelsPrice(levels);
-		} else if (levels < 0) {
-			errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative LEVELS: " + levels);
-		}
+        int levels = section.getInt(Nodes.EXP_LEVELS);
+        if (levels > 0) {
+            icon.setExpLevelsPrice(levels);
+        } else if (levels < 0) {
+            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative LEVELS: " + levels);
+        }
 
-		if (section.isSet(Nodes.REQUIRED_ITEM)) {
-			try {
-				ItemStackReader itemReader = new ItemStackReader(section.getString(Nodes.REQUIRED_ITEM), true);
-				RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(), itemReader.getAmount());
-				if (itemReader.hasExplicitDataValue()) {
-					requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
-				}
-				icon.setRequiredItem(requiredItem);
-			} catch (FormatException e) {
-				errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid REQUIRED-ITEM: " + e.getMessage());
-			}
-		}
+        if (section.isSet(Nodes.REQUIRED_ITEM)) {
+            try {
+                ItemStackReader itemReader = new ItemStackReader(section.getString(Nodes.REQUIRED_ITEM), true);
+                RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(), itemReader.getAmount());
+                if (itemReader.hasExplicitDataValue()) {
+                    requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
+                }
+                icon.setRequiredItem(requiredItem);
+            } catch (FormatException e) {
+                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid REQUIRED-ITEM: " + e.getMessage());
+            }
+        }
 
-		return icon;
-	}
+        return icon;
+    }
 
-	public static class Coords {
+    public static Coords loadCoordsFromSection(ConfigurationSection section) {
+        Validate.notNull(section, "ConfigurationSection cannot be null");
 
-		private Integer x, y;
+        Integer x = null;
+        Integer y = null;
 
-		protected Coords(Integer x, Integer y) {
-			this.x = x;
-			this.y = y;
-		}
+        if (section.isInt(Nodes.POSITION_X)) {
+            x = section.getInt(Nodes.POSITION_X);
+        }
 
-		public boolean isSetX() {
-			return x != null;
-		}
+        if (section.isInt(Nodes.POSITION_Y)) {
+            y = section.getInt(Nodes.POSITION_Y);
+        }
 
-		public boolean isSetY() {
-			return y != null;
-		}
+        return new Coords(x, y);
+    }
 
-		public Integer getX() {
-			return x;
-		}
+    public static class Coords {
 
-		public Integer getY() {
-			return y;
-		}
-	}
+        private Integer x, y;
 
-	private static class Nodes {
+        protected Coords(Integer x, Integer y) {
+            this.x = x;
+            this.y = y;
+        }
 
-		public static final String
-				ID = "ID",
-				AMOUNT = "AMOUNT",
-				DATA_VALUE = "DATA-VALUE",
-				DURABILITY = "DURABILITY",
-				NBT_DATA = "NBT-DATA",
-				NAME = "NAME",
-				LORE = "LORE",
-				ENCHANT = "ENCHANTMENT",
-				COLOR = "COLOR",
-				SKULL_OWNER = "SKULL-OWNER",
-				BANNER_COLOR = "BANNER-COLOUR",
-				BANNER_PATTERNS = "BANNER-PATTERNS",
-				COMMAND = "COMMAND",
-				PRICE = "PRICE",
-				POINTS = "POINTS",
-				TOKENS = "TOKENS",
-				EXP_LEVELS = "LEVELS",
-				REQUIRED_ITEM = "REQUIRED-ITEM",
-				PERMISSION = "PERMISSION",
-				PERMISSION_MESSAGE = "PERMISSION-MESSAGE",
-				VIEW_PERMISSION = "VIEW-PERMISSION",
-				KEEP_OPEN = "KEEP-OPEN",
-				POSITION_X = "POSITION-X",
-				POSITION_Y = "POSITION-Y";
-	}
+        public boolean isSetX() {
+            return x != null;
+        }
 
+        public boolean isSetY() {
+            return y != null;
+        }
 
-	public static Coords loadCoordsFromSection(ConfigurationSection section) {
-		Validate.notNull(section, "ConfigurationSection cannot be null");
+        public Integer getX() {
+            return x;
+        }
 
-		Integer x = null;
-		Integer y = null;
+        public Integer getY() {
+            return y;
+        }
+    }
 
-		if (section.isInt(Nodes.POSITION_X)) {
-			x = section.getInt(Nodes.POSITION_X);
-		}
+    private static class Nodes {
 
-		if (section.isInt(Nodes.POSITION_Y)) {
-			y = section.getInt(Nodes.POSITION_Y);
-		}
-
-		return new Coords(x, y);
-	}
+        public static final String
+                ID = "ID",
+                AMOUNT = "AMOUNT",
+                DATA_VALUE = "DATA-VALUE",
+                DURABILITY = "DURABILITY",
+                NBT_DATA = "NBT-DATA",
+                NAME = "NAME",
+                LORE = "LORE",
+                ENCHANT = "ENCHANTMENT",
+                COLOR = "COLOR",
+                SKULL_OWNER = "SKULL-OWNER",
+                BANNER_COLOR = "BANNER-COLOUR",
+                BANNER_PATTERNS = "BANNER-PATTERNS",
+                COMMAND = "COMMAND",
+                PRICE = "PRICE",
+                POINTS = "POINTS",
+                TOKENS = "TOKENS",
+                EXP_LEVELS = "LEVELS",
+                REQUIRED_ITEM = "REQUIRED-ITEM",
+                PERMISSION = "PERMISSION",
+                PERMISSION_MESSAGE = "PERMISSION-MESSAGE",
+                VIEW_PERMISSION = "VIEW-PERMISSION",
+                KEEP_OPEN = "KEEP-OPEN",
+                POSITION_X = "POSITION-X",
+                POSITION_Y = "POSITION-Y";
+    }
 
 }

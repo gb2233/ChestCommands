@@ -1,11 +1,10 @@
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.Utils;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class GivePointsIconCommand extends IconCommand {
 

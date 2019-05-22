@@ -21,32 +21,32 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryUtils {
 
-	public static boolean hasInventoryFull(Player player) {
-		return player.getInventory().firstEmpty() == -1;
-	}
+    public static boolean hasInventoryFull(Player player) {
+        return player.getInventory().firstEmpty() == -1;
+    }
 
-	public static boolean containsAtLeast(Inventory inv, Material material, int minAmount) {
-		int contained = 0;
+    public static boolean containsAtLeast(Inventory inv, Material material, int minAmount) {
+        int contained = 0;
 
-		for (ItemStack item : inv.getContents()) {
-			if (item != null && item.getType() == material) {
-				contained += item.getAmount();
-			}
-		}
+        for (ItemStack item : inv.getContents()) {
+            if (item != null && item.getType() == material) {
+                contained += item.getAmount();
+            }
+        }
 
-		return contained >= minAmount;
-	}
+        return contained >= minAmount;
+    }
 
-	public static boolean containsAtLeast(Inventory inv, Material material, int minAmount, short data) {
-		int contained = 0;
+    public static boolean containsAtLeast(Inventory inv, Material material, int minAmount, short data) {
+        int contained = 0;
 
-		for (ItemStack item : inv.getContents()) {
-			if (item != null && item.getType() == material && item.getDurability() == data) {
-				contained += item.getAmount();
-			}
-		}
+        for (ItemStack item : inv.getContents()) {
+            if (item != null && item.getType() == material && item.getDurability() == data) {
+                contained += item.getAmount();
+            }
+        }
 
-		return contained >= minAmount;
-	}
+        return contained >= minAmount;
+    }
 
 }

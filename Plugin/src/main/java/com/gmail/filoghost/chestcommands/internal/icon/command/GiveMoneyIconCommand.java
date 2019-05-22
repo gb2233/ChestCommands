@@ -22,42 +22,42 @@ import org.bukkit.entity.Player;
 
 public class GiveMoneyIconCommand extends IconCommand {
 
-	private double moneyToGive;
-	private String errorMessage;
+    private double moneyToGive;
+    private String errorMessage;
 
-	public GiveMoneyIconCommand(String command) {
-		super(command);
-		if (!hasVariables) {
-			parseMoney(super.command);
-		}
-	}
+    public GiveMoneyIconCommand(String command) {
+        super(command);
+        if (!hasVariables) {
+            parseMoney(super.command);
+        }
+    }
 
-	private void parseMoney(String command) {
-		if (!Utils.isValidPositiveDouble(command)) {
-			errorMessage = ChatColor.RED + "Invalid money amount: " + command;
-			return;
-		}
-		errorMessage = null;
-		moneyToGive = Double.parseDouble(command);
-	}
+    private void parseMoney(String command) {
+        if (!Utils.isValidPositiveDouble(command)) {
+            errorMessage = ChatColor.RED + "Invalid money amount: " + command;
+            return;
+        }
+        errorMessage = null;
+        moneyToGive = Double.parseDouble(command);
+    }
 
-	@Override
-	public boolean execute(Player player) {
-		if (hasVariables) {
-			parseMoney(getParsedCommand(player));
-		}
-		if (errorMessage != null) {
-			player.sendMessage(errorMessage);
-			return false;
-		}
+    @Override
+    public boolean execute(Player player) {
+        if (hasVariables) {
+            parseMoney(getParsedCommand(player));
+        }
+        if (errorMessage != null) {
+            player.sendMessage(errorMessage);
+            return false;
+        }
 
-		if (EconomyBridge.hasValidEconomy()) {
-			EconomyBridge.giveMoney(player, moneyToGive);
-			return true;
-		} else {
-			player.sendMessage(ChatColor.RED + "Vault with a compatible economy plugin not found. Please inform the staff.");
-			return false;
-		}
-	}
+        if (EconomyBridge.hasValidEconomy()) {
+            EconomyBridge.giveMoney(player, moneyToGive);
+            return true;
+        } else {
+            player.sendMessage(ChatColor.RED + "Vault with a compatible economy plugin not found. Please inform the staff.");
+            return false;
+        }
+    }
 
 }

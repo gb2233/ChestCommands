@@ -19,24 +19,24 @@ import org.bukkit.entity.Player;
 
 public class ExecuteCommandsTask implements Runnable {
 
-	private Player player;
-	private Icon icon;
+    private Player player;
+    private Icon icon;
 
 
-	public ExecuteCommandsTask(Player player, Icon icon) {
-		this.player = player;
-		this.icon = icon;
-	}
+    public ExecuteCommandsTask(Player player, Icon icon) {
+        this.player = player;
+        this.icon = icon;
+    }
 
 
-	@Override
-	public void run() {
-		boolean close = icon.onClick(player);
+    @Override
+    public void run() {
+        boolean close = icon.onClick(player);
 
-		if (close) {
-			player.closeInventory();
-		}
-	}
+        if (close) {
+            player.closeInventory();
+        }
+    }
 
 
 }
