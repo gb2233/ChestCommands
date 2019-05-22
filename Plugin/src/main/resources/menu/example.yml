@@ -237,7 +237,7 @@ banner:
 
 tokens-give:
   COMMAND: 'tell: &aYou have paid 50 tokens for this command!; give: diamond_block'
-  NAME: '&eTokens'
+  NAME: '&bTokens'
   LORE:
     - 'This command will be executed'
     - 'only if you have at least 50 tokens!'
@@ -251,7 +251,7 @@ tokens-give:
 tokens-take:
   REQUIRED-ITEM: 'diamond_block'
   COMMAND: 'tell: &aYou have been paid 50 tokens; givetokens: 50'
-  NAME: '&Tokens & Required item'
+  NAME: '&bTokens & Required item'
   LORE:
     - 'This command is the opposite of the previous.'
     - 'It will take you a diamond block and give you 50 tokens.'

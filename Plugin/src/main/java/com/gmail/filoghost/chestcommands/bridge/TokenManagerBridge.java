@@ -53,7 +53,7 @@ public class TokenManagerBridge {
         if (!hasValidPlugin()) throw new IllegalStateException("TokenManager plugin was not found!");
         if (tokens < 0) throw new IllegalArgumentException("Invalid amount of tokens: " + tokens);
 
-        boolean result = tokenManager.removeTokens(player, tokens);
+        boolean result = tokenManager.addTokens(player, tokens);
 
         MenuUtils.refreshMenu(player);
 
