@@ -45,6 +45,7 @@ public class RefreshMenusTask implements Runnable {
                     if (extMenu.getRefreshTicks() > 0) {
                         if (elapsedTenths % extMenu.getRefreshTicks() == 0) {
                             extMenu.refresh(player, topInventory);
+                            player.updateInventory();
                         }
                     }
                 }

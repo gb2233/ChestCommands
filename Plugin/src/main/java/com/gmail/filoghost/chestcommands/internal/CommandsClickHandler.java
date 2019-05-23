@@ -17,6 +17,7 @@ package com.gmail.filoghost.chestcommands.internal;
 import com.gmail.filoghost.chestcommands.api.ClickHandler;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.OpenIconCommand;
+import com.gmail.filoghost.chestcommands.internal.icon.command.RefreshIconCommand;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class CommandsClickHandler implements ClickHandler {
 
         if (commands != null && commands.size() > 0) {
             for (IconCommand command : commands) {
-                if (command instanceof OpenIconCommand) {
+                if (command instanceof OpenIconCommand || command instanceof RefreshIconCommand) {
                     // Fix GUI closing if KEEP-OPEN is not set, and a command should open another GUI
                     this.closeOnClick = false;
                 }
