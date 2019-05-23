@@ -15,9 +15,7 @@
 package com.gmail.filoghost.chestcommands.config.yaml;
 
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
-import org.bukkit.configuration.InvalidConfigurationException;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -46,7 +44,7 @@ public class SpecialConfig {
 
         // Check if the configuration was initialized
         if (defaultValuesMap == null) {
-            defaultValuesMap = new HashMap<String, Object>();
+            defaultValuesMap = new HashMap<>();
 
             // Put the values in the default values map
             for (Field field : getClass().getDeclaredFields()) {

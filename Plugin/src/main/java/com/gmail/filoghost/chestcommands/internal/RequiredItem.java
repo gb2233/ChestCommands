@@ -86,7 +86,7 @@ public class RequiredItem {
         int itemsToTake = amount; //start from amount and decrease
 
         ItemStack[] contents = player.getInventory().getContents();
-        ItemStack current = null;
+        ItemStack current;
 
 
         for (int i = 0; i < contents.length; i++) {

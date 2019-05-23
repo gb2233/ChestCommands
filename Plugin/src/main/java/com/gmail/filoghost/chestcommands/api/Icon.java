@@ -56,7 +56,7 @@ public class Icon {
     private ItemStack cachedItem; // When there are no variables, we don't recreate the item
 
     public Icon() {
-        enchantments = new HashMap<Enchantment, Integer>();
+        enchantments = new HashMap<>();
         closeOnClick = true;
         amount = 1;
     }
@@ -113,7 +113,7 @@ public class Icon {
     }
 
     public boolean hasLore() {
-        return lore != null && lore.size() > 0;
+        return lore != null && !lore.isEmpty();
     }
 
     public List<String> getLore() {
@@ -143,7 +143,7 @@ public class Icon {
     }
 
     public Map<Enchantment, Integer> getEnchantments() {
-        return new HashMap<Enchantment, Integer>(enchantments);
+        return new HashMap<>(enchantments);
     }
 
     public void setEnchantments(Map<Enchantment, Integer> enchantments) {

@@ -37,7 +37,7 @@ public class InventoryListener implements Listener {
 
     private static Map<Player, Long> antiClickSpam = Utils.newHashMap();
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent event) {
         if (event.hasItem() && event.getAction() != Action.PHYSICAL) {
             for (BoundItem boundItem : ChestCommands.getBoundItems()) {
@@ -52,7 +52,7 @@ public class InventoryListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getInventory().getHolder() instanceof MenuInventoryHolder) {
 

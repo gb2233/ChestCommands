@@ -100,7 +100,7 @@ public class ExtendedIconMenu extends IconMenu {
     public void refresh(Player player, Inventory inventory) {
         try {
             for (int i = 0; i < icons.length; i++) {
-                if (icons[i] != null && icons[i] instanceof ExtendedIcon) {
+                if (icons[i] instanceof ExtendedIcon) {
                     ExtendedIcon extIcon = (ExtendedIcon) icons[i];
 
                     if (extIcon.hasViewPermission() || extIcon.hasVariables()) {
