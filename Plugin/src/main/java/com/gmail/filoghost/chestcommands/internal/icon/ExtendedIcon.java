@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExtendedIcon extends Icon {
@@ -42,7 +43,7 @@ public class ExtendedIcon extends Icon {
 
     private double moneyPrice;
     private int expLevelsPrice;
-    private RequiredItem requiredItem;
+    private List<RequiredItem> requiredItems = new ArrayList<>();
     private int playerPointsPrice;
     private long tokenManagerPrice;
 
@@ -146,12 +147,12 @@ public class ExtendedIcon extends Icon {
         this.expLevelsPrice = expLevelsPrice;
     }
 
-    public RequiredItem getRequiredItem() {
-        return requiredItem;
+    public List<RequiredItem> getRequiredItems() {
+        return requiredItems;
     }
 
-    public void setRequiredItem(RequiredItem requiredItem) {
-        this.requiredItem = requiredItem;
+    public void addRequiredItem(RequiredItem requiredItem) {
+        this.requiredItems.add(requiredItem);
     }
 
     public String calculateName(Player pov) {
@@ -220,17 +221,22 @@ public class ExtendedIcon extends Icon {
             }
         }
 
-        if (requiredItem != null) {
+        if (!requiredItems.isEmpty()) {
 
-            if (!requiredItem.hasItem(player)) {
-                player.sendMessage(ChestCommands.getLang().no_required_item
-                        .replace("{material}", MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
-                        .replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
-                        .replace("{amount}", Integer.toString(requiredItem.getAmount()))
-                        .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short.toString(requiredItem.getDataValue()) : ChestCommands.getLang().any)
-                );
-                return closeOnClick;
+            for (RequiredItem requiredItem : requiredItems) {
+
+                if (!requiredItem.hasItem(player)) {
+                    player.sendMessage(ChestCommands.getLang().no_required_item
+                            .replace("{material}", MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
+                            .replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
+                            .replace("{amount}", Integer.toString(requiredItem.getAmount()))
+                            .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short.toString(requiredItem.getDataValue()) : ChestCommands.getLang().any)
+                    );
+                    return closeOnClick;
+                }
+
             }
+
         }
 
         // Take the money, the points, the tokens and the required item
@@ -265,8 +271,8 @@ public class ExtendedIcon extends Icon {
             changedVariables = true;
         }
 
-        if (requiredItem != null) {
-            requiredItem.takeItem(player);
+        if (!requiredItems.isEmpty()) {
+            requiredItems.forEach(requiredItem -> requiredItem.takeItem(player));
         }
 
         if (changedVariables) {

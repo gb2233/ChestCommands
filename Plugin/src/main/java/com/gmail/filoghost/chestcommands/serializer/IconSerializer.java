@@ -158,15 +158,17 @@ public class IconSerializer {
         }
 
         if (section.isSet(Nodes.REQUIRED_ITEM)) {
-            try {
-                ItemStackReader itemReader = new ItemStackReader(section.getString(Nodes.REQUIRED_ITEM), true);
-                RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(), itemReader.getAmount());
-                if (itemReader.hasExplicitDataValue()) {
-                    requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
+            for (String item : section.getString(Nodes.REQUIRED_ITEM).split(";")) {
+                try {
+                    ItemStackReader itemReader = new ItemStackReader(item, true);
+                    RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(), itemReader.getAmount());
+                    if (itemReader.hasExplicitDataValue()) {
+                        requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
+                    }
+                    icon.addRequiredItem(requiredItem);
+                } catch (FormatException e) {
+                    errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid REQUIRED-ITEM: " + e.getMessage());
                 }
-                icon.setRequiredItem(requiredItem);
-            } catch (FormatException e) {
-                errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid REQUIRED-ITEM: " + e.getMessage());
             }
         }
 

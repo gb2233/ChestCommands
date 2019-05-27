@@ -285,6 +285,18 @@ points-take:
   POSITION-Y: 3
 
 
+multiple-required-items:
+  REQUIRED-ITEM: 'gold_block;diamond_block'
+  COMMAND: 'tell: &aThank you :)'
+  NAME: '&dMultiple required items'
+  LORE:
+    - 'This command only runs when you have a diamond block and a golden block.'
+  ID: diamond
+  POSITION-X: 4
+  POSITION-Y: 3
+  ENCHANTMENT: durability, 1
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
