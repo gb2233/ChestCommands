@@ -223,18 +223,24 @@ public class ExtendedIcon extends Icon {
 
         if (!requiredItems.isEmpty()) {
 
+            boolean notHasItem = false;
+
             for (RequiredItem requiredItem : requiredItems) {
 
                 if (!requiredItem.hasItem(player)) {
+                    notHasItem = true;
                     player.sendMessage(ChestCommands.getLang().no_required_item
                             .replace("{material}", MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
                             .replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
                             .replace("{amount}", Integer.toString(requiredItem.getAmount()))
                             .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short.toString(requiredItem.getDataValue()) : ChestCommands.getLang().any)
                     );
-                    return closeOnClick;
                 }
 
+            }
+
+            if (notHasItem) {
+                return closeOnClick;
             }
 
         }
