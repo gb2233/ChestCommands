@@ -14,31 +14,22 @@
  */
 package com.gmail.filoghost.chestcommands.serializer;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
+import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
+import com.gmail.filoghost.chestcommands.internal.icon.command.*;
+import com.gmail.filoghost.chestcommands.util.ErrorLogger;
+import com.gmail.filoghost.chestcommands.util.Utils;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.gmail.filoghost.chestcommands.ChestCommands;
-import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.BroadcastIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.ConsoleIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.DragonBarIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.GiveIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.GiveMoneyIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.OpIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.OpenIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.PlayerIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.ServerIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.SoundIconCommand;
-import com.gmail.filoghost.chestcommands.internal.icon.command.TellIconCommand;
-import com.gmail.filoghost.chestcommands.util.ErrorLogger;
-import com.gmail.filoghost.chestcommands.util.Utils;
-
 public class CommandSerializer {
 
 	private static Map<Pattern, Class<? extends IconCommand>> commandTypesMap = Utils.newHashMap();
+
 	static {
 		commandTypesMap.put(commandPattern("console:"), ConsoleIconCommand.class);
 		commandTypesMap.put(commandPattern("op:"), OpIconCommand.class);
