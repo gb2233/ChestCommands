@@ -79,6 +79,7 @@ public class ChestCommands extends JavaPlugin {
 	private static Configuration config;
 	private static List<String> menuList;
 	private static File menusFolder;
+	public static DBHandler handler;
 	
 	@Override
 	public void onEnable() {
@@ -137,11 +138,20 @@ public class ChestCommands extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
 		Bukkit.getPluginManager().registerEvents(new SignListener(), this);
-		
-		CommandFramework.register(this, new CommandHandler("chestcommands"));
+
+        if(config.getBoolean("use-mysql")) {
+            try {
+                handler = new DBHandler();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 		
 		ErrorLogger errorLogger = new ErrorLogger();
 		load(errorLogger);
+        CommandFramework.register(this, new CommandHandler("chestcommands"));
 		
 		lastReloadErrors = errorLogger.getSize();
 		if (errorLogger.hasErrors()) {
@@ -156,12 +166,7 @@ public class ChestCommands extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		closeAllMenus();
-		try {
-			if(connection.isValid(4))
-				connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+        DBHandler.shutdown();
 	}
 	
 	
@@ -266,46 +271,23 @@ public class ChestCommands extends JavaPlugin {
 			}
 		}
 
-		menuList = config.getStringList("menus");
 
-		creds = new MysqlData(config.getString("db.host"), config.getInt("db.port"), config.getString("db.database"), config.getString("db.username"), config.getString("db.password"), config.getString("db.table-name"));
-		if(config.getBoolean("use-mysql")) {
-			try {
-				openConnection();
-                createIfNonExistent();
-				if(config.getString("action-on-start").equalsIgnoreCase("import")) {
-					CommandHandler.Import(menuList);
-					instance.getLogger().info("Import on startup was successful");
-				}
-				else if(config.getString("action-on-start").equalsIgnoreCase("export")) {
-					CommandHandler.Export(menuList);
-					instance.getLogger().info("Export on startup was successful");
-				}
+        menuList = config.getStringList("menus");
 
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+        if(config.getString("action-on-start").equalsIgnoreCase("import")) {
+            DBHandler.Import(menuList);
+            instance.getLogger().info("Import on startup was successful");
+        }
+        else if(config.getString("action-on-start").equalsIgnoreCase("export")) {
+            DBHandler.Export(menuList);
+            instance.getLogger().info("Export on startup was successful");
+        }
 
-		}
-		// Register the BungeeCord plugin channel
+        // Register the BungeeCord plugin channel
 		if (!Bukkit.getMessenger().isOutgoingChannelRegistered(this, "BungeeCord")) {
 			Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		}
 	}
-
-
-    public static void createIfNonExistent() {
-        try {
-            Statement statement = ChestCommands.GetConnection().createStatement();
-            String queryText = "CREATE TABLE IF NOT EXISTS `" + ChestCommands.GetMysqlCreds().GetTableName() + "` ( `FILENAME` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , `CFGSTRING` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , PRIMARY KEY (`FILENAME`));";
-            statement.executeUpdate(queryText);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
 
 	/**
 	 * Loads all the configuration files recursively into a list.
@@ -324,28 +306,8 @@ public class ChestCommands extends JavaPlugin {
 		return list;
 	}
 
-
-	private void openConnection() throws SQLException, ClassNotFoundException {
-		if (connection != null && !connection.isClosed()) {
-			return;
-		}
-		synchronized (this) {
-			if (connection != null && !connection.isClosed()) {
-				return;
-			}
-			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://" + creds.GetHost() + ":" + creds.GetPort() + "/" + creds.GetDatabase(), creds.GetUsername(), creds.GetPassword());
-		}
-
-	}
-	public static MysqlData GetMysqlCreds() {
-		return creds;
-	}
 	public static List<String> GetMenuList() {
 		return menuList;
-	}
-	public static Connection GetConnection() {
-		return connection;
 	}
 	public static Configuration GetConfig() {
 		return config;

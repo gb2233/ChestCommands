@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.command;
 
+import com.gmail.filoghost.chestcommands.util.DBHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -27,14 +28,6 @@ import com.gmail.filoghost.chestcommands.command.framework.CommandValidate;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.task.ErrorLoggerTask;
 import com.gmail.filoghost.chestcommands.util.ErrorLogger;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Base64;
-import java.util.List;
 
 public class CommandHandler extends CommandFramework {
 
@@ -148,16 +141,16 @@ public class CommandHandler extends CommandFramework {
 		}
 
 
-		if (args[0].equalsIgnoreCase("migrate")) {
+		if (args[0].equalsIgnoreCase("migrate") && ChestCommands.getInstance().getConfig().getBoolean("use-mysql",false)) {
 			CommandValidate.dbEnabled("Please enable 'use-mysql' to use this feature");
 			CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "migrate"), "You don't have permission.");
 			CommandValidate.minLength(args, 2, "Correct usage: /" + label + "migrate <import/export>");
 			if (args[1].equalsIgnoreCase("export")) {
-				Export(ChestCommands.GetMenuList());
+				DBHandler.Export(ChestCommands.GetMenuList());
 				sender.sendMessage(ChatColor.RED + "Export Completed!");
 			}
 			else if(args[1].equalsIgnoreCase("import")) {
-				Import(ChestCommands.GetMenuList());
+				DBHandler.Import(ChestCommands.GetMenuList());
 				sender.sendMessage(ChatColor.RED + "Import Completed!");
 			}
 			return;
@@ -165,77 +158,6 @@ public class CommandHandler extends CommandFramework {
 
 
 		sender.sendMessage(ChatColor.RED + "Unknown sub-command \"" + args[0] + "\".");
-	}
-	public static void Export(List<String> menuList) {
-		try {
-			Statement statement = ChestCommands.GetConnection().createStatement();
-			File menuFolder = new File(ChestCommands.GetInstance().getDataFolder(), "menu");
-			for(String fName : menuList) {
-				String txtConfig = "";
-				try {
-					BufferedReader reader = new BufferedReader(new FileReader(new File(menuFolder,fName + ".yml")));
-					String line = null;
-					StringBuilder stringBuilder = new StringBuilder();
-					String ls = System.getProperty("line.separator");
-					while((line = reader.readLine()) != null) {
-						stringBuilder.append(line);
-						stringBuilder.append(ls);
-					}
-					reader.close();
-					txtConfig = stringBuilder.toString();
-				}
-				catch ( IOException e)
-				{
-				}
-				byte[] encodedBytes = Base64.getEncoder().encode(txtConfig.getBytes());
-				String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
-				String queryText = "INSERT INTO `" + ChestCommands.GetMysqlCreds().GetTableName() + "`(`FILENAME`, `CFGSTRING`) VALUES (\"" + fName + "\",\"" + encodedString + "\") ON DUPLICATE KEY UPDATE `CFGSTRING` = \"" + encodedString + "\";";
-				statement.executeUpdate(queryText);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void Import(List<String> menuList) {
-		String decodedConfig = "";
-		try {
-			Statement statement = ChestCommands.GetConnection().createStatement();
-			File menuFolder = new File(ChestCommands.GetInstance().getDataFolder(), "menu");
-			for(String fName : menuList) {
-				String queryText = "SELECT * FROM `" + ChestCommands.GetMysqlCreds().GetTableName() + "` WHERE `FILENAME` = '" + fName + "';";
-				ResultSet result = statement.executeQuery(queryText);
-				result.first();
-				String base64Config = result.getString("CFGSTRING");
-				byte[] decodedBytes = Base64.getDecoder().decode(base64Config.getBytes());
-				decodedConfig = new String(decodedBytes, StandardCharsets.UTF_8);
-				BufferedWriter writer = null;
-				try
-				{
-					writer = new BufferedWriter( new FileWriter(new File(menuFolder,fName + ".yml")));
-					writer.write(decodedConfig);
-
-				}
-				catch ( IOException e)
-				{
-				}
-				finally
-				{
-					try
-					{
-						if ( writer != null)
-							writer.close( );
-					}
-					catch ( IOException e)
-					{
-					}
-				}
-
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 }
