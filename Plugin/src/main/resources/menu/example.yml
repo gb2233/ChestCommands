@@ -297,6 +297,21 @@ multiple-required-items:
   ENCHANTMENT: durability, 1
 
 
+test-per-click-command:
+  COMMAND-LEFT: 'console: Say You left-clicked'
+  COMMAND-RIGHT: 'console: Say You right-clicked'
+  COMMAND-MIDDLE: 'console: Say You middle-clicked'
+  NAME: '&aCommands per clicktype'
+  LORE:
+    - 'You left-click.'
+    - 'You right-click.'
+    - 'You middle-click'
+    - 'And you get different messages.'
+  ID: redstone_block
+  POSITION-X: 5
+  POSITION-Y: 3
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
