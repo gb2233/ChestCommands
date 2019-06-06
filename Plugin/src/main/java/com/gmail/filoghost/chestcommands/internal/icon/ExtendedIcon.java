@@ -26,6 +26,7 @@ import com.gmail.filoghost.chestcommands.util.MaterialsRegistry;
 import com.gmail.filoghost.chestcommands.util.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
@@ -165,7 +166,7 @@ public class ExtendedIcon extends Icon {
 
     @SuppressWarnings("deprecation")
     @Override
-    public boolean onClick(Player player) {
+    public boolean onClick(Player player, ClickType clickType) {
 
         // Check all the requirements
 
@@ -295,6 +296,6 @@ public class ExtendedIcon extends Icon {
             }
         }
 
-        return super.onClick(player);
+        return super.onClick(player, clickType);
     }
 }
