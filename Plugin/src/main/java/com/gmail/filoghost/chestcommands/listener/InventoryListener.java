@@ -27,6 +27,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -80,8 +81,11 @@ public class InventoryListener implements Listener {
                         }
                     }
 
+                    // Get click type
+                    ClickType clickType = event.getClick();
+
                     // Closes the inventory and executes commands AFTER the event
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(ChestCommands.getInstance(), new ExecuteCommandsTask(clicker, icon));
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(ChestCommands.getInstance(), new ExecuteCommandsTask(clicker, icon, clickType));
                 }
             }
         }

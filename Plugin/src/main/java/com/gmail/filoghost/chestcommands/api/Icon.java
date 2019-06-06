@@ -21,6 +21,7 @@ import org.bukkit.*;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -48,7 +49,9 @@ public class Icon {
     private String skullOwner;
     private DyeColor bannerColor;
     private List<Pattern> bannerPatterns;
-    private ClickHandler clickHandler;
+    private ClickHandler clickLeftHandler;
+    private ClickHandler clickRightHandler;
+    private ClickHandler clickMiddleHandler;
 
     private boolean nameHasVariables;
     private boolean[] loreLinesWithVariables;
@@ -207,12 +210,34 @@ public class Icon {
         this.closeOnClick = closeOnClick;
     }
 
-    public ClickHandler getClickHandler() {
-        return clickHandler;
+    public ClickHandler getClickMiddleHandler() {
+        return clickMiddleHandler;
+    }
+
+    public ClickHandler getClickRightHandler() {
+        return clickRightHandler;
+    }
+
+    public ClickHandler getClickLeftHandler() {
+        return clickLeftHandler;
+    }
+
+    public void setClickMiddleHandler(ClickHandler clickHandler) {
+        this.clickMiddleHandler = clickHandler;
+    }
+
+    public void setClickRightHandler(ClickHandler clickHandler) {
+        this.clickRightHandler = clickHandler;
+    }
+
+    public void setClickLeftHandler(ClickHandler clickHandler) {
+        this.clickLeftHandler = clickHandler;
     }
 
     public void setClickHandler(ClickHandler clickHandler) {
-        this.clickHandler = clickHandler;
+        this.clickLeftHandler = clickHandler;
+        this.clickRightHandler = clickHandler;
+        this.clickMiddleHandler = clickHandler;
     }
 
     protected String calculateName(Player pov) {
@@ -338,11 +363,16 @@ public class Icon {
         return itemStack;
     }
 
-    public boolean onClick(Player whoClicked) {
-        if (clickHandler != null) {
-            return clickHandler.onClick(whoClicked);
+    public boolean onClick(Player whoClicked, ClickType clickType) {
+        if (clickLeftHandler != null && clickType == ClickType.LEFT) {
+            return clickLeftHandler.onClick(whoClicked);
+        } else if (clickRightHandler != null && clickType == ClickType.RIGHT) {
+            return clickRightHandler.onClick(whoClicked);
+        } else if (clickMiddleHandler != null && clickType == ClickType.MIDDLE) {
+            return clickMiddleHandler.onClick(whoClicked);
         }
 
         return closeOnClick;
     }
+
 }

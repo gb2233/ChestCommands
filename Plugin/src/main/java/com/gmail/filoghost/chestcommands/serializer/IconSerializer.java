@@ -129,6 +129,69 @@ public class IconSerializer {
             icon.setClickHandler(new CommandsClickHandler(commands, closeOnClick));
         }
 
+        if (section.isSet(Nodes.COMMAND_LEFT)) {
+
+            List<IconCommand> commands;
+
+            if (section.isList(Nodes.COMMAND_LEFT)) {
+                commands = Utils.newArrayList();
+
+                for (String commandString : section.getStringList(Nodes.COMMAND_LEFT)) {
+                    if (commandString.isEmpty()) {
+                        continue;
+                    }
+                    commands.add(CommandSerializer.matchCommand(commandString));
+                }
+
+            } else {
+                commands = CommandSerializer.readCommands(section.getString(Nodes.COMMAND_LEFT));
+            }
+
+            icon.setClickLeftHandler(new CommandsClickHandler(commands, closeOnClick));
+        }
+
+        if (section.isSet(Nodes.COMMAND_RIGHT)) {
+
+            List<IconCommand> commands;
+
+            if (section.isList(Nodes.COMMAND_RIGHT)) {
+                commands = Utils.newArrayList();
+
+                for (String commandString : section.getStringList(Nodes.COMMAND_RIGHT)) {
+                    if (commandString.isEmpty()) {
+                        continue;
+                    }
+                    commands.add(CommandSerializer.matchCommand(commandString));
+                }
+
+            } else {
+                commands = CommandSerializer.readCommands(section.getString(Nodes.COMMAND_RIGHT));
+            }
+
+            icon.setClickRightHandler(new CommandsClickHandler(commands, closeOnClick));
+        }
+
+        if (section.isSet(Nodes.COMMAND_MIDDLE)) {
+
+            List<IconCommand> commands;
+
+            if (section.isList(Nodes.COMMAND_MIDDLE)) {
+                commands = Utils.newArrayList();
+
+                for (String commandString : section.getStringList(Nodes.COMMAND_MIDDLE)) {
+                    if (commandString.isEmpty()) {
+                        continue;
+                    }
+                    commands.add(CommandSerializer.matchCommand(commandString));
+                }
+
+            } else {
+                commands = CommandSerializer.readCommands(section.getString(Nodes.COMMAND_MIDDLE));
+            }
+
+            icon.setClickMiddleHandler(new CommandsClickHandler(commands, closeOnClick));
+        }
+
         double price = section.getDouble(Nodes.PRICE);
         if (price > 0.0) {
             icon.setMoneyPrice(price);
@@ -234,6 +297,9 @@ public class IconSerializer {
                 BANNER_COLOR = "BANNER-COLOUR",
                 BANNER_PATTERNS = "BANNER-PATTERNS",
                 COMMAND = "COMMAND",
+                COMMAND_LEFT = "COMMAND-LEFT",
+                COMMAND_RIGHT = "COMMAND-RIGHT",
+                COMMAND_MIDDLE = "COMMAND-MIDDLE",
                 PRICE = "PRICE",
                 POINTS = "POINTS",
                 TOKENS = "TOKENS",

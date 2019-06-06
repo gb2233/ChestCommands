@@ -16,22 +16,25 @@ package com.gmail.filoghost.chestcommands.task;
 
 import com.gmail.filoghost.chestcommands.api.Icon;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 public class ExecuteCommandsTask implements Runnable {
 
     private Player player;
     private Icon icon;
+    private ClickType clickType;
 
 
-    public ExecuteCommandsTask(Player player, Icon icon) {
+    public ExecuteCommandsTask(Player player, Icon icon, ClickType clickType) {
         this.player = player;
         this.icon = icon;
+        this.clickType = clickType;
     }
 
 
     @Override
     public void run() {
-        boolean close = icon.onClick(player);
+        boolean close = icon.onClick(player, clickType);
 
         if (close) {
             player.closeInventory();
