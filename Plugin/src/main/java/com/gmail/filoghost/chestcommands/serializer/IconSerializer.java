@@ -24,8 +24,11 @@ import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.*;
 import com.gmail.filoghost.chestcommands.util.nbt.parser.MojangsonParseException;
 import com.gmail.filoghost.chestcommands.util.nbt.parser.MojangsonParser;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class IconSerializer {
@@ -220,20 +223,29 @@ public class IconSerializer {
             errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative LEVELS: " + levels);
         }
 
-        if (section.isSet(Nodes.REQUIRED_ITEM)) {
-            for (String item : section.getString(Nodes.REQUIRED_ITEM).split(";")) {
-                try {
-                    ItemStackReader itemReader = new ItemStackReader(item, true);
-                    RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(), itemReader.getAmount());
-                    if (itemReader.hasExplicitDataValue()) {
-                        requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
-                    }
-                    icon.addRequiredItem(requiredItem);
-                } catch (FormatException e) {
-                    errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid REQUIRED-ITEM: " + e.getMessage());
-                }
-            }
-        }
+		if (section.isSet(Nodes.REQUIRED_ITEM)) {
+			List<String> requiredItemsStrings;
+			if (section.isList(Nodes.REQUIRED_ITEM)) {
+				requiredItemsStrings = section.getStringList(Nodes.REQUIRED_ITEM);
+			} else {
+				requiredItemsStrings = Collections.singletonList(section.getString(Nodes.REQUIRED_ITEM));
+			}
+
+			List<RequiredItem> requiredItems = new ArrayList<RequiredItem>();
+			for (String requiredItemText : requiredItemsStrings) {
+				try {
+					ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
+					RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(), itemReader.getAmount());
+					if (itemReader.hasExplicitDataValue()) {
+						requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
+					}
+					requiredItems.add(requiredItem);
+				} catch (FormatException e) {
+					errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has an invalid REQUIRED-ITEM: " + e.getMessage());
+				}
+			}
+			icon.setRequiredItems(requiredItems);
+		}
 
         return icon;
     }

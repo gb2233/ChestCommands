@@ -148,9 +148,13 @@ public class ExtendedIcon extends Icon {
         this.expLevelsPrice = expLevelsPrice;
     }
 
-    public List<RequiredItem> getRequiredItems() {
-        return requiredItems;
-    }
+	public List<RequiredItem> getRequiredItems() {
+		return requiredItems;
+	}
+
+	public void setRequiredItems(List<RequiredItem> requiredItems) {
+		this.requiredItems = requiredItems;
+	}
 
     public void addRequiredItem(RequiredItem requiredItem) {
         this.requiredItems.add(requiredItem);
