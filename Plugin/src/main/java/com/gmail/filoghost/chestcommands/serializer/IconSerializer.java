@@ -24,10 +24,10 @@ import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.*;
 import com.gmail.filoghost.chestcommands.util.nbt.parser.MojangsonParseException;
 import com.gmail.filoghost.chestcommands.util.nbt.parser.MojangsonParser;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -227,11 +227,13 @@ public class IconSerializer {
 			List<String> requiredItemsStrings;
 			if (section.isList(Nodes.REQUIRED_ITEM)) {
 				requiredItemsStrings = section.getStringList(Nodes.REQUIRED_ITEM);
-			} else {
+			} else if (section.isString(Nodes.REQUIRED_ITEM) && section.getString(Nodes.REQUIRED_ITEM).contains(";")) {
+			    requiredItemsStrings = Arrays.asList(section.getString(Nodes.REQUIRED_ITEM).split(";"));
+            } else {
 				requiredItemsStrings = Collections.singletonList(section.getString(Nodes.REQUIRED_ITEM));
 			}
 
-			List<RequiredItem> requiredItems = new ArrayList<RequiredItem>();
+			List<RequiredItem> requiredItems = new ArrayList<>();
 			for (String requiredItemText : requiredItemsStrings) {
 				try {
 					ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);

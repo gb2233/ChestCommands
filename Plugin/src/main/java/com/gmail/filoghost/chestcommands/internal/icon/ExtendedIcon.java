@@ -156,10 +156,6 @@ public class ExtendedIcon extends Icon {
 		this.requiredItems = requiredItems;
 	}
 
-    public void addRequiredItem(RequiredItem requiredItem) {
-        this.requiredItems.add(requiredItem);
-    }
-
     public String calculateName(Player pov) {
         return super.calculateName(pov);
     }
