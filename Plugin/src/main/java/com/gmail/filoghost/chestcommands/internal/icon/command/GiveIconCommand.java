@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.exception.FormatException;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.ItemStackReader;
@@ -44,17 +45,18 @@ public class GiveIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        if (hasVariables) {
-            parseItem(getParsedCommand(player));
-        }
-        if (errorMessage != null) {
-            player.sendMessage(errorMessage);
-            return false;
-        }
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            if (hasVariables) {
+                parseItem(getParsedCommand(player));
+            }
+            if (errorMessage != null) {
+                player.sendMessage(errorMessage);
+                TaskChain.abort();
+            }
 
-        player.getInventory().addItem(itemToGive.clone());
-        return true;
+            player.getInventory().addItem(itemToGive.clone());
+        });
     }
 
 }

@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
 import org.bukkit.entity.Player;
@@ -25,9 +26,8 @@ public class TellIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        player.sendMessage(getParsedCommand(player));
-        return true;
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> player.sendMessage(getParsedCommand(player)));
     }
 
 }

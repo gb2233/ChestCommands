@@ -14,6 +14,8 @@
  */
 package com.gmail.filoghost.chestcommands.internal;
 
+import co.aikar.taskchain.TaskChain;
+import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.api.ClickHandler;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.OpenIconCommand;
@@ -44,11 +46,13 @@ public class CommandsClickHandler implements ClickHandler {
     @Override
     public boolean onClick(Player player) {
         if (commands != null && !commands.isEmpty()) {
+            TaskChain taskChain = ChestCommands.getTaskChainFactory().newChain();
+
             for (IconCommand command : commands) {
-                if (!command.execute(player)) {
-                    break;
-                }
+                command.execute(player, taskChain);
             }
+
+            taskChain.execute();
         }
 
         return closeOnClick;

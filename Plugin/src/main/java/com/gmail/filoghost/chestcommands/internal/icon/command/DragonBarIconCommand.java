@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
@@ -46,14 +47,15 @@ public class DragonBarIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        if (hasVariables) {
-            parseBar(getParsedCommand(player));
-        }
-        if (BarAPIBridge.hasValidPlugin()) {
-            BarAPIBridge.setMessage(player, message, seconds);
-        }
-        return true;
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            if (hasVariables) {
+                parseBar(getParsedCommand(player));
+            }
+            if (BarAPIBridge.hasValidPlugin()) {
+                BarAPIBridge.setMessage(player, message, seconds);
+            }
+        });
     }
 
 }

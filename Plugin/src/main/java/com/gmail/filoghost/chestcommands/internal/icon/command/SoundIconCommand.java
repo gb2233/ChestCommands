@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.BukkitUtils;
 import org.bukkit.ChatColor;
@@ -63,17 +64,17 @@ public class SoundIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        if (hasVariables) {
-            parseSound(getParsedCommand(player));
-        }
-        if (errorMessage != null) {
-            player.sendMessage(errorMessage);
-            return true;
-        }
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            if (hasVariables) {
+                parseSound(getParsedCommand(player));
+            }
+            if (errorMessage != null) {
+                player.sendMessage(errorMessage);
+            }
 
-        player.playSound(player.getLocation(), sound, volume, pitch);
-        return true;
+            player.playSound(player.getLocation(), sound, volume, pitch);
+        });
     }
 
 }

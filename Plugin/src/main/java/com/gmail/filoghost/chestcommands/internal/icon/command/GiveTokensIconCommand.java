@@ -1,5 +1,6 @@
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.Utils;
@@ -23,18 +24,20 @@ public class GiveTokensIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        if (errorMessage != null) {
-            player.sendMessage(errorMessage);
-            return false;
-        }
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            if (errorMessage != null) {
+                player.sendMessage(errorMessage);
+                TaskChain.abort();
+            }
 
-        if (TokenManagerBridge.hasValidPlugin()) {
-            TokenManagerBridge.giveTokens(player, tokensToGive);
-            return true;
-        } else {
-            player.sendMessage(ChatColor.RED + "The plugin TokenManager was not found. Please inform the staff.");
-            return false;
-        }
+            if (TokenManagerBridge.hasValidPlugin()) {
+                TokenManagerBridge.giveTokens(player, tokensToGive);
+            } else {
+                player.sendMessage(ChatColor.RED + "The plugin TokenManager was not found. Please inform the staff.");
+                TaskChain.abort();
+            }
+        });
     }
+
 }

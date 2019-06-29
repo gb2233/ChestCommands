@@ -1,5 +1,6 @@
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.Utils;
@@ -23,19 +24,20 @@ public class GivePointsIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        if (errorMessage != null) {
-            player.sendMessage(errorMessage);
-            return false;
-        }
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            if (errorMessage != null) {
+                player.sendMessage(errorMessage);
+                TaskChain.abort();
+            }
 
-        if (PlayerPointsBridge.hasValidPlugin()) {
-            PlayerPointsBridge.givePoints(player, pointsToGive);
-            return true;
-        } else {
-            player.sendMessage(ChatColor.RED + "The plugin PlayerPoints was not found. Please inform the staff.");
-            return false;
-        }
+            if (PlayerPointsBridge.hasValidPlugin()) {
+                PlayerPointsBridge.givePoints(player, pointsToGive);
+            } else {
+                player.sendMessage(ChatColor.RED + "The plugin PlayerPoints was not found. Please inform the staff.");
+                TaskChain.abort();
+            }
+        });
     }
 
 }

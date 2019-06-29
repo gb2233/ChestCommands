@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.config.AsciiPlaceholders;
 import com.gmail.filoghost.chestcommands.internal.VariableManager;
 import org.bukkit.entity.Player;
@@ -32,6 +33,6 @@ public abstract class IconCommand {
         return hasVariables ? VariableManager.setVariables(command, executor) : command;
     }
 
-    public abstract boolean execute(Player player);
+    public abstract void execute(Player player, TaskChain taskChain);
 
 }

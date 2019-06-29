@@ -37,6 +37,11 @@
 			<id>placeholderapi-repo</id>
 			<url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
 		</repository>
+
+		<repository>
+			<id>aikar</id>
+			<url>https://repo.aikar.co/content/groups/aikar/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -96,6 +101,12 @@
 			<optional>true</optional>
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/TokenManager.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>co.aikar</groupId>
+			<artifactId>taskchain-bukkit</artifactId>
+			<version>LATEST</version>
 		</dependency>
 	</dependencies>
 

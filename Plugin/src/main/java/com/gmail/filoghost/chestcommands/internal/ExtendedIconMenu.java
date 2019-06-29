@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.Permissions;
 import com.gmail.filoghost.chestcommands.api.IconMenu;
@@ -72,9 +73,13 @@ public class ExtendedIconMenu extends IconMenu {
     public void open(Player player) {
         try {
             if (openActions != null) {
+                TaskChain taskChain = ChestCommands.getTaskChainFactory().newChain();
+
                 for (IconCommand openAction : openActions) {
-                    openAction.execute(player);
+                    openAction.execute(player, taskChain);
                 }
+
+                taskChain.execute();
             }
 
             Inventory inventory = Bukkit.createInventory(new MenuInventoryHolder(this), icons.length, title);

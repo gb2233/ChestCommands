@@ -14,6 +14,8 @@
  */
 package com.gmail.filoghost.chestcommands;
 
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChainFactory;
 import com.gmail.filoghost.chestcommands.bridge.*;
 import com.gmail.filoghost.chestcommands.command.CommandHandler;
 import com.gmail.filoghost.chestcommands.command.framework.CommandFramework;
@@ -66,6 +68,8 @@ public class ChestCommands extends JavaPlugin {
     private static int lastReloadErrors;
     private static String newVersion;
 
+    private static TaskChainFactory taskChainFactory;
+
     public static void closeAllMenus() {
         for (Player player : BukkitUtils.getOnlinePlayers()) {
             if (player.getOpenInventory() != null) {
@@ -116,6 +120,10 @@ public class ChestCommands extends JavaPlugin {
         ChestCommands.lastReloadErrors = lastReloadErrors;
     }
 
+    public static TaskChainFactory getTaskChainFactory() {
+        return taskChainFactory;
+    }
+
     @Override
     public void onEnable() {
         if (instance != null) {
@@ -130,6 +138,8 @@ public class ChestCommands extends JavaPlugin {
 
         settings = new Settings(new PluginConfig(this, "config.yml"));
         lang = new Lang(new PluginConfig(this, "lang.yml"));
+
+        taskChainFactory = BukkitTaskChainFactory.create(this);
 
         if (!EconomyBridge.setupEconomy()) {
             getLogger().warning("Vault with a compatible economy plugin was not found! Icons with a PRICE or commands that give money will not work.");

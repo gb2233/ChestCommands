@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.Utils;
@@ -41,23 +42,25 @@ public class GiveMoneyIconCommand extends IconCommand {
         moneyToGive = Double.parseDouble(command);
     }
 
-    @Override
-    public boolean execute(Player player) {
-        if (hasVariables) {
-            parseMoney(getParsedCommand(player));
-        }
-        if (errorMessage != null) {
-            player.sendMessage(errorMessage);
-            return false;
-        }
 
-        if (EconomyBridge.hasValidEconomy()) {
-            EconomyBridge.giveMoney(player, moneyToGive);
-            return true;
-        } else {
-            player.sendMessage(ChatColor.RED + "Vault with a compatible economy plugin not found. Please inform the staff.");
-            return false;
-        }
+    @Override
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            if (hasVariables) {
+                parseMoney(getParsedCommand(player));
+            }
+            if (errorMessage != null) {
+                player.sendMessage(errorMessage);
+                TaskChain.abort();
+            }
+
+            if (EconomyBridge.hasValidEconomy()) {
+                EconomyBridge.giveMoney(player, moneyToGive);
+            } else {
+                player.sendMessage(ChatColor.RED + "Vault with a compatible economy plugin not found. Please inform the staff.");
+                TaskChain.abort();
+            }
+        });
     }
 
 }

@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import org.bukkit.entity.Player;
 
@@ -24,9 +25,8 @@ public class PlayerIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        player.chat('/' + getParsedCommand(player));
-        return true;
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> player.chat('/' + getParsedCommand(player)));
     }
 
 }

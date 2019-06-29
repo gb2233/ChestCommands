@@ -1,5 +1,6 @@
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.udojava.evalex.Expression;
 import org.bukkit.ChatColor;
@@ -11,13 +12,18 @@ public class ConditionIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        Expression condition = new Expression(getParsedCommand(player));
-        if (condition.isBoolean()) {
-            return condition.eval().intValue() == 1;
-        } else {
-            player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
-            return false;
-        }
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            Expression condition = new Expression(getParsedCommand(player));
+            if (condition.isBoolean()) {
+                if (condition.eval().intValue() != 1) {
+                    TaskChain.abort();
+                }
+            } else {
+                player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
+                TaskChain.abort();
+            }
+        });
     }
+
 }

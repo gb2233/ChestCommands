@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.bungee.BungeeCordUtils;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import org.bukkit.entity.Player;
@@ -25,9 +26,8 @@ public class ServerIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        BungeeCordUtils.connect(player, hasVariables ? getParsedCommand(player) : command);
-        return true;
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> BungeeCordUtils.connect(player, hasVariables ? getParsedCommand(player) : command));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
@@ -17,35 +18,37 @@ public class RefreshIconCommand extends IconCommand {
     }
 
     @Override
-    public boolean execute(Player player) {
-        String parsedCommand = getParsedCommand(player);
-        int delay;
-        try {
-            delay = Integer.parseInt(parsedCommand.trim());
-        } catch (NumberFormatException e) {
-            String errorMessage = ChatColor.RED + "Invalid refresh delay! " + parsedCommand;
-            ChestCommands.getInstance().getLogger().warning(errorMessage);
-            return false;
-        }
-        new BukkitRunnable() {
+    public void execute(Player player, TaskChain taskChain) {
+        taskChain.sync(() -> {
+            String parsedCommand = getParsedCommand(player);
+            int delay = 0;
+            try {
+                delay = Integer.parseInt(parsedCommand.trim());
+            } catch (NumberFormatException e) {
+                String errorMessage = ChatColor.RED + "Invalid refresh delay! " + parsedCommand;
+                ChestCommands.getInstance().getLogger().warning(errorMessage);
+                TaskChain.abort();
+            }
+            new BukkitRunnable() {
 
-            @Override
-            public void run() {
-                InventoryView view = player.getOpenInventory();
-                if (view == null) {
-                    return;
-                }
-                Inventory topInventory = view.getTopInventory();
-                if (topInventory.getHolder() instanceof MenuInventoryHolder) {
-                    MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
-                    if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
-                        ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
-                        extMenu.refresh(player, topInventory);
-                        player.updateInventory();
+                @Override
+                public void run() {
+                    InventoryView view = player.getOpenInventory();
+                    if (view == null) {
+                        return;
+                    }
+                    Inventory topInventory = view.getTopInventory();
+                    if (topInventory.getHolder() instanceof MenuInventoryHolder) {
+                        MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
+                        if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
+                            ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
+                            extMenu.refresh(player, topInventory);
+                            player.updateInventory();
+                        }
                     }
                 }
-            }
-        }.runTaskLater(ChestCommands.getInstance(), delay);
-        return true;
+            }.runTaskLater(ChestCommands.getInstance(), delay);
+        });
     }
+
 }
