@@ -312,6 +312,16 @@ test-per-click-command:
   POSITION-Y: 3
 
 
+test-delay-command:
+  COMMAND: 'tell: &aThis is current; delay: 60; tell: &aThis is 3 seconds later'
+  NAME: '&eDelay Command'
+  LORE:
+    - 'This is a test of delay command.'
+  ID: clock
+  POSITION-X: 6
+  POSITION-Y: 3
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp

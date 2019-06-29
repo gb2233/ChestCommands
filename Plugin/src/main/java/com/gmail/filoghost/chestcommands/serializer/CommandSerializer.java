@@ -19,6 +19,7 @@ import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.BroadcastIconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.ConditionIconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.ConsoleIconCommand;
+import com.gmail.filoghost.chestcommands.internal.icon.command.DelayIconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.DragonBarIconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.GiveIconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.GiveMoneyIconCommand;
@@ -59,6 +60,7 @@ public class CommandSerializer {
     commandTypesMap.put(commandPattern("dragon-?bar:"), DragonBarIconCommand.class);
     commandTypesMap.put(commandPattern("condition:"), ConditionIconCommand.class);
     commandTypesMap.put(commandPattern("give-?tokens:"), GiveTokensIconCommand.class);
+    commandTypesMap.put(commandPattern("delay:"), DelayIconCommand.class);
   }
 
   private static Pattern commandPattern(String regex) {

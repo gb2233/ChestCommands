@@ -104,6 +104,7 @@ public final class MaterialsRegistry {
     tryAddMaterialAlias("command block", "COMMAND");
     tryAddMaterialAlias("dye", "INK_SACK");
     tryAddMaterialAlias("banner", "PINK_BANNER");
+    tryAddMaterialAlias("clock", "WATCH");
   }
 
   private MaterialsRegistry() {
