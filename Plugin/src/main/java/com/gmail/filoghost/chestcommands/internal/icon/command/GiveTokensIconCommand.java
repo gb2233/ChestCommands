@@ -25,20 +25,17 @@ public class GiveTokensIconCommand extends IconCommand {
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    taskChain.sync(() -> {
-      if (errorMessage != null) {
-        player.sendMessage(errorMessage);
-        TaskChain.abort();
-      }
+    if (errorMessage != null) {
+      player.sendMessage(errorMessage);
+      return;
+    }
+    if (!TokenManagerBridge.hasValidPlugin()) {
+      player.sendMessage(
+          ChatColor.RED + "The plugin TokenManager was not found. Please inform the staff.");
+      return;
+    }
 
-      if (TokenManagerBridge.hasValidPlugin()) {
-        TokenManagerBridge.giveTokens(player, tokensToGive);
-      } else {
-        player.sendMessage(
-            ChatColor.RED + "The plugin TokenManager was not found. Please inform the staff.");
-        TaskChain.abort();
-      }
-    });
+    taskChain.sync(() -> TokenManagerBridge.giveTokens(player, tokensToGive));
   }
 
 }

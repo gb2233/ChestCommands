@@ -25,20 +25,17 @@ public class GivePointsIconCommand extends IconCommand {
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    taskChain.sync(() -> {
-      if (errorMessage != null) {
-        player.sendMessage(errorMessage);
-        TaskChain.abort();
-      }
+    if (errorMessage != null) {
+      player.sendMessage(errorMessage);
+      return;
+    }
+    if (!PlayerPointsBridge.hasValidPlugin()) {
+      player.sendMessage(
+          ChatColor.RED + "The plugin PlayerPoints was not found. Please inform the staff.");
+      return;
+    }
 
-      if (PlayerPointsBridge.hasValidPlugin()) {
-        PlayerPointsBridge.givePoints(player, pointsToGive);
-      } else {
-        player.sendMessage(
-            ChatColor.RED + "The plugin PlayerPoints was not found. Please inform the staff.");
-        TaskChain.abort();
-      }
-    });
+    taskChain.sync(() -> PlayerPointsBridge.givePoints(player, pointsToGive));
   }
 
 }

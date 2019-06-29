@@ -45,23 +45,20 @@ public class GiveMoneyIconCommand extends IconCommand {
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    taskChain.sync(() -> {
-      if (hasVariables) {
-        parseMoney(getParsedCommand(player));
-      }
-      if (errorMessage != null) {
-        player.sendMessage(errorMessage);
-        TaskChain.abort();
-      }
+    if (hasVariables) {
+      parseMoney(getParsedCommand(player));
+    }
+    if (errorMessage != null) {
+      player.sendMessage(errorMessage);
+      return;
+    }
+    if (!EconomyBridge.hasValidEconomy()) {
+      player.sendMessage(ChatColor.RED
+          + "Vault with a compatible economy plugin not found. Please inform the staff.");
+      return;
+    }
 
-      if (EconomyBridge.hasValidEconomy()) {
-        EconomyBridge.giveMoney(player, moneyToGive);
-      } else {
-        player.sendMessage(ChatColor.RED
-            + "Vault with a compatible economy plugin not found. Please inform the staff.");
-        TaskChain.abort();
-      }
-    });
+    taskChain.sync(() -> EconomyBridge.giveMoney(player, moneyToGive));
   }
 
 }

@@ -14,14 +14,14 @@ public class ConditionIconCommand extends IconCommand {
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
+    Expression condition = new Expression(getParsedCommand(player));
+    if (!condition.isBoolean()) {
+      player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
+      return;
+    }
+
     taskChain.sync(() -> {
-      Expression condition = new Expression(getParsedCommand(player));
-      if (condition.isBoolean()) {
-        if (condition.eval().intValue() != 1) {
-          TaskChain.abort();
-        }
-      } else {
-        player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
+      if (condition.eval().intValue() != 1) {
         TaskChain.abort();
       }
     });

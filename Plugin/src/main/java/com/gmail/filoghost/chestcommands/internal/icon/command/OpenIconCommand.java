@@ -30,26 +30,25 @@ public class OpenIconCommand extends IconCommand {
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    taskChain.sync(() -> {
-      String target = hasVariables ? getParsedCommand(player) : command;
-      final ExtendedIconMenu menu = ChestCommands.getFileNameToMenuMap().get(target.toLowerCase());
-      if (menu != null) {
+    String target = hasVariables ? getParsedCommand(player) : command;
+    final ExtendedIconMenu menu = ChestCommands.getFileNameToMenuMap().get(target.toLowerCase());
+    if (menu == null) {
+      player.sendMessage(ChatColor.RED + "Menu not found! Please inform the staff.");
+      return;
+    }
 
-        /*
-         * Delay the task, since this command is executed in ClickInventoryEvent
-         * and opening another inventory in the same moment is not a good idea.
-         */
-        Bukkit.getScheduler().scheduleSyncDelayedTask(ChestCommands.getInstance(), () -> {
-          if (player.hasPermission(menu.getPermission())) {
-            menu.open(player);
-          } else {
-            menu.sendNoPermissionMessage(player);
-          }
-        });
-      } else {
-        player.sendMessage(ChatColor.RED + "Menu not found! Please inform the staff.");
-        TaskChain.abort();
-      }
+    taskChain.sync(() -> {
+      /*
+       * Delay the task, since this command is executed in ClickInventoryEvent
+       * and opening another inventory in the same moment is not a good idea.
+       */
+      Bukkit.getScheduler().scheduleSyncDelayedTask(ChestCommands.getInstance(), () -> {
+        if (player.hasPermission(menu.getPermission())) {
+          menu.open(player);
+        } else {
+          menu.sendNoPermissionMessage(player);
+        }
+      });
     });
   }
 

@@ -65,16 +65,15 @@ public class SoundIconCommand extends IconCommand {
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    taskChain.sync(() -> {
-      if (hasVariables) {
-        parseSound(getParsedCommand(player));
-      }
-      if (errorMessage != null) {
-        player.sendMessage(errorMessage);
-      }
+    if (hasVariables) {
+      parseSound(getParsedCommand(player));
+    }
+    if (errorMessage != null) {
+      player.sendMessage(errorMessage);
+      return;
+    }
 
-      player.playSound(player.getLocation(), sound, volume, pitch);
-    });
+    taskChain.sync(() -> player.playSound(player.getLocation(), sound, volume, pitch));
   }
 
 }

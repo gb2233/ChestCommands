@@ -46,17 +46,15 @@ public class GiveIconCommand extends IconCommand {
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    taskChain.sync(() -> {
-      if (hasVariables) {
-        parseItem(getParsedCommand(player));
-      }
-      if (errorMessage != null) {
-        player.sendMessage(errorMessage);
-        TaskChain.abort();
-      }
+    if (hasVariables) {
+      parseItem(getParsedCommand(player));
+    }
+    if (errorMessage != null) {
+      player.sendMessage(errorMessage);
+      return;
+    }
 
-      player.getInventory().addItem(itemToGive.clone());
-    });
+    taskChain.sync(() -> player.getInventory().addItem(itemToGive.clone()));
   }
 
 }
