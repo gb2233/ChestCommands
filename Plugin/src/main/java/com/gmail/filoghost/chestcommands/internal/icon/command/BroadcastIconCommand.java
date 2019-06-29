@@ -22,13 +22,13 @@ import org.bukkit.entity.Player;
 
 public class BroadcastIconCommand extends IconCommand {
 
-    public BroadcastIconCommand(String command) {
-        super(FormatUtils.addColors(command));
-    }
+  public BroadcastIconCommand(String command) {
+    super(FormatUtils.addColors(command));
+  }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> Bukkit.broadcastMessage(getParsedCommand(player)));
-    }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> Bukkit.broadcastMessage(getParsedCommand(player)));
+  }
 
 }

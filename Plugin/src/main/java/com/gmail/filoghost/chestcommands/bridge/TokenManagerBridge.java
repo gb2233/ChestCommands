@@ -8,56 +8,70 @@ import org.bukkit.plugin.Plugin;
 
 public class TokenManagerBridge {
 
-    private static TokenManager tokenManager;
+  private static TokenManager tokenManager;
 
-    public static boolean setupPlugin() {
-        Plugin tokenPlugin = Bukkit.getPluginManager().getPlugin("TokenManager");
+  public static boolean setupPlugin() {
+    Plugin tokenPlugin = Bukkit.getPluginManager().getPlugin("TokenManager");
 
-        if (tokenPlugin == null) {
-            return false;
-        }
-
-        tokenManager = (TokenManager) tokenPlugin;
-        return true;
+    if (tokenPlugin == null) {
+      return false;
     }
 
-    public static boolean hasValidPlugin() {
-        return tokenManager != null;
+    tokenManager = (TokenManager) tokenPlugin;
+    return true;
+  }
+
+  public static boolean hasValidPlugin() {
+    return tokenManager != null;
+  }
+
+  public static long getTokens(Player player) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("TokenManager plugin was not found!");
+    }
+    return tokenManager.getTokens(player).orElse(0);
+  }
+
+  public static boolean hasTokens(Player player, long minimum) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("TokenManager plugin was not found!");
+    }
+    if (minimum < 0) {
+      throw new IllegalArgumentException("Invalid amount of tokens: " + minimum);
     }
 
-    public static long getTokens(Player player) {
-        if (!hasValidPlugin()) throw new IllegalStateException("TokenManager plugin was not found!");
-        return tokenManager.getTokens(player).orElse(0);
+    return tokenManager.getTokens(player).orElse(0) >= minimum;
+  }
+
+  public static boolean takeTokens(Player player, long tokens) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("TokenManager plugin was not found!");
+    }
+    if (tokens < 0) {
+      throw new IllegalArgumentException("Invalid amount of tokens: " + tokens);
     }
 
-    public static boolean hasTokens(Player player, long minimum) {
-        if (!hasValidPlugin()) throw new IllegalStateException("TokenManager plugin was not found!");
-        if (minimum < 0) throw new IllegalArgumentException("Invalid amount of tokens: " + minimum);
+    boolean result = tokenManager.removeTokens(player, tokens);
 
-        return tokenManager.getTokens(player).orElse(0) >= minimum;
+    MenuUtils.refreshMenu(player);
+
+    return result;
+  }
+
+
+  public static boolean giveTokens(Player player, long tokens) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("TokenManager plugin was not found!");
+    }
+    if (tokens < 0) {
+      throw new IllegalArgumentException("Invalid amount of tokens: " + tokens);
     }
 
-    public static boolean takeTokens(Player player, long tokens) {
-        if (!hasValidPlugin()) throw new IllegalStateException("TokenManager plugin was not found!");
-        if (tokens < 0) throw new IllegalArgumentException("Invalid amount of tokens: " + tokens);
+    boolean result = tokenManager.addTokens(player, tokens);
 
-        boolean result = tokenManager.removeTokens(player, tokens);
+    MenuUtils.refreshMenu(player);
 
-        MenuUtils.refreshMenu(player);
-
-        return result;
-    }
-
-
-    public static boolean giveTokens(Player player, long tokens) {
-        if (!hasValidPlugin()) throw new IllegalStateException("TokenManager plugin was not found!");
-        if (tokens < 0) throw new IllegalArgumentException("Invalid amount of tokens: " + tokens);
-
-        boolean result = tokenManager.addTokens(player, tokens);
-
-        MenuUtils.refreshMenu(player);
-
-        return result;
-    }
+    return result;
+  }
 
 }

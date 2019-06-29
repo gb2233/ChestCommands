@@ -21,13 +21,13 @@ import org.bukkit.entity.Player;
 
 public class TellIconCommand extends IconCommand {
 
-    public TellIconCommand(String command) {
-        super(FormatUtils.addColors(command));
-    }
+  public TellIconCommand(String command) {
+    super(FormatUtils.addColors(command));
+  }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> player.sendMessage(getParsedCommand(player)));
-    }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> player.sendMessage(getParsedCommand(player)));
+  }
 
 }

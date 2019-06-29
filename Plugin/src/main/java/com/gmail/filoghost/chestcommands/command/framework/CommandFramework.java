@@ -26,45 +26,45 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class CommandFramework implements CommandExecutor {
 
-    private String label;
+  private String label;
 
 
-    public CommandFramework(String label) {
-        this.label = label;
+  public CommandFramework(String label) {
+    this.label = label;
+  }
+
+  /**
+   * Register a command through the framework.
+   */
+  public static boolean register(JavaPlugin plugin, CommandFramework command) {
+    PluginCommand pluginCommand = plugin.getCommand(command.label);
+
+    if (pluginCommand == null) {
+      return false;
     }
 
-    /**
-     * Register a command through the framework.
-     */
-    public static boolean register(JavaPlugin plugin, CommandFramework command) {
-        PluginCommand pluginCommand = plugin.getCommand(command.label);
+    pluginCommand.setExecutor(command);
+    return true;
+  }
 
-        if (pluginCommand == null) {
-            return false;
-        }
+  public abstract void execute(CommandSender sender, String label, String[] args);
 
-        pluginCommand.setExecutor(command);
-        return true;
+  /**
+   * Default implementation of Bukkit's command executor.
+   */
+  @Override
+  public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    try {
+      execute(sender, label, args);
+
+    } catch (CommandException ex) {
+      if (ex.getMessage() != null && !ex.getMessage().isEmpty()) {
+        // Use RED by default
+        sender.sendMessage(ChatColor.RED + ex.getMessage());
+      }
     }
 
-    public abstract void execute(CommandSender sender, String label, String[] args);
-
-    /**
-     * Default implementation of Bukkit's command executor.
-     */
-    @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        try {
-            execute(sender, label, args);
-
-        } catch (CommandException ex) {
-            if (ex.getMessage() != null && !ex.getMessage().isEmpty()) {
-                // Use RED by default
-                sender.sendMessage(ChatColor.RED + ex.getMessage());
-            }
-        }
-
-        return true;
-    }
+    return true;
+  }
 
 }

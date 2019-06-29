@@ -21,13 +21,14 @@ import org.bukkit.entity.Player;
 
 public class ServerIconCommand extends IconCommand {
 
-    public ServerIconCommand(String command) {
-        super(command);
-    }
+  public ServerIconCommand(String command) {
+    super(command);
+  }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> BungeeCordUtils.connect(player, hasVariables ? getParsedCommand(player) : command));
-    }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(
+        () -> BungeeCordUtils.connect(player, hasVariables ? getParsedCommand(player) : command));
+  }
 
 }

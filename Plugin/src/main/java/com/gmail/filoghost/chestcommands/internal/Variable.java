@@ -22,69 +22,69 @@ import org.bukkit.entity.Player;
 
 public enum Variable {
 
-    PLAYER("{player}") {
-        public String getReplacement(Player executor) {
-            return executor.getName();
-        }
-    },
-
-    ONLINE("{online}") {
-        public String getReplacement(Player executor) {
-            return String.valueOf(CachedGetters.getOnlinePlayers());
-        }
-    },
-
-    POINTS("{points}") {
-        public String getReplacement(Player executor) {
-            if (PlayerPointsBridge.hasValidPlugin()) {
-                return String.valueOf(PlayerPointsBridge.getPoints(executor));
-            } else {
-                return "[PLAYER POINTS PLUGIN NOT FOUND]";
-            }
-        }
-    },
-
-    TOKENS("{tokens}") {
-        public String getReplacement(Player executor) {
-            if (TokenManagerBridge.hasValidPlugin()) {
-                return String.valueOf(TokenManagerBridge.getTokens(executor));
-            } else {
-                return "[TOKEN MANAGER PLUGIN NOT FOUND]";
-            }
-        }
-    },
-
-    MAX_PLAYERS("{max_players}") {
-        public String getReplacement(Player executor) {
-            return String.valueOf(Bukkit.getMaxPlayers());
-        }
-    },
-
-    MONEY("{money}") {
-        public String getReplacement(Player executor) {
-            if (EconomyBridge.hasValidEconomy()) {
-                return EconomyBridge.formatMoney(EconomyBridge.getMoney(executor));
-            } else {
-                return "[ECONOMY PLUGIN NOT FOUND]";
-            }
-        }
-    },
-
-    WORLD("{world}") {
-        public String getReplacement(Player executor) {
-            return executor.getWorld().getName();
-        }
-    };
-
-    private String text;
-
-    Variable(String text) {
-        this.text = text;
+  PLAYER("{player}") {
+    public String getReplacement(Player executor) {
+      return executor.getName();
     }
+  },
 
-    public String getText() {
-        return text;
+  ONLINE("{online}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(CachedGetters.getOnlinePlayers());
     }
+  },
 
-    public abstract String getReplacement(Player executor);
+  POINTS("{points}") {
+    public String getReplacement(Player executor) {
+      if (PlayerPointsBridge.hasValidPlugin()) {
+        return String.valueOf(PlayerPointsBridge.getPoints(executor));
+      } else {
+        return "[PLAYER POINTS PLUGIN NOT FOUND]";
+      }
+    }
+  },
+
+  TOKENS("{tokens}") {
+    public String getReplacement(Player executor) {
+      if (TokenManagerBridge.hasValidPlugin()) {
+        return String.valueOf(TokenManagerBridge.getTokens(executor));
+      } else {
+        return "[TOKEN MANAGER PLUGIN NOT FOUND]";
+      }
+    }
+  },
+
+  MAX_PLAYERS("{max_players}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(Bukkit.getMaxPlayers());
+    }
+  },
+
+  MONEY("{money}") {
+    public String getReplacement(Player executor) {
+      if (EconomyBridge.hasValidEconomy()) {
+        return EconomyBridge.formatMoney(EconomyBridge.getMoney(executor));
+      } else {
+        return "[ECONOMY PLUGIN NOT FOUND]";
+      }
+    }
+  },
+
+  WORLD("{world}") {
+    public String getReplacement(Player executor) {
+      return executor.getWorld().getName();
+    }
+  };
+
+  private String text;
+
+  Variable(String text) {
+    this.text = text;
+  }
+
+  public String getText() {
+    return text;
+  }
+
+  public abstract String getReplacement(Player executor);
 }

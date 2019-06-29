@@ -9,59 +9,73 @@ import org.bukkit.plugin.Plugin;
 // PlayerPoints minimum version: 2.0
 public class PlayerPointsBridge {
 
-    private static PlayerPoints playerPoints;
+  private static PlayerPoints playerPoints;
 
-    public static boolean setupPlugin() {
-        Plugin pointsPlugin = Bukkit.getPluginManager().getPlugin("PlayerPoints");
+  public static boolean setupPlugin() {
+    Plugin pointsPlugin = Bukkit.getPluginManager().getPlugin("PlayerPoints");
 
-        if (pointsPlugin == null) {
-            return false;
-        }
-
-        playerPoints = (PlayerPoints) pointsPlugin;
-        return true;
+    if (pointsPlugin == null) {
+      return false;
     }
 
-    public static boolean hasValidPlugin() {
-        return playerPoints != null;
+    playerPoints = (PlayerPoints) pointsPlugin;
+    return true;
+  }
+
+  public static boolean hasValidPlugin() {
+    return playerPoints != null;
+  }
+
+  public static int getPoints(Player player) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("PlayerPoints plugin was not found!");
+    }
+    return playerPoints.getAPI().look(player.getUniqueId());
+  }
+
+  public static boolean hasPoints(Player player, int minimum) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("PlayerPoints plugin was not found!");
+    }
+    if (minimum < 0) {
+      throw new IllegalArgumentException("Invalid amount of points: " + minimum);
     }
 
-    public static int getPoints(Player player) {
-        if (!hasValidPlugin()) throw new IllegalStateException("PlayerPoints plugin was not found!");
-        return playerPoints.getAPI().look(player.getUniqueId());
+    return playerPoints.getAPI().look(player.getUniqueId()) >= minimum;
+  }
+
+  /**
+   * @return true if the operation was successful.
+   */
+  public static boolean takePoints(Player player, int points) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("PlayerPoints plugin was not found!");
+    }
+    if (points < 0) {
+      throw new IllegalArgumentException("Invalid amount of points: " + points);
     }
 
-    public static boolean hasPoints(Player player, int minimum) {
-        if (!hasValidPlugin()) throw new IllegalStateException("PlayerPoints plugin was not found!");
-        if (minimum < 0) throw new IllegalArgumentException("Invalid amount of points: " + minimum);
+    boolean result = playerPoints.getAPI().take(player.getUniqueId(), points);
 
-        return playerPoints.getAPI().look(player.getUniqueId()) >= minimum;
+    MenuUtils.refreshMenu(player);
+
+    return result;
+  }
+
+
+  public static boolean givePoints(Player player, int points) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("PlayerPoints plugin was not found!");
+    }
+    if (points < 0) {
+      throw new IllegalArgumentException("Invalid amount of points: " + points);
     }
 
-    /**
-     * @return true if the operation was successful.
-     */
-    public static boolean takePoints(Player player, int points) {
-        if (!hasValidPlugin()) throw new IllegalStateException("PlayerPoints plugin was not found!");
-        if (points < 0) throw new IllegalArgumentException("Invalid amount of points: " + points);
+    boolean result = playerPoints.getAPI().give(player.getUniqueId(), points);
 
-        boolean result = playerPoints.getAPI().take(player.getUniqueId(), points);
+    MenuUtils.refreshMenu(player);
 
-        MenuUtils.refreshMenu(player);
-
-        return result;
-    }
-
-
-    public static boolean givePoints(Player player, int points) {
-        if (!hasValidPlugin()) throw new IllegalStateException("PlayerPoints plugin was not found!");
-        if (points < 0) throw new IllegalArgumentException("Invalid amount of points: " + points);
-
-        boolean result = playerPoints.getAPI().give(player.getUniqueId(), points);
-
-        MenuUtils.refreshMenu(player);
-
-        return result;
-    }
+    return result;
+  }
 
 }

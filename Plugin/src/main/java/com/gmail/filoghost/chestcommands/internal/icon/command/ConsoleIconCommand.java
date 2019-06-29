@@ -21,13 +21,14 @@ import org.bukkit.entity.Player;
 
 public class ConsoleIconCommand extends IconCommand {
 
-    public ConsoleIconCommand(String command) {
-        super(command);
-    }
+  public ConsoleIconCommand(String command) {
+    super(command);
+  }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getParsedCommand(player)));
-    }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain
+        .sync(() -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), getParsedCommand(player)));
+  }
 
 }

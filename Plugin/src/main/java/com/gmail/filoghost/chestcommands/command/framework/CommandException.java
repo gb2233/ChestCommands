@@ -16,10 +16,10 @@ package com.gmail.filoghost.chestcommands.command.framework;
 
 public class CommandException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public CommandException(String msg) {
-        super(msg);
-    }
+  public CommandException(String msg) {
+    super(msg);
+  }
 
 }

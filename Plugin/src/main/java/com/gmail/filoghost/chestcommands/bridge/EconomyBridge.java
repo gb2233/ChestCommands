@@ -23,75 +23,92 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class EconomyBridge {
 
-    private static Economy economy;
+  private static Economy economy;
 
-    public static boolean setupEconomy() {
-        if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        economy = rsp.getProvider();
-        return economy != null;
+  public static boolean setupEconomy() {
+    if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+      return false;
+    }
+    RegisteredServiceProvider<Economy> rsp = Bukkit.getServicesManager()
+        .getRegistration(Economy.class);
+    if (rsp == null) {
+      return false;
+    }
+    economy = rsp.getProvider();
+    return economy != null;
+  }
+
+  public static boolean hasValidEconomy() {
+    return economy != null;
+  }
+
+  public static Economy getEconomy() {
+    if (!hasValidEconomy()) {
+      throw new IllegalStateException("Economy plugin was not found!");
+    }
+    return economy;
+  }
+
+  public static double getMoney(Player player) {
+    if (!hasValidEconomy()) {
+      throw new IllegalStateException("Economy plugin was not found!");
+    }
+    return economy.getBalance(player, player.getWorld().getName());
+  }
+
+  public static boolean hasMoney(Player player, double minimum) {
+    if (!hasValidEconomy()) {
+      throw new IllegalStateException("Economy plugin was not found!");
+    }
+    if (minimum < 0.0) {
+      throw new IllegalArgumentException("Invalid amount of money: " + minimum);
     }
 
-    public static boolean hasValidEconomy() {
-        return economy != null;
+    double balance = economy.getBalance(player, player.getWorld().getName());
+
+    return !(balance < minimum);
+  }
+
+  /**
+   * @return true if the operation was successful.
+   */
+  public static boolean takeMoney(Player player, double amount) {
+    if (!hasValidEconomy()) {
+      throw new IllegalStateException("Economy plugin was not found!");
+    }
+    if (amount < 0.0) {
+      throw new IllegalArgumentException("Invalid amount of money: " + amount);
     }
 
-    public static Economy getEconomy() {
-        if (!hasValidEconomy()) throw new IllegalStateException("Economy plugin was not found!");
-        return economy;
+    EconomyResponse response = economy.withdrawPlayer(player, player.getWorld().getName(), amount);
+    boolean result = response.transactionSuccess();
+
+    MenuUtils.refreshMenu(player);
+
+    return result;
+  }
+
+  public static boolean giveMoney(Player player, double amount) {
+    if (!hasValidEconomy()) {
+      throw new IllegalStateException("Economy plugin was not found!");
+    }
+    if (amount < 0.0) {
+      throw new IllegalArgumentException("Invalid amount of money: " + amount);
     }
 
-    public static double getMoney(Player player) {
-        if (!hasValidEconomy()) throw new IllegalStateException("Economy plugin was not found!");
-        return economy.getBalance(player, player.getWorld().getName());
+    EconomyResponse response = economy.depositPlayer(player, player.getWorld().getName(), amount);
+    boolean result = response.transactionSuccess();
+
+    MenuUtils.refreshMenu(player);
+
+    return result;
+  }
+
+  public static String formatMoney(double amount) {
+    if (hasValidEconomy()) {
+      return economy.format(amount);
+    } else {
+      return Double.toString(amount);
     }
-
-    public static boolean hasMoney(Player player, double minimum) {
-        if (!hasValidEconomy()) throw new IllegalStateException("Economy plugin was not found!");
-        if (minimum < 0.0) throw new IllegalArgumentException("Invalid amount of money: " + minimum);
-
-        double balance = economy.getBalance(player, player.getWorld().getName());
-
-        return !(balance < minimum);
-    }
-
-    /**
-     * @return true if the operation was successful.
-     */
-    public static boolean takeMoney(Player player, double amount) {
-        if (!hasValidEconomy()) throw new IllegalStateException("Economy plugin was not found!");
-        if (amount < 0.0) throw new IllegalArgumentException("Invalid amount of money: " + amount);
-
-        EconomyResponse response = economy.withdrawPlayer(player, player.getWorld().getName(), amount);
-        boolean result = response.transactionSuccess();
-
-        MenuUtils.refreshMenu(player);
-
-        return result;
-    }
-
-    public static boolean giveMoney(Player player, double amount) {
-        if (!hasValidEconomy()) throw new IllegalStateException("Economy plugin was not found!");
-        if (amount < 0.0) throw new IllegalArgumentException("Invalid amount of money: " + amount);
-
-        EconomyResponse response = economy.depositPlayer(player, player.getWorld().getName(), amount);
-        boolean result = response.transactionSuccess();
-
-        MenuUtils.refreshMenu(player);
-
-        return result;
-    }
-
-    public static String formatMoney(double amount) {
-        if (hasValidEconomy()) {
-            return economy.format(amount);
-        } else {
-            return Double.toString(amount);
-        }
-    }
+  }
 }

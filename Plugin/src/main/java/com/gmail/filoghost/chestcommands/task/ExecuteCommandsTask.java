@@ -20,26 +20,26 @@ import org.bukkit.event.inventory.ClickType;
 
 public class ExecuteCommandsTask implements Runnable {
 
-    private Player player;
-    private Icon icon;
-    private ClickType clickType;
+  private Player player;
+  private Icon icon;
+  private ClickType clickType;
 
 
-    public ExecuteCommandsTask(Player player, Icon icon, ClickType clickType) {
-        this.player = player;
-        this.icon = icon;
-        this.clickType = clickType;
+  public ExecuteCommandsTask(Player player, Icon icon, ClickType clickType) {
+    this.player = player;
+    this.icon = icon;
+    this.clickType = clickType;
+  }
+
+
+  @Override
+  public void run() {
+    boolean close = icon.onClick(player, clickType);
+
+    if (close) {
+      player.closeInventory();
     }
-
-
-    @Override
-    public void run() {
-        boolean close = icon.onClick(player, clickType);
-
-        if (close) {
-            player.closeInventory();
-        }
-    }
+  }
 
 
 }

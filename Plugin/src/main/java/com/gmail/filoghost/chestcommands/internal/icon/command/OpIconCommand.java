@@ -20,25 +20,25 @@ import org.bukkit.entity.Player;
 
 public class OpIconCommand extends IconCommand {
 
-    public OpIconCommand(String command) {
-        super(command);
-    }
+  public OpIconCommand(String command) {
+    super(command);
+  }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> {
-            if (player.isOp()) {
-                player.chat("/" + getParsedCommand(player));
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> {
+      if (player.isOp()) {
+        player.chat("/" + getParsedCommand(player));
 
-            } else {
-                try {
-                    player.setOp(true);
-                    player.chat("/" + getParsedCommand(player));
-                } finally {
-                    player.setOp(false);
-                }
-            }
-        });
-    }
+      } else {
+        try {
+          player.setOp(true);
+          player.chat("/" + getParsedCommand(player));
+        } finally {
+          player.setOp(false);
+        }
+      }
+    });
+  }
 
 }

@@ -9,35 +9,36 @@ import org.bukkit.entity.Player;
 
 public class GivePointsIconCommand extends IconCommand {
 
-    private int pointsToGive;
-    private String errorMessage;
+  private int pointsToGive;
+  private String errorMessage;
 
-    public GivePointsIconCommand(String command) {
-        super(command);
+  public GivePointsIconCommand(String command) {
+    super(command);
 
-        if (!Utils.isValidPositiveInteger(command)) {
-            errorMessage = ChatColor.RED + "Invalid points amount: " + command;
-            return;
-        }
-
-        pointsToGive = Integer.parseInt(command);
+    if (!Utils.isValidPositiveInteger(command)) {
+      errorMessage = ChatColor.RED + "Invalid points amount: " + command;
+      return;
     }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> {
-            if (errorMessage != null) {
-                player.sendMessage(errorMessage);
-                TaskChain.abort();
-            }
+    pointsToGive = Integer.parseInt(command);
+  }
 
-            if (PlayerPointsBridge.hasValidPlugin()) {
-                PlayerPointsBridge.givePoints(player, pointsToGive);
-            } else {
-                player.sendMessage(ChatColor.RED + "The plugin PlayerPoints was not found. Please inform the staff.");
-                TaskChain.abort();
-            }
-        });
-    }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> {
+      if (errorMessage != null) {
+        player.sendMessage(errorMessage);
+        TaskChain.abort();
+      }
+
+      if (PlayerPointsBridge.hasValidPlugin()) {
+        PlayerPointsBridge.givePoints(player, pointsToGive);
+      } else {
+        player.sendMessage(
+            ChatColor.RED + "The plugin PlayerPoints was not found. Please inform the staff.");
+        TaskChain.abort();
+      }
+    });
+  }
 
 }

@@ -23,44 +23,45 @@ import org.bukkit.entity.Player;
 
 public class GiveMoneyIconCommand extends IconCommand {
 
-    private double moneyToGive;
-    private String errorMessage;
+  private double moneyToGive;
+  private String errorMessage;
 
-    public GiveMoneyIconCommand(String command) {
-        super(command);
-        if (!hasVariables) {
-            parseMoney(super.command);
-        }
+  public GiveMoneyIconCommand(String command) {
+    super(command);
+    if (!hasVariables) {
+      parseMoney(super.command);
     }
+  }
 
-    private void parseMoney(String command) {
-        if (!Utils.isValidPositiveDouble(command)) {
-            errorMessage = ChatColor.RED + "Invalid money amount: " + command;
-            return;
-        }
-        errorMessage = null;
-        moneyToGive = Double.parseDouble(command);
+  private void parseMoney(String command) {
+    if (!Utils.isValidPositiveDouble(command)) {
+      errorMessage = ChatColor.RED + "Invalid money amount: " + command;
+      return;
     }
+    errorMessage = null;
+    moneyToGive = Double.parseDouble(command);
+  }
 
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> {
-            if (hasVariables) {
-                parseMoney(getParsedCommand(player));
-            }
-            if (errorMessage != null) {
-                player.sendMessage(errorMessage);
-                TaskChain.abort();
-            }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> {
+      if (hasVariables) {
+        parseMoney(getParsedCommand(player));
+      }
+      if (errorMessage != null) {
+        player.sendMessage(errorMessage);
+        TaskChain.abort();
+      }
 
-            if (EconomyBridge.hasValidEconomy()) {
-                EconomyBridge.giveMoney(player, moneyToGive);
-            } else {
-                player.sendMessage(ChatColor.RED + "Vault with a compatible economy plugin not found. Please inform the staff.");
-                TaskChain.abort();
-            }
-        });
-    }
+      if (EconomyBridge.hasValidEconomy()) {
+        EconomyBridge.giveMoney(player, moneyToGive);
+      } else {
+        player.sendMessage(ChatColor.RED
+            + "Vault with a compatible economy plugin not found. Please inform the staff.");
+        TaskChain.abort();
+      }
+    });
+  }
 
 }

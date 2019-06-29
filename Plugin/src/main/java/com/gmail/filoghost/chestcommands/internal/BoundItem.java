@@ -22,45 +22,45 @@ import org.bukkit.inventory.ItemStack;
 
 public class BoundItem {
 
-    private ExtendedIconMenu menu;
-    private Material material;
-    private short data;
-    private ClickType clickType;
+  private ExtendedIconMenu menu;
+  private Material material;
+  private short data;
+  private ClickType clickType;
 
-    public BoundItem(ExtendedIconMenu menu, Material material, ClickType clickType) {
-        Validate.notNull(material, "Material cannot be null");
-        Validate.notNull(material, "ClickType cannot be null");
-        Validate.isTrue(material != Material.AIR, "Material cannot be AIR");
+  public BoundItem(ExtendedIconMenu menu, Material material, ClickType clickType) {
+    Validate.notNull(material, "Material cannot be null");
+    Validate.notNull(material, "ClickType cannot be null");
+    Validate.isTrue(material != Material.AIR, "Material cannot be AIR");
 
-        this.menu = menu;
-        this.material = material;
-        this.clickType = clickType;
-        data = -1; // -1 = any
+    this.menu = menu;
+    this.material = material;
+    this.clickType = clickType;
+    data = -1; // -1 = any
+  }
+
+  public void setRestrictiveData(short data) {
+    this.data = data;
+  }
+
+  public ExtendedIconMenu getMenu() {
+    return menu;
+  }
+
+  public boolean isValidTrigger(ItemStack item, Action action) {
+    if (item == null) {
+      return false;
     }
 
-    public void setRestrictiveData(short data) {
-        this.data = data;
+    // First, they must have the same material
+    if (this.material != item.getType()) {
+      return false;
+    }
+    // Check if the data value is valid (-1 = any data value)
+    if (this.data != -1 && this.data != item.getDurability()) {
+      return false;
     }
 
-    public ExtendedIconMenu getMenu() {
-        return menu;
-    }
-
-    public boolean isValidTrigger(ItemStack item, Action action) {
-        if (item == null) {
-            return false;
-        }
-
-        // First, they must have the same material
-        if (this.material != item.getType()) {
-            return false;
-        }
-        // Check if the data value is valid (-1 = any data value)
-        if (this.data != -1 && this.data != item.getDurability()) {
-            return false;
-        }
-
-        // Finally checks the action
-        return clickType.isValidInteract(action);
-    }
+    // Finally checks the action
+    return clickType.isValidInteract(action);
+  }
 }

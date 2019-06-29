@@ -21,18 +21,18 @@ import org.bukkit.entity.Player;
 
 public abstract class IconCommand {
 
-    protected String command;
-    protected boolean hasVariables;
+  protected String command;
+  protected boolean hasVariables;
 
-    public IconCommand(String command) {
-        this.command = AsciiPlaceholders.placeholdersToSymbols(command).trim();
-        this.hasVariables = VariableManager.hasVariables(command);
-    }
+  public IconCommand(String command) {
+    this.command = AsciiPlaceholders.placeholdersToSymbols(command).trim();
+    this.hasVariables = VariableManager.hasVariables(command);
+  }
 
-    public String getParsedCommand(Player executor) {
-        return hasVariables ? VariableManager.setVariables(command, executor) : command;
-    }
+  public String getParsedCommand(Player executor) {
+    return hasVariables ? VariableManager.setVariables(command, executor) : command;
+  }
 
-    public abstract void execute(Player player, TaskChain taskChain);
+  public abstract void execute(Player player, TaskChain taskChain);
 
 }

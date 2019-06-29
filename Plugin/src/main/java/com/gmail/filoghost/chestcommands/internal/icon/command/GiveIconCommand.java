@@ -24,39 +24,39 @@ import org.bukkit.inventory.ItemStack;
 
 public class GiveIconCommand extends IconCommand {
 
-    private ItemStack itemToGive;
-    private String errorMessage;
+  private ItemStack itemToGive;
+  private String errorMessage;
 
-    public GiveIconCommand(String command) {
-        super(command);
-        if (!hasVariables) {
-            parseItem(super.command);
-        }
+  public GiveIconCommand(String command) {
+    super(command);
+    if (!hasVariables) {
+      parseItem(super.command);
     }
+  }
 
-    private void parseItem(String command) {
-        try {
-            ItemStackReader reader = new ItemStackReader(command, true);
-            itemToGive = reader.createStack();
-            errorMessage = null;
-        } catch (FormatException e) {
-            errorMessage = ChatColor.RED + "Invalid item to give: " + e.getMessage();
-        }
+  private void parseItem(String command) {
+    try {
+      ItemStackReader reader = new ItemStackReader(command, true);
+      itemToGive = reader.createStack();
+      errorMessage = null;
+    } catch (FormatException e) {
+      errorMessage = ChatColor.RED + "Invalid item to give: " + e.getMessage();
     }
+  }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> {
-            if (hasVariables) {
-                parseItem(getParsedCommand(player));
-            }
-            if (errorMessage != null) {
-                player.sendMessage(errorMessage);
-                TaskChain.abort();
-            }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> {
+      if (hasVariables) {
+        parseItem(getParsedCommand(player));
+      }
+      if (errorMessage != null) {
+        player.sendMessage(errorMessage);
+        TaskChain.abort();
+      }
 
-            player.getInventory().addItem(itemToGive.clone());
-        });
-    }
+      player.getInventory().addItem(itemToGive.clone());
+    });
+  }
 
 }

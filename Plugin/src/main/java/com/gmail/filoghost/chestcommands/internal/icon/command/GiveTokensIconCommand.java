@@ -9,35 +9,36 @@ import org.bukkit.entity.Player;
 
 public class GiveTokensIconCommand extends IconCommand {
 
-    private long tokensToGive;
-    private String errorMessage;
+  private long tokensToGive;
+  private String errorMessage;
 
-    public GiveTokensIconCommand(String command) {
-        super(command);
+  public GiveTokensIconCommand(String command) {
+    super(command);
 
-        if (!Utils.isValidPositiveInteger(command)) {
-            errorMessage = ChatColor.RED + "Invalid tokens amount: " + command;
-            return;
-        }
-
-        tokensToGive = Long.parseLong(command);
+    if (!Utils.isValidPositiveInteger(command)) {
+      errorMessage = ChatColor.RED + "Invalid tokens amount: " + command;
+      return;
     }
 
-    @Override
-    public void execute(Player player, TaskChain taskChain) {
-        taskChain.sync(() -> {
-            if (errorMessage != null) {
-                player.sendMessage(errorMessage);
-                TaskChain.abort();
-            }
+    tokensToGive = Long.parseLong(command);
+  }
 
-            if (TokenManagerBridge.hasValidPlugin()) {
-                TokenManagerBridge.giveTokens(player, tokensToGive);
-            } else {
-                player.sendMessage(ChatColor.RED + "The plugin TokenManager was not found. Please inform the staff.");
-                TaskChain.abort();
-            }
-        });
-    }
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> {
+      if (errorMessage != null) {
+        player.sendMessage(errorMessage);
+        TaskChain.abort();
+      }
+
+      if (TokenManagerBridge.hasValidPlugin()) {
+        TokenManagerBridge.giveTokens(player, tokensToGive);
+      } else {
+        player.sendMessage(
+            ChatColor.RED + "The plugin TokenManager was not found. Please inform the staff.");
+        TaskChain.abort();
+      }
+    });
+  }
 
 }
