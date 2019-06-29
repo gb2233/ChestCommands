@@ -265,7 +265,7 @@ points-give:
   NAME: '&ePoints'
   LORE:
     - 'This command will be executed'
-    - 'only if you have at least 50 tokens!'
+    - 'only if you have at least 50 points!'
     - 'It gives you a gold block.'
   ID: gold_block
   POINTS: 50
