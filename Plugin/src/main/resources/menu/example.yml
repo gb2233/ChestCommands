@@ -298,9 +298,10 @@ multiple-required-items:
 
 
 test-per-click-command:
-  COMMAND-LEFT: 'console: Say You left-clicked'
-  COMMAND-RIGHT: 'console: Say You right-clicked'
-  COMMAND-MIDDLE: 'console: Say You middle-clicked'
+  COMMAND:
+    LEFT: 'console: Say You left-clicked'
+    RIGHT: 'console: Say You right-clicked'
+    MIDDLE: 'console: Say You middle-clicked'
   NAME: '&aCommands per clicktype'
   LORE:
     - 'You left-click.'
