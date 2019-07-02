@@ -271,6 +271,7 @@ public class ChestCommands extends JavaPlugin {
       // Create the directory with the default menu
       menusFolder.mkdirs();
       BukkitUtils.saveResourceSafe(this, "menu" + File.separator + "example.yml");
+      BukkitUtils.saveResourceSafe(this, "menu" + File.separator + "custom_gui.yml");
     }
 
     List<PluginConfig> menusList = loadMenus(menusFolder);
