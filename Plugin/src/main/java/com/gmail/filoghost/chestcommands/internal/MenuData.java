@@ -46,7 +46,9 @@ public class MenuData {
     return title;
   }
 
-  public int getSlots() { return slots;}
+  public int getSlots() {
+    return slots;
+  }
 
   public boolean hasCommands() {
     return commands != null && commands.length > 0;

@@ -291,7 +291,8 @@ public class ChestCommands extends JavaPlugin {
 
       MenuData data = MenuSerializer.loadMenuData(menuConfig, errorLogger);
       ExtendedIconMenu iconMenu = MenuSerializer
-          .loadMenu(menuConfig, data.getTitle(), data.getSlots(), data.getInventoryType(), errorLogger);
+          .loadMenu(menuConfig, data.getTitle(), data.getSlots(), data.getInventoryType(),
+              errorLogger);
 
       if (fileNameToMenuMap.containsKey(menuConfig.getFileName())) {
         errorLogger.addError("Two menus have the same file name \"" + menuConfig.getFileName()

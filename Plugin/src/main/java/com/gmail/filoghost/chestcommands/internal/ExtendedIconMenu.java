@@ -87,7 +87,8 @@ public class ExtendedIconMenu extends IconMenu {
         inventory = Bukkit
             .createInventory(new MenuInventoryHolder(this), getSize(), getTitle());
       } else {
-        inventory = Bukkit.createInventory(new MenuInventoryHolder(this), inventoryType, getTitle());
+        inventory = Bukkit
+            .createInventory(new MenuInventoryHolder(this), inventoryType, getTitle());
       }
 
       for (int i = 0; i < icons.length; i++) {

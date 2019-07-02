@@ -30,9 +30,11 @@ import org.bukkit.event.inventory.InventoryType;
 
 public class MenuSerializer {
 
-  public static ExtendedIconMenu loadMenu(PluginConfig config, String title, int slots, InventoryType inventoryType,
+  public static ExtendedIconMenu loadMenu(PluginConfig config, String title, int slots,
+      InventoryType inventoryType,
       ErrorLogger errorLogger) {
-    ExtendedIconMenu iconMenu = new ExtendedIconMenu(title, slots, inventoryType, config.getFileName());
+    ExtendedIconMenu iconMenu = new ExtendedIconMenu(title, slots, inventoryType,
+        config.getFileName());
 
     for (String subSectionName : config.getKeys(false)) {
       if (subSectionName.equals("menu-settings")) {
@@ -97,18 +99,27 @@ public class MenuSerializer {
             + "\" contains an illegal inventory type, it will be CHEST by default");
       }
       switch (inventoryType) {
-        default: errorLogger.addError("The menu \"" + config.getFileName()
-            + "\"'s inventory type is not supported, it will be CHEST by default");
-        // TODO: Figure out why Anvil doesn't work
-        // case ANVIL:
+        default:
+          errorLogger.addError("The menu \"" + config.getFileName()
+              + "\"'s inventory type is not supported, it will be CHEST by default");
+          // TODO: Figure out why Anvil doesn't work
+          // case ANVIL:
         case FURNACE:
-          slots = 3; break;
-        case CHEST: slots = 27; break;
-        case HOPPER: slots = 5; break;
-        case CRAFTING: slots = 10; break;
+          slots = 3;
+          break;
+        case CHEST:
+          slots = 27;
+          break;
+        case HOPPER:
+          slots = 5;
+          break;
+        case CRAFTING:
+          slots = 10;
+          break;
         case DISPENSER:
         case DROPPER:
-          slots = 9; break;
+          slots = 9;
+          break;
       }
     } else {
       slots = 6 * 9; // Defaults to 6 rows
