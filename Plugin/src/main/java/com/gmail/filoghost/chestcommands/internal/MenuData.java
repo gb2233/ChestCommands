@@ -18,12 +18,14 @@ import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.ClickType;
 import java.util.List;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryType;
 
 public class MenuData {
 
   // Required data
   private String title;
-  private int rows;
+  private InventoryType inventoryType;
+  private int slots;
 
   // Optional data
   private String[] commands;
@@ -33,9 +35,10 @@ public class MenuData {
   private List<IconCommand> openActions;
   private int refreshTenths;
 
-  public MenuData(String title, int rows) {
+  public MenuData(String title, int slots, InventoryType inventoryType) {
     this.title = title;
-    this.rows = rows;
+    this.slots = slots;
+    this.inventoryType = inventoryType;
     boundDataValue = -1; // -1 = any
   }
 
@@ -43,9 +46,7 @@ public class MenuData {
     return title;
   }
 
-  public int getRows() {
-    return rows;
-  }
+  public int getSlots() { return slots;}
 
   public boolean hasCommands() {
     return commands != null && commands.length > 0;
@@ -105,5 +106,9 @@ public class MenuData {
 
   public void setRefreshTenths(int refreshTenths) {
     this.refreshTenths = refreshTenths;
+  }
+
+  public InventoryType getInventoryType() {
+    return inventoryType;
   }
 }

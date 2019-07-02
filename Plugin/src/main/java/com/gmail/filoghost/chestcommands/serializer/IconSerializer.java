@@ -283,12 +283,27 @@ public class IconSerializer {
     Integer x = null;
     Integer y = null;
 
-    if (section.isInt(Nodes.POSITION_X)) {
-      x = section.getInt(Nodes.POSITION_X);
-    }
+    if (section.isInt(Nodes.SLOT)) {
+      int slot = section.getInt(Nodes.SLOT);
+      if (slot > 9) {
+        x = slot;
+        y = 1;
+        while (x > 9) {
+          y += 1;
+          x -= 9;
+        }
+      } else {
+        x = slot;
+        y = 1;
+      }
+    } else {
+      if (section.isInt(Nodes.POSITION_X)) {
+        x = section.getInt(Nodes.POSITION_X);
+      }
 
-    if (section.isInt(Nodes.POSITION_Y)) {
-      y = section.getInt(Nodes.POSITION_Y);
+      if (section.isInt(Nodes.POSITION_Y)) {
+        y = section.getInt(Nodes.POSITION_Y);
+      }
     }
 
     return new Coords(x, y);
@@ -348,6 +363,7 @@ public class IconSerializer {
         PERMISSION_MESSAGE = "PERMISSION-MESSAGE",
         VIEW_PERMISSION = "VIEW-PERMISSION",
         KEEP_OPEN = "KEEP-OPEN",
+        SLOT = "SLOT",
         POSITION_X = "POSITION-X",
         POSITION_Y = "POSITION-Y";
   }

@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -38,8 +39,8 @@ public class ExtendedIconMenu extends IconMenu {
 
   private int refreshTicks;
 
-  public ExtendedIconMenu(String title, int rows, String fileName) {
-    super(title, rows);
+  public ExtendedIconMenu(String title, int slots, InventoryType inventoryType, String fileName) {
+    super(title, slots, inventoryType);
     this.fileName = fileName;
     this.permission = Permissions.OPEN_MENU_BASE + fileName;
   }
@@ -81,8 +82,13 @@ public class ExtendedIconMenu extends IconMenu {
         taskChain.execute();
       }
 
-      Inventory inventory = Bukkit
-          .createInventory(new MenuInventoryHolder(this), icons.length, title);
+      Inventory inventory;
+      if (inventoryType.equals(InventoryType.CHEST) && icons.length != 27) {
+        inventory = Bukkit
+            .createInventory(new MenuInventoryHolder(this), getSize(), getTitle());
+      } else {
+        inventory = Bukkit.createInventory(new MenuInventoryHolder(this), inventoryType, getTitle());
+      }
 
       for (int i = 0; i < icons.length; i++) {
         if (icons[i] != null) {

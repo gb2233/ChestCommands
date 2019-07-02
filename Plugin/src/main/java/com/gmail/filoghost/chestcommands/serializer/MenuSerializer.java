@@ -26,12 +26,13 @@ import com.gmail.filoghost.chestcommands.util.FormatUtils;
 import com.gmail.filoghost.chestcommands.util.ItemStackReader;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryType;
 
 public class MenuSerializer {
 
-  public static ExtendedIconMenu loadMenu(PluginConfig config, String title, int rows,
+  public static ExtendedIconMenu loadMenu(PluginConfig config, String title, int slots, InventoryType inventoryType,
       ErrorLogger errorLogger) {
-    ExtendedIconMenu iconMenu = new ExtendedIconMenu(title, rows, config.getFileName());
+    ExtendedIconMenu iconMenu = new ExtendedIconMenu(title, slots, inventoryType, config.getFileName());
 
     for (String subSectionName : config.getKeys(false)) {
       if (subSectionName.equals("menu-settings")) {
@@ -69,7 +70,8 @@ public class MenuSerializer {
   public static MenuData loadMenuData(PluginConfig config, ErrorLogger errorLogger) {
 
     String title = FormatUtils.addColors(config.getString(Nodes.MENU_NAME));
-    int rows;
+    int slots = 0;
+    InventoryType inventoryType = InventoryType.CHEST;
 
     if (title == null) {
       errorLogger.addError("The menu \"" + config.getFileName() + "\" doesn't have a name set.");
@@ -81,19 +83,40 @@ public class MenuSerializer {
     }
 
     if (config.isInt(Nodes.MENU_ROWS)) {
-      rows = config.getInt(Nodes.MENU_ROWS);
+      slots = config.getInt(Nodes.MENU_ROWS) * 9;
 
-      if (rows <= 0) {
-        rows = 1;
+      if (slots <= 0) {
+        slots = 9;
       }
 
+    } else if (config.isSet(Nodes.MENU_INV_TYPE)) {
+      try {
+        inventoryType = InventoryType.valueOf(config.getString(Nodes.MENU_INV_TYPE));
+      } catch (IllegalArgumentException e) {
+        errorLogger.addError("The menu \"" + config.getFileName()
+            + "\" contains an illegal inventory type, it will be CHEST by default");
+      }
+      switch (inventoryType) {
+        default: errorLogger.addError("The menu \"" + config.getFileName()
+            + "\"'s inventory type is not supported, it will be CHEST by default");
+        // TODO: Figure out why Anvil doesn't work
+        // case ANVIL:
+        case FURNACE:
+          slots = 3; break;
+        case CHEST: slots = 27; break;
+        case HOPPER: slots = 5; break;
+        case CRAFTING: slots = 10; break;
+        case DISPENSER:
+        case DROPPER:
+          slots = 9; break;
+      }
     } else {
-      rows = 6; // Defaults to 6 rows
+      slots = 6 * 9; // Defaults to 6 rows
       errorLogger.addError("The menu \"" + config.getFileName()
           + "\" doesn't have a the number of rows set, it will have 6 rows by default.");
     }
 
-    MenuData menuData = new MenuData(title, rows);
+    MenuData menuData = new MenuData(title, slots, inventoryType);
 
     if (config.isSet(Nodes.MENU_COMMAND)) {
       menuData.setCommands(config.getString(Nodes.MENU_COMMAND).replace(" ", "").split(";"));
@@ -141,6 +164,7 @@ public class MenuSerializer {
 
     public static final String MENU_NAME = "menu-settings.name";
     public static final String MENU_ROWS = "menu-settings.rows";
+    public static final String MENU_INV_TYPE = "menu-settings.inventory-type";
     public static final String MENU_COMMAND = "menu-settings.command";
 
     public static final String OPEN_ACTION = "menu-settings.open-action";

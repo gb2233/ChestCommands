@@ -21,6 +21,7 @@ import com.gmail.filoghost.chestcommands.util.Validate;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 /*
@@ -34,19 +35,19 @@ import org.bukkit.inventory.Inventory;
 public class IconMenu {
 
   protected final String title;
+  protected final InventoryType inventoryType;
   protected final Icon[] icons;
 
 
-  public IconMenu(String title, int rows) {
+  public IconMenu(String title, int slots, InventoryType inventoryType) {
     this.title = title;
-    icons = new Icon[rows * 9];
+    this.inventoryType = inventoryType;
+    icons = new Icon[slots];
   }
 
   public void setIcon(int x, int y, Icon icon) {
     int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
-    if (slot >= 0 && slot < icons.length) {
-      icons[slot] = icon;
-    }
+    setIconRaw(slot, icon);
   }
 
   public void setIconRaw(int slot, Icon icon) {
@@ -87,8 +88,13 @@ public class IconMenu {
   public void open(Player player) {
     Validate.notNull(player, "Player cannot be null");
 
-    Inventory inventory = Bukkit
-        .createInventory(new MenuInventoryHolder(this), icons.length, title);
+    Inventory inventory;
+    if (inventoryType.equals(InventoryType.CHEST) && icons.length != 27) {
+      inventory = Bukkit
+          .createInventory(new MenuInventoryHolder(this), icons.length, title);
+    } else {
+      inventory = Bukkit.createInventory(new MenuInventoryHolder(this), inventoryType, title);
+    }
 
     for (int i = 0; i < icons.length; i++) {
       if (icons[i] != null) {
