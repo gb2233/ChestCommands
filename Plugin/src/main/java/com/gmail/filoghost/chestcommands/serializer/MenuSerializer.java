@@ -113,7 +113,7 @@ public class MenuSerializer {
         case HOPPER:
           slots = 5;
           break;
-        case CRAFTING:
+        case WORKBENCH:
           slots = 10;
           break;
         case DISPENSER:

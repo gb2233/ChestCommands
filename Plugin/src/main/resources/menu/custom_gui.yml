@@ -1,0 +1,29 @@
+menu-settings:
+
+  name: '&1Custom menu'
+
+  # REQUIRED
+  # You can use inventory-type instead of rows
+  #
+  # Supported types: FURNACE, CHEST, HOPPER, WORKBENCH, DISPENSER, DROPPER
+  inventory-type: HOPPER
+
+  command: 'customgui'
+  auto-refresh: 5
+  open-action: 'tell: &eYou opened the custom menu.'
+
+slot_1:
+  COMMAND: 'console: say Hello {player}!'
+  NAME: '&cRuns command from the console.'
+  LORE:
+    - 'It broadcasts your name with the command /say.'
+  ID: command block
+  SLOT: 1
+
+slot_3:
+  COMMAND: 'console: say Hello again {player}!'
+  NAME: '&cRuns command from the console.'
+  LORE:
+    - 'It broadcasts your name with the command /say.'
+  ID: command block
+  SLOT: 3
