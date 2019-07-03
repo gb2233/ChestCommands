@@ -12,7 +12,7 @@ menu-settings:
 
   # REQUIRED
   # The number of rows in the menu.
-  rows: 3
+  rows: 4
 
   # OPTIONAL (you can remove this or set it to '')
   # Bind multiple commands using ; (command: 'menu; m; me')
@@ -323,6 +323,29 @@ test-delay-command:
   POSITION-Y: 3
 
 
+simple-buy-sell:
+  REQUIRED-ITEM:
+    RIGHT: 'wheat'
+    MIDDLE: 'wheat,64'
+  COMMAND:
+    LEFT: 'condition: {money} >= 5; console: eco take {player} 5; give: wheat,1'
+    RIGHT: 'give-money: 3.5'
+    MIDDLE: 'give-money: 15'
+  NAME: '&dSimple Buy/Sell Item'
+  LORE:
+    - 'A simple example for a shop item'
+    - ''
+    - 'Left click to buy one for 5$'
+    - 'Right click to sell one for 3.5$'
+    - 'Middle click to sell a stack for 15$'
+    - ''
+    - 'Stinks :)'
+  ID: wheat
+  POSITION-X: 7
+  POSITION-Y: 3
+  KEEP-OPEN: true
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
@@ -330,4 +353,4 @@ menu-close-no-commands-no-lore:
     - 'Create an item without command,'
     - 'the GUI will just close.'
   POSITION-X: 9
-  POSITION-Y: 3
+  POSITION-Y: 4

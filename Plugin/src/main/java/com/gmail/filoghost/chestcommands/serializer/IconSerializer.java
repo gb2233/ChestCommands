@@ -246,7 +246,104 @@ public class IconSerializer {
               + levels);
     }
 
-    if (section.isSet(Nodes.REQUIRED_ITEM)) {
+    if (section.isConfigurationSection(Nodes.REQUIRED_ITEM)) {
+      // LEFT REQUIRED ITEMS
+      if (section.isSet(Nodes.REQUIRED_ITEM_LEFT)) {
+        List<String> requiredItemsStrings;
+        if (section.isList(Nodes.REQUIRED_ITEM_LEFT)) {
+          requiredItemsStrings = section.getStringList(Nodes.REQUIRED_ITEM_LEFT);
+        } else if (section.isString(Nodes.REQUIRED_ITEM_LEFT) && section
+            .getString(Nodes.REQUIRED_ITEM_LEFT)
+            .contains(";")) {
+          requiredItemsStrings = Arrays
+              .asList(section.getString(Nodes.REQUIRED_ITEM_LEFT).split(";"));
+        } else {
+          requiredItemsStrings = Collections
+              .singletonList(section.getString(Nodes.REQUIRED_ITEM_LEFT));
+        }
+
+        List<RequiredItem> requiredItems = new ArrayList<>();
+        for (String requiredItemText : requiredItemsStrings) {
+          try {
+            ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
+            RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(),
+                itemReader.getAmount());
+            if (itemReader.hasExplicitDataValue()) {
+              requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
+            }
+            requiredItems.add(requiredItem);
+          } catch (FormatException e) {
+            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
+                + "\" has an invalid REQUIRED-ITEM.LEFT: " + e.getMessage());
+          }
+        }
+        icon.setLeftRequiredItems(requiredItems);
+      }
+      // RIGHT REQUIRED ITEMS
+      if (section.isSet(Nodes.REQUIRED_ITEM_RIGHT)) {
+        List<String> requiredItemsStrings;
+        if (section.isList(Nodes.REQUIRED_ITEM_RIGHT)) {
+          requiredItemsStrings = section.getStringList(Nodes.REQUIRED_ITEM_RIGHT);
+        } else if (section.isString(Nodes.REQUIRED_ITEM_RIGHT) && section
+            .getString(Nodes.REQUIRED_ITEM_RIGHT)
+            .contains(";")) {
+          requiredItemsStrings = Arrays
+              .asList(section.getString(Nodes.REQUIRED_ITEM_RIGHT).split(";"));
+        } else {
+          requiredItemsStrings = Collections
+              .singletonList(section.getString(Nodes.REQUIRED_ITEM_RIGHT));
+        }
+
+        List<RequiredItem> requiredItems = new ArrayList<>();
+        for (String requiredItemText : requiredItemsStrings) {
+          try {
+            ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
+            RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(),
+                itemReader.getAmount());
+            if (itemReader.hasExplicitDataValue()) {
+              requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
+            }
+            requiredItems.add(requiredItem);
+          } catch (FormatException e) {
+            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
+                + "\" has an invalid REQUIRED-ITEM.RIGHT: " + e.getMessage());
+          }
+        }
+        icon.setRightRequiredItems(requiredItems);
+      }
+      // MIDDLE REQUIRED ITEMS
+      if (section.isSet(Nodes.REQUIRED_ITEM_MIDDLE)) {
+        List<String> requiredItemsStrings;
+        if (section.isList(Nodes.REQUIRED_ITEM_MIDDLE)) {
+          requiredItemsStrings = section.getStringList(Nodes.REQUIRED_ITEM_MIDDLE);
+        } else if (section.isString(Nodes.REQUIRED_ITEM_MIDDLE) && section
+            .getString(Nodes.REQUIRED_ITEM_MIDDLE)
+            .contains(";")) {
+          requiredItemsStrings = Arrays
+              .asList(section.getString(Nodes.REQUIRED_ITEM_MIDDLE).split(";"));
+        } else {
+          requiredItemsStrings = Collections
+              .singletonList(section.getString(Nodes.REQUIRED_ITEM_MIDDLE));
+        }
+
+        List<RequiredItem> requiredItems = new ArrayList<>();
+        for (String requiredItemText : requiredItemsStrings) {
+          try {
+            ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
+            RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(),
+                itemReader.getAmount());
+            if (itemReader.hasExplicitDataValue()) {
+              requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
+            }
+            requiredItems.add(requiredItem);
+          } catch (FormatException e) {
+            errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
+                + "\" has an invalid REQUIRED-ITEM.MIDDLE: " + e.getMessage());
+          }
+        }
+        icon.setMiddleRequiredItems(requiredItems);
+      }
+    } else if (section.isSet(Nodes.REQUIRED_ITEM)) {
       List<String> requiredItemsStrings;
       if (section.isList(Nodes.REQUIRED_ITEM)) {
         requiredItemsStrings = section.getStringList(Nodes.REQUIRED_ITEM);
@@ -360,6 +457,9 @@ public class IconSerializer {
         TOKENS = "TOKENS",
         EXP_LEVELS = "LEVELS",
         REQUIRED_ITEM = "REQUIRED-ITEM",
+        REQUIRED_ITEM_LEFT = "REQUIRED-ITEM.LEFT",
+        REQUIRED_ITEM_RIGHT = "REQUIRED-ITEM.RIGHT",
+        REQUIRED_ITEM_MIDDLE = "REQUIRED-ITEM.MIDDLE",
         PERMISSION = "PERMISSION",
         PERMISSION_MESSAGE = "PERMISSION-MESSAGE",
         VIEW_PERMISSION = "VIEW-PERMISSION",

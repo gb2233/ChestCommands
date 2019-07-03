@@ -43,7 +43,9 @@ public class ExtendedIcon extends Icon {
 
   private double moneyPrice;
   private int expLevelsPrice;
-  private List<RequiredItem> requiredItems = new ArrayList<>();
+  private List<RequiredItem> leftRequiredItems = new ArrayList<>();
+  private List<RequiredItem> rightRequiredItems = new ArrayList<>();
+  private List<RequiredItem> middleRequiredItems = new ArrayList<>();
   private int playerPointsPrice;
   private long tokenManagerPrice;
 
@@ -147,12 +149,34 @@ public class ExtendedIcon extends Icon {
     this.expLevelsPrice = expLevelsPrice;
   }
 
-  public List<RequiredItem> getRequiredItems() {
-    return requiredItems;
+  public List<RequiredItem> getLeftRequiredItems() {
+    return leftRequiredItems;
+  }
+
+  public void setLeftRequiredItems(List<RequiredItem> requiredItems) {
+    this.leftRequiredItems = requiredItems;
+  }
+
+  public List<RequiredItem> getRightRequiredItems() {
+    return rightRequiredItems;
+  }
+
+  public void setRightRequiredItems(List<RequiredItem> requiredItems) {
+    this.rightRequiredItems = requiredItems;
+  }
+
+  public List<RequiredItem> getMiddleRequiredItems() {
+    return middleRequiredItems;
+  }
+
+  public void setMiddleRequiredItems(List<RequiredItem> requiredItems) {
+    this.middleRequiredItems = requiredItems;
   }
 
   public void setRequiredItems(List<RequiredItem> requiredItems) {
-    this.requiredItems = requiredItems;
+    this.leftRequiredItems = requiredItems;
+    this.rightRequiredItems = requiredItems;
+    this.middleRequiredItems = requiredItems;
   }
 
   public String calculateName(Player pov) {
@@ -228,6 +252,18 @@ public class ExtendedIcon extends Icon {
       }
     }
 
+    List<RequiredItem> requiredItems = new ArrayList<>();
+    switch (clickType) {
+      case LEFT:
+        requiredItems = leftRequiredItems;
+        break;
+      case RIGHT:
+        requiredItems = rightRequiredItems;
+        break;
+      case MIDDLE:
+        requiredItems = middleRequiredItems;
+        break;
+    }
     if (!requiredItems.isEmpty()) {
 
       boolean notHasItem = false;
