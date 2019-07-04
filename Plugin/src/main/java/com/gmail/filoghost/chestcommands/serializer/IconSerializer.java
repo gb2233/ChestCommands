@@ -266,11 +266,8 @@ public class IconSerializer {
         for (String requiredItemText : requiredItemsStrings) {
           try {
             ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
-            RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(),
-                itemReader.getAmount());
-            if (itemReader.hasExplicitDataValue()) {
-              requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
-            }
+            RequiredItem requiredItem = new RequiredItem(itemReader);
+
             requiredItems.add(requiredItem);
           } catch (FormatException e) {
             errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
@@ -298,11 +295,8 @@ public class IconSerializer {
         for (String requiredItemText : requiredItemsStrings) {
           try {
             ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
-            RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(),
-                itemReader.getAmount());
-            if (itemReader.hasExplicitDataValue()) {
-              requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
-            }
+            RequiredItem requiredItem = new RequiredItem(itemReader);
+
             requiredItems.add(requiredItem);
           } catch (FormatException e) {
             errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
@@ -330,11 +324,8 @@ public class IconSerializer {
         for (String requiredItemText : requiredItemsStrings) {
           try {
             ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
-            RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(),
-                itemReader.getAmount());
-            if (itemReader.hasExplicitDataValue()) {
-              requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
-            }
+            RequiredItem requiredItem = new RequiredItem(itemReader);
+
             requiredItems.add(requiredItem);
           } catch (FormatException e) {
             errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
@@ -358,11 +349,8 @@ public class IconSerializer {
       for (String requiredItemText : requiredItemsStrings) {
         try {
           ItemStackReader itemReader = new ItemStackReader(requiredItemText, true);
-          RequiredItem requiredItem = new RequiredItem(itemReader.getMaterial(),
-              itemReader.getAmount());
-          if (itemReader.hasExplicitDataValue()) {
-            requiredItem.setRestrictiveDataValue(itemReader.getDataValue());
-          }
+          RequiredItem requiredItem = new RequiredItem(itemReader);
+
           requiredItems.add(requiredItem);
         } catch (FormatException e) {
           errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName

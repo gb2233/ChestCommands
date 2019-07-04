@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal;
 
+import com.gmail.filoghost.chestcommands.util.ItemStackReader;
 import com.gmail.filoghost.chestcommands.util.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,40 +22,36 @@ import org.bukkit.inventory.ItemStack;
 
 public class RequiredItem {
 
-  private Material material;
-  private int amount;
-  private short dataValue;
+  private ItemStackReader itemReader;
   private boolean isDurabilityRestrictive = false;
 
-  public RequiredItem(Material material, int amount) {
-    Validate.notNull(material, "Material cannot be null");
-    Validate.isTrue(material != Material.AIR, "Material cannot be air");
+  public RequiredItem(ItemStackReader itemReader) {
+    Validate.notNull(itemReader.getMaterial(), "Material cannot be null");
+    Validate.isTrue(itemReader.getMaterial() != Material.AIR, "Material cannot be air");
 
-    this.material = material;
-    this.amount = amount;
+    this.itemReader = itemReader;
+
+    if (itemReader.hasExplicitDataValue()) {
+      Validate.isTrue(itemReader.getDataValue() >= 0, "Data value cannot be negative");
+
+      isDurabilityRestrictive = true;
+    }
   }
 
   public ItemStack createItemStack() {
-    return new ItemStack(material, amount, dataValue);
+    return itemReader.createStack();
   }
 
   public Material getMaterial() {
-    return material;
+    return itemReader.getMaterial();
   }
 
   public int getAmount() {
-    return amount;
+    return itemReader.getAmount();
   }
 
   public short getDataValue() {
-    return dataValue;
-  }
-
-  public void setRestrictiveDataValue(short data) {
-    Validate.isTrue(data >= 0, "Data value cannot be negative");
-
-    this.dataValue = data;
-    isDurabilityRestrictive = true;
+    return itemReader.getDataValue();
   }
 
   public boolean hasRestrictiveDataValue() {
@@ -65,27 +62,27 @@ public class RequiredItem {
     if (!isDurabilityRestrictive) {
       return true;
     }
-    return data == this.dataValue;
+    return data == this.itemReader.getDataValue();
   }
 
   public boolean hasItem(Player player) {
     int amountFound = 0;
 
     for (ItemStack item : player.getInventory().getContents()) {
-      if (item != null && item.getType() == material && isValidDataValue(item.getDurability())) {
+      if (item != null && item.getType() == getMaterial() && isValidDataValue(item.getDurability())) {
         amountFound += item.getAmount();
       }
     }
 
-    return amountFound >= amount;
+    return amountFound >= getAmount();
   }
 
   public boolean takeItem(Player player) {
-    if (amount <= 0) {
+    if (getAmount() <= 0) {
       return true;
     }
 
-    int itemsToTake = amount; //start from amount and decrease
+    int itemsToTake = getAmount(); //start from amount and decrease
 
     ItemStack[] contents = player.getInventory().getContents();
     ItemStack current;
@@ -94,7 +91,7 @@ public class RequiredItem {
 
       current = contents[i];
 
-      if (current != null && current.getType() == material && isValidDataValue(
+      if (current != null && current.getType() == getMaterial() && isValidDataValue(
           current.getDurability())) {
         if (current.getAmount() > itemsToTake) {
           current.setAmount(current.getAmount() - itemsToTake);
