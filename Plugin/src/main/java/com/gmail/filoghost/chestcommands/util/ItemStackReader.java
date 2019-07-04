@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -31,6 +30,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -177,7 +177,7 @@ public class ItemStackReader {
       if (data.length != 2) {
         throw new FormatException("invalid enchant format \"" + input + "\"");
       }
-      if (Utils.isValidInteger(data[1])) {
+      if (!Utils.isValidInteger(data[1])) {
         throw new FormatException("invalid integer \"" + input + "\"");
       }
       if (EnchantmentSerializer.matchEnchantment(data[0]) == null) {
@@ -196,7 +196,7 @@ public class ItemStackReader {
       if (data.length != 3) {
         throw new FormatException("invalid potion format \"" + input + "\"");
       }
-      if (Utils.isValidInteger(data[1]) || Utils.isValidInteger(data[2])) {
+      if (!(Utils.isValidInteger(data[1]) || Utils.isValidInteger(data[2]))) {
         throw new FormatException("invalid integer \"" + input + "\"");
       }
       if (PotionEffectType.getByName(data[0]) == null) {
@@ -258,6 +258,9 @@ public class ItemStackReader {
     if (itemMeta instanceof BannerMeta) {
       ((BannerMeta) itemMeta).setBaseColor(baseColor);
       ((BannerMeta) itemMeta).setPatterns(patterns);
+    }
+    if (itemMeta instanceof LeatherArmorMeta) {
+      ((LeatherArmorMeta) itemMeta).setColor(color);
     }
 
     item.setItemMeta(itemMeta);
