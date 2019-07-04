@@ -55,6 +55,14 @@ public class RequiredItem {
     return itemReader.getDataValue();
   }
 
+  public boolean hasItemMeta() {
+    return createItemStack().hasItemMeta();
+  }
+
+  public ItemMeta getItemMeta() {
+    return createItemStack().getItemMeta();
+  }
+
   public boolean hasRestrictiveDataValue() {
     return isDurabilityRestrictive;
   }
