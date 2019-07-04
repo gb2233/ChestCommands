@@ -20,10 +20,34 @@ slot_1:
   ID: command block
   SLOT: 1
 
+slot_2:
+  COMMAND: 'give: diamond_sword,1, name: &c&lStarter_Sword, lore: &7This_is_a_simple_sword &7By_&8ADMIN,enchant: Knockback|1 DAMAGE_ALL|1, flag: HIDE_ATTRIBUTES HIDE_ENCHANTS'
+  NAME: '&cGive diamond sword.'
+  ID: diamond sword
+  SLOT: 2
+
 slot_3:
-  COMMAND: 'console: say Hello again {player}!'
-  NAME: '&cRuns command from the console.'
-  LORE:
-    - 'It broadcasts your name with the command /say.'
-  ID: command block
+  COMMAND: 'give: potion,1, name: &c&lMystery_Potion, effect: SPEED|300|1 NIGHT_VISION|300|1, flag: HIDE_ATTRIBUTES HIDE_POTION_EFFECTS'
+  NAME: '&cGive mystery potion.'
+  ID: potion
   SLOT: 3
+
+slot_4:
+  COMMAND: 'give: LEATHER_CHESTPLATE,1, color: 0 50 50'
+  NAME: '&aColored leather armor'
+  ID: leather chestplate
+  SLOT: 4
+
+slot_5:
+  REQUIRED-ITEM:
+    RIGHT: 'banner,1, base-color: PINK, pattern: CREEPER|GREEN DIAGONAL_LEFT|BLACK'
+  COMMAND:
+    LEFT: 'give: banner,1, base-color: PINK, pattern: CREEPER|GREEN DIAGONAL_LEFT|BLACK'
+    RIGHT: 'tell: &a&lThank you :)'
+  NAME: '&aGive/take banner'
+  LORE:
+    - ''
+    - 'Left click to give'
+    - 'Right click to take'
+  ID: banner
+  SLOT: 5
