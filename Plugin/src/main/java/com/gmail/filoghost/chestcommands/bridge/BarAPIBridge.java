@@ -24,6 +24,10 @@ public class BarAPIBridge {
   private static BarAPI barAPI;
 
   public static boolean setupPlugin() {
+    if (!Bukkit.getServer().getPluginManager().isPluginEnabled("BarAPI")) {
+      return false;
+    }
+
     Plugin barPlugin = Bukkit.getPluginManager().getPlugin("BarAPI");
 
     if (barPlugin == null) {

@@ -11,6 +11,10 @@ public class TokenManagerBridge {
   private static TokenManager tokenManager;
 
   public static boolean setupPlugin() {
+    if (!Bukkit.getServer().getPluginManager().isPluginEnabled("TokenManager")) {
+      return false;
+    }
+
     Plugin tokenPlugin = Bukkit.getPluginManager().getPlugin("TokenManager");
 
     if (tokenPlugin == null) {
