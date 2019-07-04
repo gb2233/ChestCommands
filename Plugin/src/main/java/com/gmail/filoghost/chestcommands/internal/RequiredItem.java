@@ -70,7 +70,7 @@ public class RequiredItem {
     if (!(item.hasItemMeta() || createItemStack().hasItemMeta())) {
       return true;
     } else {
-      return item.isSimilar(createItemStack());
+      return item.getItemMeta().equals(createItemStack().getItemMeta());
     }
   }
 
