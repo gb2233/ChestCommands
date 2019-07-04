@@ -13,11 +13,13 @@ menu-settings:
   open-action: 'tell: &eYou opened the custom menu.'
 
 slot_1:
-  COMMAND: 'console: say Hello {player}!'
-  NAME: '&cRuns command from the console.'
-  LORE:
-    - 'It broadcasts your name with the command /say.'
-  ID: command block
+  REQUIRED-ITEM:
+    RIGHT: 'paper,1, enchant: unbreaking|1, name: &c&lSmall_Paper, lore: &7This_is_a_simple_paper &7By_&8ADMIN, flag: HIDE_ATTRIBUTES'
+  COMMAND:
+    LEFT: 'give: paper,1, name: &c&lSmall_Paper, lore: &7This_is_a_simple_paper &7By_&8ADMIN, enchant: unbreaking|1,flag: HIDE_ATTRIBUTES'
+    RIGHT: 'tell: &aThank you :)'
+  NAME: '&cGive/take paper.'
+  ID: paper
   SLOT: 1
 
 slot_2:
@@ -39,15 +41,7 @@ slot_4:
   SLOT: 4
 
 slot_5:
-  REQUIRED-ITEM:
-    RIGHT: 'banner,1, base-color: PINK, pattern: CREEPER|GREEN DIAGONAL_LEFT|BLACK'
-  COMMAND:
-    LEFT: 'give: banner,1, base-color: PINK, pattern: CREEPER|GREEN DIAGONAL_LEFT|BLACK'
-    RIGHT: 'tell: &a&lThank you :)'
-  NAME: '&aGive/take banner'
-  LORE:
-    - ''
-    - 'Left click to give'
-    - 'Right click to take'
+  COMMAND: 'give: banner,1, base-color: PINK, pattern: CREEPER|GREEN DIAGONAL_LEFT|BLACK'
+  NAME: '&aGive banner'
   ID: banner
   SLOT: 5
