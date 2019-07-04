@@ -19,6 +19,7 @@ import com.gmail.filoghost.chestcommands.util.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class RequiredItem {
 
@@ -65,11 +66,19 @@ public class RequiredItem {
     return data == this.itemReader.getDataValue();
   }
 
+  public boolean isValidItemMeta(ItemStack item) {
+    if (!(item.hasItemMeta() || createItemStack().hasItemMeta())) {
+      return true;
+    } else {
+      return item.isSimilar(createItemStack());
+    }
+  }
+
   public boolean hasItem(Player player) {
     int amountFound = 0;
 
     for (ItemStack item : player.getInventory().getContents()) {
-      if (item != null && item.isSimilar(createItemStack()) && isValidDataValue(item.getDurability())) {
+      if (item != null && item.getType() == getMaterial() && isValidDataValue(item.getDurability()) && isValidItemMeta(item)) {
         amountFound += item.getAmount();
       }
     }
@@ -91,8 +100,7 @@ public class RequiredItem {
 
       current = contents[i];
 
-      if (current != null && current.isSimilar(createItemStack()) && isValidDataValue(
-          current.getDurability())) {
+      if (current != null && current.getType() == getMaterial() && isValidDataValue(current.getDurability()) && isValidItemMeta(current)) {
         if (current.getAmount() > itemsToTake) {
           current.setAmount(current.getAmount() - itemsToTake);
           return true;
