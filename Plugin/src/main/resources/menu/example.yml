@@ -346,6 +346,22 @@ simple-buy-sell:
   KEEP-OPEN: true
 
 
+multiply-money:
+  COMMAND: 'condition: {money} > 0; givemoney: {money}; refresh: 0'
+  NAME: '&eMultiply Money'
+  LORE:
+    - 'This is a example of placeholders on "give-money:"'
+    - 'This will multiply your money by 2'
+    - 'Your money need to be higher than 0 to use this'
+    - ''
+    - 'Current money: {money}'
+  KEEP-OPEN: true
+  ID: paper
+  POSITION-X: 8
+  POSITION-Y: 3
+  ENCHANTMENT: durability, 1
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
