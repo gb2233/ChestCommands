@@ -14,17 +14,25 @@ public class GivePointsIconCommand extends IconCommand {
 
   public GivePointsIconCommand(String command) {
     super(command);
+    if (!hasVariables) {
+      parsePoint(super.command);
+    }
+  }
 
+  private void parsePoint(String command) {
     if (!Utils.isValidPositiveInteger(command)) {
       errorMessage = ChatColor.RED + "Invalid points amount: " + command;
       return;
     }
-
+    errorMessage = null;
     pointsToGive = Integer.parseInt(command);
   }
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
+    if (hasVariables) {
+      parsePoint(getParsedCommand(player));
+    }
     if (errorMessage != null) {
       player.sendMessage(errorMessage);
       return;

@@ -42,7 +42,6 @@ public class GiveMoneyIconCommand extends IconCommand {
     moneyToGive = Double.parseDouble(command);
   }
 
-
   @Override
   public void execute(Player player, TaskChain taskChain) {
     if (hasVariables) {
