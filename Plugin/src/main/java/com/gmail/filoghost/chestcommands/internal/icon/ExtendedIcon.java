@@ -273,7 +273,10 @@ public class ExtendedIcon extends Icon {
         if (!requiredItem.hasItem(player)) {
           notHasItem = true;
           player.sendMessage(ChestCommands.getLang().no_required_item
-              .replace("{item}", (requiredItem.hasItemMeta() && requiredItem.getItemMeta().hasDisplayName()) ? requiredItem.getItemMeta().getDisplayName() : MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
+              .replace("{item}",
+                  (requiredItem.hasItemMeta() && requiredItem.getItemMeta().hasDisplayName())
+                      ? requiredItem.getItemMeta().getDisplayName()
+                      : MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
               .replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
               .replace("{amount}", Integer.toString(requiredItem.getAmount()))
               .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short

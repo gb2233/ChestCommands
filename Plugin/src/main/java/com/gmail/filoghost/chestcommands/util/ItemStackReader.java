@@ -51,8 +51,8 @@ public class ItemStackReader {
   private boolean explicitDataValue = false;
 
   /**
-   * Reads item in the format "id:data, amount [,<itemMeta>]" id can be either the id of the material or its name.
-   * for example wool:5, 3 is a valid input.
+   * Reads item in the format "id:data, amount [,<itemMeta>]" id can be either the id of the
+   * material or its name. for example wool:5, 3 is a valid input.
    */
   public ItemStackReader(String input, boolean parseAmount) throws FormatException {
     Validate.notNull(input, "input cannot be null");
@@ -159,7 +159,8 @@ public class ItemStackReader {
   // Banner Pattern
   // <pattern>|<color>
   private void parseBannerPattern(String input) throws FormatException {
-    patterns = ItemUtils.parseBannerPatternList(Arrays.asList(input.substring(Nodes.PATTERN.length()).trim().replace("|", ":").split(" ")));
+    patterns = ItemUtils.parseBannerPatternList(
+        Arrays.asList(input.substring(Nodes.PATTERN.length()).trim().replace("|", ":").split(" ")));
   }
 
   // Base color
@@ -202,7 +203,8 @@ public class ItemStackReader {
       if (PotionEffectType.getByName(data[0]) == null) {
         throw new FormatException("invalid effect type \"" + input + "\"");
       }
-      effects.add(new PotionEffect(PotionEffectType.getByName(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2])));
+      effects.add(new PotionEffect(PotionEffectType.getByName(data[0]), Integer.parseInt(data[1]),
+          Integer.parseInt(data[2])));
     }
   }
 
@@ -225,7 +227,8 @@ public class ItemStackReader {
   // <display_name>
   // Example: This_Is_Example
   private void parseDisplayName(String input) {
-    displayName = ChatColor.translateAlternateColorCodes('&', input.substring(Nodes.NAME.length()).trim().replace("_", " "));
+    displayName = ChatColor.translateAlternateColorCodes('&',
+        input.substring(Nodes.NAME.length()).trim().replace("_", " "));
   }
 
   public Material getMaterial() {
@@ -288,6 +291,7 @@ public class ItemStackReader {
   }
 
   private class Nodes {
+
     public static final String
         LORE = "lore:",
         NAME = "name:",

@@ -86,7 +86,8 @@ public class RequiredItem {
     int amountFound = 0;
 
     for (ItemStack item : player.getInventory().getContents()) {
-      if (item != null && item.getType() == getMaterial() && isValidDataValue(item.getDurability()) && isValidItemMeta(item)) {
+      if (item != null && item.getType() == getMaterial() && isValidDataValue(item.getDurability())
+          && isValidItemMeta(item)) {
         amountFound += item.getAmount();
       }
     }
@@ -108,7 +109,8 @@ public class RequiredItem {
 
       current = contents[i];
 
-      if (current != null && current.getType() == getMaterial() && isValidDataValue(current.getDurability()) && isValidItemMeta(current)) {
+      if (current != null && current.getType() == getMaterial() && isValidDataValue(
+          current.getDurability()) && isValidItemMeta(current)) {
         if (current.getAmount() > itemsToTake) {
           current.setAmount(current.getAmount() - itemsToTake);
           return true;
