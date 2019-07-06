@@ -11,3 +11,7 @@ License: MIT License
 [TaskChain]
 URL: https://github.com/aikar/TaskChain
 License: MIT License
+
+[EvalEx]
+URL: https://github.com/uklimaschewski/EvalEx
+License: MIT License
