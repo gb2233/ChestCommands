@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.util.ItemStackReader;
 import com.gmail.filoghost.chestcommands.util.Validate;
 import org.bukkit.Material;
@@ -75,11 +76,7 @@ public class RequiredItem {
   }
 
   public boolean isValidItemMeta(ItemStack item) {
-    if (!(item.hasItemMeta() || createItemStack().hasItemMeta())) {
-      return true;
-    } else {
-      return item.getItemMeta().equals(createItemStack().getItemMeta());
-    }
+    return ChestCommands.getInstance().getServer().getItemFactory().equals(item.getItemMeta(), createItemStack().getItemMeta());
   }
 
   public boolean hasItem(Player player) {
