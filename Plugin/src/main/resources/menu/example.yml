@@ -362,6 +362,26 @@ multiply-money:
   ENCHANTMENT: durability, 1
 
 
+head:
+  COMMAND:
+    LEFT: 'give: skull:3,1,skull: hdb-1'
+    RIGHT: 'tell: &aThank you :)'
+  REQUIRED-ITEM:
+    RIGHT: 'skull:3,1,skull: hdb-1'
+  NAME: '&eHeadDatabase'
+  LORE:
+    - 'This is a test for HeadDatabase hooking'
+    - 'You can use ''hdb-<head_id>'' to use HeadDatabase heads'
+    - ''
+    - 'This only works if you install HeadDatabase'
+  KEEP-OPEN: true
+  ID: 'skull:3'
+  SKULL-OWNER: 'hdb-1'
+  POSITION-X: 9
+  POSITION-Y: 3
+  ENCHANTMENT: durability, 1
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
