@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.util;
 
+import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
 import com.gmail.filoghost.chestcommands.exception.FormatException;
 import com.gmail.filoghost.chestcommands.serializer.EnchantmentSerializer;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -42,6 +44,7 @@ public class ItemStackReader {
   private List<ItemFlag> itemFlags = new ArrayList<>();
   private List<String> lore = new ArrayList<>();
   private String displayName = null;
+  private String skull;
   private HashMap<Enchantment, Integer> enchantments = new HashMap<>();
   private List<PotionEffect> effects = new ArrayList<>();
   private DyeColor baseColor = DyeColor.WHITE;
@@ -86,6 +89,9 @@ public class ItemStackReader {
         }
         if (data.toLowerCase().startsWith(Nodes.FLAG)) {
           parseItemFlag(data);
+        }
+        if (data.toLowerCase().startsWith(Nodes.SKULL)) {
+          parseSkull(data);
         }
       }
     }
@@ -141,6 +147,12 @@ public class ItemStackReader {
       throw new FormatException("invalid material \"" + input + "\"");
     }
     this.material = material;
+  }
+
+  // Skull
+  // <skull>
+  private void parseSkull(String input) {
+    skull = input.substring(Nodes.SKULL.length()).trim();
   }
 
   // Item flags
@@ -251,22 +263,32 @@ public class ItemStackReader {
     ItemStack item = new ItemStack(material, amount, dataValue);
     ItemMeta itemMeta = item.getItemMeta();
 
-    itemMeta.setDisplayName(displayName);
-    itemMeta.setLore(lore);
-    enchantments.forEach((enchant, level) -> itemMeta.addEnchant(enchant, level, true));
-    itemFlags.forEach(itemMeta::addItemFlags);
-    if (itemMeta instanceof PotionMeta) {
-      effects.forEach((effect) -> ((PotionMeta) itemMeta).addCustomEffect(effect, true));
-    }
-    if (itemMeta instanceof BannerMeta) {
-      ((BannerMeta) itemMeta).setBaseColor(baseColor);
-      ((BannerMeta) itemMeta).setPatterns(patterns);
-    }
-    if (itemMeta instanceof LeatherArmorMeta) {
-      ((LeatherArmorMeta) itemMeta).setColor(color);
+    if (itemMeta instanceof SkullMeta) {
+      if (skull.startsWith("hdb-") && HeadDatabaseBridge
+          .hasValidID(skull.replace("hdb-", ""))) {
+        itemMeta = HeadDatabaseBridge.getItem(skull.replace("hdb-", "")).getItemMeta();
+      } else {
+        ((SkullMeta) itemMeta).setOwner(skull);
+      }
     }
 
-    item.setItemMeta(itemMeta);
+    ItemMeta finalItemMeta = itemMeta;
+    finalItemMeta.setDisplayName(displayName);
+    finalItemMeta.setLore(lore);
+    enchantments.forEach((enchant, level) -> finalItemMeta.addEnchant(enchant, level, true));
+    itemFlags.forEach(finalItemMeta::addItemFlags);
+    if (finalItemMeta instanceof PotionMeta) {
+      effects.forEach((effect) -> ((PotionMeta) finalItemMeta).addCustomEffect(effect, true));
+    }
+    if (finalItemMeta instanceof BannerMeta) {
+      ((BannerMeta) finalItemMeta).setBaseColor(baseColor);
+      ((BannerMeta) finalItemMeta).setPatterns(patterns);
+    }
+    if (finalItemMeta instanceof LeatherArmorMeta) {
+      ((LeatherArmorMeta) finalItemMeta).setColor(color);
+    }
+
+    item.setItemMeta(finalItemMeta);
     return item;
   }
 
@@ -295,6 +317,7 @@ public class ItemStackReader {
     public static final String
         LORE = "lore:",
         NAME = "name:",
+        SKULL = "skull:",
         PATTERN = "pattern:",
         BASE_COLOR = "base-color:",
         ENCHANT = "enchant:",

@@ -15,6 +15,7 @@
 package com.gmail.filoghost.chestcommands.api;
 
 import com.gmail.filoghost.chestcommands.ChestCommands;
+import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
 import com.gmail.filoghost.chestcommands.internal.VariableManager;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import java.util.Arrays;
@@ -332,6 +333,18 @@ public class Icon {
     // Then apply data from config nodes, overwriting NBT data if there are confliting values
     ItemMeta itemMeta = itemStack.getItemMeta();
 
+    if (skullOwner != null && itemMeta instanceof SkullMeta) {
+      String skullOwner = this.skullOwner;
+      if (skullOwnerHasVariables) {
+        skullOwner = VariableManager.setVariables(skullOwner, pov);
+      }
+      if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge.hasValidID(skullOwner.replace("hdb-", ""))) {
+        itemMeta = HeadDatabaseBridge.getItem(skullOwner.replace("hdb-", "")).getItemMeta();
+      } else {
+        ((SkullMeta) itemMeta).setOwner(skullOwner);
+      }
+    }
+
     if (hasName()) {
       itemMeta.setDisplayName(calculateName(pov));
     }
@@ -341,14 +354,6 @@ public class Icon {
 
     if (color != null && itemMeta instanceof LeatherArmorMeta) {
       ((LeatherArmorMeta) itemMeta).setColor(color);
-    }
-
-    if (skullOwner != null && itemMeta instanceof SkullMeta) {
-      String skullOwner = this.skullOwner;
-      if (skullOwnerHasVariables) {
-        skullOwner = VariableManager.setVariables(skullOwner, pov);
-      }
-      ((SkullMeta) itemMeta).setOwner(skullOwner);
     }
 
     if (bannerColor != null && itemMeta instanceof BannerMeta) {

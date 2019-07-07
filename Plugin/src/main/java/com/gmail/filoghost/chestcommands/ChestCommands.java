@@ -18,6 +18,7 @@ import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChainFactory;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
@@ -168,6 +169,10 @@ public class ChestCommands extends JavaPlugin {
 
     if (TokenManagerBridge.setupPlugin()) {
       getLogger().info("Hooked TokenManager");
+    }
+
+    if (HeadDatabaseBridge.setupPlugin()) {
+      getLogger().info("Hooked HeadDatabase");
     }
 
     if (settings.update_notifications) {

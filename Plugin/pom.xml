@@ -108,6 +108,14 @@
 			<artifactId>taskchain-bukkit</artifactId>
 			<version>LATEST</version>
 		</dependency>
+
+		<dependency>
+			<groupId>me.arcaniax</groupId>
+			<artifactId>HeadDatabaseAPI</artifactId>
+			<scope>system</scope>
+			<version>1.0</version>
+			<systemPath>${basedir}/lib/HeadDatabaseAPI.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
