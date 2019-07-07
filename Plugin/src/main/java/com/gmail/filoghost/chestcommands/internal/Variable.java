@@ -74,7 +74,87 @@ public enum Variable {
     public String getReplacement(Player executor) {
       return executor.getWorld().getName();
     }
-  };
+  },
+
+  X("{x}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getLocation().getX());
+    }
+  },
+
+  Y("{y}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getLocation().getY());
+    }
+  },
+
+  Z("{z}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getLocation().getZ());
+    }
+  },
+
+  BED_WORLD("{bed_world}") {
+    public String getReplacement(Player executor) {
+      return executor.getBedSpawnLocation().getWorld().getName();
+    }
+  },
+
+  BED_X("{bed_x}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getBedSpawnLocation().getX());
+    }
+  },
+
+  BED_Y("{bed_y}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getBedSpawnLocation().getY());
+    }
+  },
+
+  BED_Z("{bed_z}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getBedSpawnLocation().getZ());
+    }
+  },
+
+  EXP("{exp}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getTotalExperience());
+    }
+  },
+
+  LEVEL("{level}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getLevel());
+    }
+  },
+
+  EXP_TO_LEVEL("{exp_to_level}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getExpToLevel());
+    }
+  },
+
+  FOOD_LEVEL("{food_level}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getFoodLevel());
+    }
+  },
+
+  IP("{ip}") {
+    public String getReplacement(Player executor) {
+      return executor.getAddress().getAddress().getHostAddress();
+    }
+  },
+
+  BIOME("{biome}") {
+    public String getReplacement(Player executor) {
+      return String.valueOf(executor.getLocation().getBlock().getBiome());
+    }
+  },
+
+  ;
 
   private String text;
 
