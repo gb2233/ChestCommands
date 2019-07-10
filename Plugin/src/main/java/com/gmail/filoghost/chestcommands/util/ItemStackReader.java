@@ -19,13 +19,11 @@ import com.gmail.filoghost.chestcommands.exception.FormatException;
 import com.gmail.filoghost.chestcommands.serializer.EnchantmentSerializer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -41,15 +39,7 @@ public class ItemStackReader {
 
   private Material material = Material.STONE; // In the worst case (bad exception handling) we just get stone
   private int amount = 1;
-  private List<ItemFlag> itemFlags = new ArrayList<>();
-  private List<String> lore = new ArrayList<>();
-  private String displayName = null;
-  private String skull;
-  private HashMap<Enchantment, Integer> enchantments = new HashMap<>();
-  private List<PotionEffect> effects = new ArrayList<>();
-  private DyeColor baseColor = DyeColor.WHITE;
-  private List<Pattern> patterns = new ArrayList<>();
-  private Color color;
+  private ItemMeta itemMeta;
   private short dataValue = 0;
   private boolean explicitDataValue = false;
 
@@ -60,10 +50,66 @@ public class ItemStackReader {
   public ItemStackReader(String input, boolean parseAmount) throws FormatException {
     Validate.notNull(input, "input cannot be null");
 
-    // READ DATA
+    String[] itemData = new String[0];
+    String materialString;
+    String amountString = "1";
+
+    // Divide data
     String[] split = input.split(",");
+    // Remove spaces, they're not needed
+    materialString = StringUtils.stripChars(split[0], " _-");
     if (split.length > 2) {
-      String[] itemData = Arrays.copyOfRange(split, 2, split.length);
+      itemData = Arrays.copyOfRange(split, 2, split.length);
+    }
+    if (split.length > 1) {
+      // Remove spaces, they're not needed
+      amountString = StringUtils.stripChars(split[1], " _-");
+    }
+
+    // Read the optional amount
+    if (parseAmount) {
+      if (!Utils.isValidInteger(amountString)) {
+        throw new FormatException("invalid amount \"" + amountString + "\"");
+      }
+
+      int amount = Integer.parseInt(amountString);
+      if (amount <= 0) {
+        throw new FormatException("invalid amount \"" + amountString + "\"");
+      }
+      this.amount = amount;
+    }
+
+    // Read the optional data value
+    String[] splitByColons = materialString.split(":");
+
+    if (splitByColons.length > 1) {
+
+      if (!Utils.isValidShort(splitByColons[1])) {
+        throw new FormatException("invalid data value \"" + splitByColons[1] + "\"");
+      }
+
+      short dataValue = Short.parseShort(splitByColons[1]);
+      if (dataValue < 0) {
+        throw new FormatException("invalid data value \"" + splitByColons[1] + "\"");
+      }
+
+      this.explicitDataValue = true;
+      this.dataValue = dataValue;
+
+      // Only keep the first part as input
+      materialString = splitByColons[0];
+    }
+
+    Material material = MaterialsRegistry.matchMaterial(materialString);
+
+    if (material == null || MaterialsRegistry.isAir(material)) {
+      throw new FormatException("invalid material \"" + materialString + "\"");
+    }
+    this.material = material;
+
+    // Read ItemMeta
+    itemMeta = new ItemStack(material, dataValue).getItemMeta().clone();
+    if (itemData.length > 0) {
       for (String data : itemData) {
         data = data.trim();
         if (data.toLowerCase().startsWith(Nodes.NAME)) {
@@ -95,64 +141,20 @@ public class ItemStackReader {
         }
       }
     }
-
-    // Remove spaces, they're not needed
-    input = StringUtils.stripChars(input, " _-");
-
-    if (parseAmount) {
-      // Read the optional amount
-      String[] splitAmount = input.split(",");
-
-      if (splitAmount.length > 1) {
-
-        if (!Utils.isValidInteger(splitAmount[1])) {
-          throw new FormatException("invalid amount \"" + splitAmount[1] + "\"");
-        }
-
-        int amount = Integer.parseInt(splitAmount[1]);
-        if (amount <= 0) {
-          throw new FormatException("invalid amount \"" + splitAmount[1] + "\"");
-        }
-        this.amount = amount;
-
-        // Only keep the first part as input
-        input = splitAmount[0];
-      }
-    }
-
-    // Read the optional data value
-    String[] splitByColons = input.split(":");
-
-    if (splitByColons.length > 1) {
-
-      if (!Utils.isValidShort(splitByColons[1])) {
-        throw new FormatException("invalid data value \"" + splitByColons[1] + "\"");
-      }
-
-      short dataValue = Short.parseShort(splitByColons[1]);
-      if (dataValue < 0) {
-        throw new FormatException("invalid data value \"" + splitByColons[1] + "\"");
-      }
-
-      this.explicitDataValue = true;
-      this.dataValue = dataValue;
-
-      // Only keep the first part as input
-      input = splitByColons[0];
-    }
-
-    Material material = MaterialsRegistry.matchMaterial(input);
-
-    if (material == null || MaterialsRegistry.isAir(material)) {
-      throw new FormatException("invalid material \"" + input + "\"");
-    }
-    this.material = material;
   }
 
   // Skull
   // <skull>
   private void parseSkull(String input) {
-    skull = input.substring(Nodes.SKULL.length()).trim();
+    String skull = input.substring(Nodes.SKULL.length()).trim();
+    if (itemMeta instanceof SkullMeta) {
+      if (skull.startsWith("hdb-") && HeadDatabaseBridge
+          .hasValidID(skull.replace("hdb-", ""))) {
+        itemMeta = HeadDatabaseBridge.getItem(skull.replace("hdb-", "")).getItemMeta();
+      } else {
+        ((SkullMeta) itemMeta).setOwner(skull);
+      }
+    }
   }
 
   // Item flags
@@ -161,7 +163,7 @@ public class ItemStackReader {
     String flags = input.substring(Nodes.FLAG.length()).trim();
     for (String flag : flags.split(" ")) {
       try {
-        itemFlags.add(ItemFlag.valueOf(flag.toUpperCase()));
+        itemMeta.addItemFlags(ItemFlag.valueOf(flag.toUpperCase()));
       } catch (Exception e) {
         throw new FormatException("invalid item flags \"" + input + "\"");
       }
@@ -171,14 +173,21 @@ public class ItemStackReader {
   // Banner Pattern
   // <pattern>|<color>
   private void parseBannerPattern(String input) throws FormatException {
-    patterns = ItemUtils.parseBannerPatternList(
-        Arrays.asList(input.substring(Nodes.PATTERN.length()).trim().replace("|", ":").split(" ")));
+    if (itemMeta instanceof BannerMeta) {
+      ((BannerMeta) itemMeta).setPatterns(ItemUtils.parseBannerPatternList(
+          Arrays
+              .asList(
+                  input.substring(Nodes.PATTERN.length()).trim().replace("|", ":").split(" "))));
+    }
   }
 
   // Base color
   // <color>
   private void parseBannerBaseColor(String input) throws FormatException {
-    baseColor = ItemUtils.parseDyeColor(input.substring(Nodes.BASE_COLOR.length()).trim());
+    if (itemMeta instanceof BannerMeta) {
+      ((BannerMeta) itemMeta)
+          .setBaseColor(ItemUtils.parseDyeColor(input.substring(Nodes.BASE_COLOR.length()).trim()));
+    }
   }
 
   // Enchantment
@@ -196,7 +205,9 @@ public class ItemStackReader {
       if (EnchantmentSerializer.matchEnchantment(data[0]) == null) {
         throw new FormatException("invalid enchant type \"" + input + "\"");
       }
-      enchantments.put(EnchantmentSerializer.matchEnchantment(data[0]), Integer.parseInt(data[1]));
+      itemMeta
+          .addEnchant(EnchantmentSerializer.matchEnchantment(data[0]), Integer.parseInt(data[1]),
+              true);
     }
   }
 
@@ -204,43 +215,51 @@ public class ItemStackReader {
   // <effect>|<duration>|<power>
   private void parsePotion(String input) throws FormatException {
     String potions = input.substring(Nodes.POTION.length()).trim();
-    for (String potion : potions.split(" ")) {
-      String[] data = potion.split("[|]");
-      if (data.length != 3) {
-        throw new FormatException("invalid potion format \"" + input + "\"");
+    if (itemMeta instanceof PotionMeta) {
+      for (String potion : potions.split(" ")) {
+        String[] data = potion.split("[|]");
+        if (data.length != 3) {
+          throw new FormatException("invalid potion format \"" + input + "\"");
+        }
+        if (!(Utils.isValidInteger(data[1]) || Utils.isValidInteger(data[2]))) {
+          throw new FormatException("invalid integer \"" + input + "\"");
+        }
+        if (PotionEffectType.getByName(data[0]) == null) {
+          throw new FormatException("invalid effect type \"" + input + "\"");
+        }
+        ((PotionMeta) itemMeta).addCustomEffect(
+            new PotionEffect(PotionEffectType.getByName(data[0]), Integer.parseInt(data[1]),
+                Integer.parseInt(data[2])), true);
       }
-      if (!(Utils.isValidInteger(data[1]) || Utils.isValidInteger(data[2]))) {
-        throw new FormatException("invalid integer \"" + input + "\"");
-      }
-      if (PotionEffectType.getByName(data[0]) == null) {
-        throw new FormatException("invalid effect type \"" + input + "\"");
-      }
-      effects.add(new PotionEffect(PotionEffectType.getByName(data[0]), Integer.parseInt(data[1]),
-          Integer.parseInt(data[2])));
     }
   }
 
   // Color
   // <RED> <GREEN> <BLUE>
   private void parseColor(String input) throws FormatException {
-    color = ItemUtils.parseColor(input.substring(Nodes.COLOR.length()).trim().replace(" ", ","));
+    if (itemMeta instanceof LeatherArmorMeta) {
+      ((LeatherArmorMeta) itemMeta).setColor(
+          ItemUtils.parseColor(input.substring(Nodes.COLOR.length()).trim().replace(" ", ",")));
+    }
   }
 
   // Lore
   // <Lore1> <Lore2>
   // Example: This_is_line_1 This_is_line_2
   private void parseLore(String input) {
+    List<String> lore = new ArrayList<>();
     for (String line : input.substring(Nodes.LORE.length()).trim().split(" ")) {
       lore.add(ChatColor.translateAlternateColorCodes('&', line.replace("_", " ")));
     }
+    itemMeta.setLore(lore);
   }
 
   // Display Name
   // <display_name>
   // Example: This_Is_Example
   private void parseDisplayName(String input) {
-    displayName = ChatColor.translateAlternateColorCodes('&',
-        input.substring(Nodes.NAME.length()).trim().replace("_", " "));
+    itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+        input.substring(Nodes.NAME.length()).trim().replace("_", " ")));
   }
 
   public Material getMaterial() {
@@ -261,55 +280,28 @@ public class ItemStackReader {
 
   public ItemStack createStack() {
     ItemStack item = new ItemStack(material, amount, dataValue);
-    ItemMeta itemMeta = item.getItemMeta();
-
-    if (itemMeta instanceof SkullMeta) {
-      if (skull.startsWith("hdb-") && HeadDatabaseBridge
-          .hasValidID(skull.replace("hdb-", ""))) {
-        itemMeta = HeadDatabaseBridge.getItem(skull.replace("hdb-", "")).getItemMeta();
-      } else {
-        ((SkullMeta) itemMeta).setOwner(skull);
-      }
-    }
-
-    ItemMeta finalItemMeta = itemMeta;
-    finalItemMeta.setDisplayName(displayName);
-    finalItemMeta.setLore(lore);
-    enchantments.forEach((enchant, level) -> finalItemMeta.addEnchant(enchant, level, true));
-    itemFlags.forEach(finalItemMeta::addItemFlags);
-    if (finalItemMeta instanceof PotionMeta) {
-      effects.forEach((effect) -> ((PotionMeta) finalItemMeta).addCustomEffect(effect, true));
-    }
-    if (finalItemMeta instanceof BannerMeta) {
-      ((BannerMeta) finalItemMeta).setBaseColor(baseColor);
-      ((BannerMeta) finalItemMeta).setPatterns(patterns);
-    }
-    if (finalItemMeta instanceof LeatherArmorMeta) {
-      ((LeatherArmorMeta) finalItemMeta).setColor(color);
-    }
-
-    item.setItemMeta(finalItemMeta);
+    item.setItemMeta(itemMeta);
     return item;
   }
 
-  public List<ItemFlag> getItemFlags() {
-    return itemFlags;
+  public Set<ItemFlag> getItemFlags() {
+    return itemMeta.getItemFlags();
   }
 
   public List<String> getLore() {
-    return lore;
+    return itemMeta.getLore();
   }
 
   public String getDisplayName() {
-    return displayName;
+    return itemMeta.getDisplayName();
   }
 
-  public HashMap<Enchantment, Integer> getEnchants() {
-    return enchantments;
+  public Map<Enchantment, Integer> getEnchants() {
+    return itemMeta.getEnchants();
   }
 
   public List<PotionEffect> getEffects() {
-    return effects;
+    return ((PotionMeta) itemMeta).getCustomEffects();
   }
 
   private class Nodes {
