@@ -22,10 +22,14 @@ import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.internal.RequiredItem;
+import com.gmail.filoghost.chestcommands.util.ItemUtils;
 import com.gmail.filoghost.chestcommands.util.MaterialsRegistry;
 import com.gmail.filoghost.chestcommands.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -272,7 +276,7 @@ public class ExtendedIcon extends Icon {
 
         if (!requiredItem.hasItem(player)) {
           notHasItem = true;
-          player.sendMessage(ChestCommands.getLang().no_required_item
+          String message = ChestCommands.getLang().no_required_item
               .replace("{item}",
                   (requiredItem.hasItemMeta() && requiredItem.getItemMeta().hasDisplayName())
                       ? requiredItem.getItemMeta().getDisplayName()
@@ -280,8 +284,21 @@ public class ExtendedIcon extends Icon {
               .replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
               .replace("{amount}", Integer.toString(requiredItem.getAmount()))
               .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short
-                  .toString(requiredItem.getDataValue()) : ChestCommands.getLang().any)
-          );
+                  .toString(requiredItem.getDataValue()) : ChestCommands.getLang().any);
+          if (ChestCommands.isSpigot() && ChestCommands.getSettings().use_hover_event_on_required_item_message) {
+            String itemJson = ItemUtils.convertItemStackToJson(requiredItem.createItemStack());
+
+            BaseComponent[] hoverEventComponents = new BaseComponent[]{new TextComponent(itemJson)};
+
+            HoverEvent event = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
+
+            TextComponent component = new TextComponent(message);
+            component.setHoverEvent(event);
+
+            player.spigot().sendMessage(component);
+          } else {
+            player.sendMessage(message);
+          }
         }
 
       }

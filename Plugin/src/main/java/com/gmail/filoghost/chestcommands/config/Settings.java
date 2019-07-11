@@ -26,6 +26,7 @@ public class Settings extends SpecialConfig {
   public boolean update_notifications = true;
   public int anti_click_spam_delay = 200;
   public boolean use_only_commands_without_args = true;
+  public boolean use_hover_event_on_required_item_message = true;
 
   public Settings(PluginConfig config) {
     super(config);

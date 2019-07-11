@@ -88,6 +88,10 @@ public class ChestCommands extends JavaPlugin {
     }
   }
 
+  public static boolean isSpigot() {
+    return Utils.isClassLoaded("org.bukkit.entity.Player$Spigot");
+  }
+
   public static ChestCommands getInstance() {
     return instance;
   }
