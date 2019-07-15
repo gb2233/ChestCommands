@@ -3,7 +3,7 @@ main: com.gmail.filoghost.chestcommands.ChestCommands
 version: ${project.version}
 api-version: 1.13
 
-softdepend: [Vault, BarAPI, PlaceholderAPI, PlayerPoints, TokenManager, HeadDatabase]
+softdepend: [Vault, BarAPI, PlaceholderAPI, PlayerPoints, TokenManager, HeadDatabase, TitleManager, TitleAPI, TTA, BountifulAPI]
 
 commands:
   chestcommands:

@@ -42,6 +42,21 @@
 			<id>aikar</id>
 			<url>https://repo.aikar.co/content/groups/aikar/</url>
 		</repository>
+
+		<repository>
+			<id>puha-repo</id>
+			<url>http://repo.puha.io/repo/</url>
+		</repository>
+
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+
+		<repository>
+			<id>tta-repo</id>
+			<url>http://releases.herbystar.eu/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -115,6 +130,35 @@
 			<scope>system</scope>
 			<version>1.0</version>
 			<systemPath>${basedir}/lib/HeadDatabaseAPI.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>io.puharesource.mc</groupId>
+			<artifactId>TitleManager</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.ConnorLinfoot</groupId>
+			<artifactId>TitleAPI</artifactId>
+			<version>1.7.6</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>de.Herbystar</groupId>
+			<artifactId>TTA</artifactId>
+			<version>LATEST</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.ConnorLinfoot</groupId>
+			<artifactId>BountifulAPI</artifactId>
+			<version>1.6.4</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/BountifulAPI.jar</systemPath>
 		</dependency>
 	</dependencies>
 

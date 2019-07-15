@@ -32,6 +32,7 @@ import com.gmail.filoghost.chestcommands.internal.icon.command.RefreshIconComman
 import com.gmail.filoghost.chestcommands.internal.icon.command.ServerIconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.SoundIconCommand;
 import com.gmail.filoghost.chestcommands.internal.icon.command.TellIconCommand;
+import com.gmail.filoghost.chestcommands.internal.icon.command.TitleIconCommand;
 import com.gmail.filoghost.chestcommands.util.ErrorLogger;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import java.util.List;
@@ -61,6 +62,7 @@ public class CommandSerializer {
     commandTypesMap.put(commandPattern("condition:"), ConditionIconCommand.class);
     commandTypesMap.put(commandPattern("give-?tokens:"), GiveTokensIconCommand.class);
     commandTypesMap.put(commandPattern("delay:"), DelayIconCommand.class);
+    commandTypesMap.put(commandPattern("title:"), TitleIconCommand.class);
   }
 
   private static Pattern commandPattern(String regex) {

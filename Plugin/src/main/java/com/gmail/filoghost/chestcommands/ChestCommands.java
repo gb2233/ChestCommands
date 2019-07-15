@@ -21,6 +21,7 @@ import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
 import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
+import com.gmail.filoghost.chestcommands.bridge.TitleBridge;
 import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
 import com.gmail.filoghost.chestcommands.command.CommandHandler;
 import com.gmail.filoghost.chestcommands.command.framework.CommandFramework;
@@ -177,6 +178,10 @@ public class ChestCommands extends JavaPlugin {
 
     if (HeadDatabaseBridge.setupPlugin()) {
       getLogger().info("Hooked HeadDatabase");
+    }
+
+    if (TitleBridge.setupPlugin()) {
+      getLogger().info("Enabled Title features");
     }
 
     if (settings.update_notifications) {
