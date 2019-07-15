@@ -45,12 +45,8 @@ public final class ItemUtils {
 
   static {
     // Check if we can use the ItemFlags API
-    if (Utils.isClassLoaded("org.bukkit.inventory.ItemFlag")) {
-      // We can use the new Bukkit API (1.8.3+)
-      USE_ITEM_FLAGS_API = true;
-    } else {
-      USE_ITEM_FLAGS_API = false;
-    }
+    // We can use the new Bukkit API (1.8.3+)
+    USE_ITEM_FLAGS_API = Utils.isClassLoaded("org.bukkit.inventory.ItemFlag");
 
     // Try to get the NMS methods and classes
     boolean success;

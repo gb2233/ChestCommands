@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 public class HeadDatabaseBridge {
+
   private static HeadDatabaseAPI api;
 
   public static boolean setupPlugin() {
@@ -26,10 +27,9 @@ public class HeadDatabaseBridge {
   }
 
   public static ItemStack getItem(String input) {
-    try{
+    try {
       return api.getItemHead(input);
-    }
-    catch(NullPointerException e){
+    } catch (NullPointerException e) {
       return null;
     }
   }

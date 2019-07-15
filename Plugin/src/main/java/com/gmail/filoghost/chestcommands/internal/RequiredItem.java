@@ -76,7 +76,8 @@ public class RequiredItem {
   }
 
   public boolean isValidItemMeta(ItemStack item) {
-    return ChestCommands.getInstance().getServer().getItemFactory().equals(item.getItemMeta(), createItemStack().getItemMeta());
+    return ChestCommands.getInstance().getServer().getItemFactory()
+        .equals(item.getItemMeta(), createItemStack().getItemMeta());
   }
 
   public boolean hasItem(Player player) {

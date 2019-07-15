@@ -338,7 +338,8 @@ public class Icon {
       if (skullOwnerHasVariables) {
         skullOwner = VariableManager.setVariables(skullOwner, pov);
       }
-      if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge.hasValidID(skullOwner.replace("hdb-", ""))) {
+      if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge
+          .hasValidID(skullOwner.replace("hdb-", ""))) {
         itemMeta = HeadDatabaseBridge.getItem(skullOwner.replace("hdb-", "")).getItemMeta();
       } else {
         ((SkullMeta) itemMeta).setOwner(skullOwner);

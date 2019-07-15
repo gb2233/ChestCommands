@@ -285,7 +285,8 @@ public class ExtendedIcon extends Icon {
               .replace("{amount}", Integer.toString(requiredItem.getAmount()))
               .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short
                   .toString(requiredItem.getDataValue()) : ChestCommands.getLang().any);
-          if (ChestCommands.isSpigot() && ChestCommands.getSettings().use_hover_event_on_required_item_message) {
+          if (ChestCommands.isSpigot() && ChestCommands
+              .getSettings().use_hover_event_on_required_item_message) {
             String itemJson = ItemUtils.convertItemStackToJson(requiredItem.createItemStack());
 
             BaseComponent[] hoverEventComponents = new BaseComponent[]{new TextComponent(itemJson)};

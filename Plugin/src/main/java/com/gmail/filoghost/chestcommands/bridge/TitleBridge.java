@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class TitleBridge {
+
   private static PluginType type;
   private static boolean isEnabled = false;
 
@@ -40,7 +41,8 @@ public class TitleBridge {
     return isEnabled;
   }
 
-  public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+  public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay,
+      int fadeOut) {
     if (!hasValidPlugin()) {
       throw new IllegalStateException("Title plugins were not found!");
     }
@@ -53,7 +55,8 @@ public class TitleBridge {
         TitleAPI.sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
       }
       case TTA: {
-        TTA_Methods.sendTitle(player, title, fadeIn, stay, fadeOut, subtitle, fadeIn, stay, fadeOut);
+        TTA_Methods
+            .sendTitle(player, title, fadeIn, stay, fadeOut, subtitle, fadeIn, stay, fadeOut);
       }
       case BOUNTIFUL_API: {
         BountifulAPI.sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);

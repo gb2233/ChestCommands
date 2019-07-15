@@ -1,8 +1,6 @@
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
 import co.aikar.taskchain.TaskChain;
-import com.connorlinfoot.titleapi.TitleAPI;
-import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.TitleBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
@@ -10,6 +8,7 @@ import com.gmail.filoghost.chestcommands.util.Utils;
 import org.bukkit.entity.Player;
 
 public class TitleIconCommand extends IconCommand {
+
   private String title;
   private String subtitle = " ";
   private int fadeIn = 20;
@@ -30,7 +29,8 @@ public class TitleIconCommand extends IconCommand {
     if (split.length == 2) {
       title = split[0];
       subtitle = split[1];
-    } else if (split.length == 5 && Utils.isValidPositiveInteger(split[2].trim()) && Utils.isValidPositiveInteger(split[3].trim()) && Utils.isValidPositiveInteger(split[4].trim())) {
+    } else if (split.length == 5 && Utils.isValidPositiveInteger(split[2].trim()) && Utils
+        .isValidPositiveInteger(split[3].trim()) && Utils.isValidPositiveInteger(split[4].trim())) {
       title = split[0];
       subtitle = split[1];
       fadeIn = Integer.parseInt(split[2].trim());
