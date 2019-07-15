@@ -195,7 +195,7 @@ public class ItemStackReader {
   private void parseEnchant(String input) throws FormatException {
     String enchants = input.substring(Nodes.ENCHANT.length()).trim();
     for (String enchant : enchants.split(" ")) {
-      String[] data = enchant.split("[|]");
+      String[] data = enchant.split("\\|");
       if (data.length != 2) {
         throw new FormatException("invalid enchant format \"" + input + "\"");
       }
@@ -217,7 +217,7 @@ public class ItemStackReader {
     String potions = input.substring(Nodes.POTION.length()).trim();
     if (itemMeta instanceof PotionMeta) {
       for (String potion : potions.split(" ")) {
-        String[] data = potion.split("[|]");
+        String[] data = potion.split("\\|");
         if (data.length != 3) {
           throw new FormatException("invalid potion format \"" + input + "\"");
         }
