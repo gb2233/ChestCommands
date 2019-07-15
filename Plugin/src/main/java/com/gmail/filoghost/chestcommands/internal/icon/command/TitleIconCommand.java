@@ -48,10 +48,8 @@ public class TitleIconCommand extends IconCommand {
       parseTitle(getParsedCommand(player));
     }
 
-    taskChain.sync(() -> {
-      if (TitleBridge.hasValidPlugin()) {
-        TitleBridge.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
-      }
-    });
+    if (TitleBridge.hasValidPlugin()) {
+      taskChain.sync(() -> TitleBridge.sendTitle(player, title, subtitle, fadeIn, stay, fadeOut));
+    }
   }
 }

@@ -26,11 +26,9 @@ public class ConditionIconCommand extends IconCommand {
       return;
     }
 
-    taskChain.sync(() -> {
-      if (condition.eval().intValue() != 1) {
-        TaskChain.abort();
-      }
-    });
+    if (condition.eval().intValue() != 1) {
+      taskChain.sync(TaskChain::abort);
+    }
   }
 
 }

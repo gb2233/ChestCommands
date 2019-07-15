@@ -52,11 +52,9 @@ public class DragonBarIconCommand extends IconCommand {
       parseBar(getParsedCommand(player));
     }
 
-    taskChain.sync(() -> {
-      if (BarAPIBridge.hasValidPlugin()) {
-        BarAPIBridge.setMessage(player, message, seconds);
-      }
-    });
+    if (BarAPIBridge.hasValidPlugin()) {
+      taskChain.sync(() -> BarAPIBridge.setMessage(player, message, seconds));
+    }
   }
 
 }
