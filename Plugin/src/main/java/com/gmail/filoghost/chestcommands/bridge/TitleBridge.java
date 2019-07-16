@@ -50,16 +50,20 @@ public class TitleBridge {
       case TITLE_MANAGER: {
         titleManagerAPI.sendTitle(player, title, fadeIn, stay, fadeOut);
         titleManagerAPI.sendSubtitle(player, subtitle, fadeIn, stay, fadeOut);
+        break;
       }
       case TITLE_API: {
         TitleAPI.sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
+        break;
       }
       case TTA: {
         TTA_Methods
             .sendTitle(player, title, fadeIn, stay, fadeOut, subtitle, fadeIn, stay, fadeOut);
+        break;
       }
       case BOUNTIFUL_API: {
         BountifulAPI.sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
+        break;
       }
     }
   }
