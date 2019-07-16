@@ -382,6 +382,28 @@ head:
   ENCHANTMENT: durability, 1
 
 
+title:
+  COMMAND: 'title: &a&lHey Hello|&eGood to see you'
+  NAME: '&3Title'
+  LORE:
+    - '&7Send title to you.'
+  ID: paper
+  POSITION-X: 1
+  POSITION-Y: 4
+
+
+title_with_time:
+  COMMAND: 'title: &a&lHey Hello|&eGood to see you|10|80|10'
+  NAME: '&3Title'
+  LORE:
+    - '&7Send title to you.'
+    - '&7Custom fade in, stay and fade out'
+  ID: paper
+  ENCHANTMENT: durability, 1
+  POSITION-X: 2
+  POSITION-Y: 4
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
