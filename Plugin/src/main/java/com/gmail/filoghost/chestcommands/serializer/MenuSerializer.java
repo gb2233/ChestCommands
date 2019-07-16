@@ -107,6 +107,7 @@ public class MenuSerializer {
         case FURNACE:
           slots = 3;
           break;
+        case ENDER_CHEST:
         case CHEST:
           slots = 27;
           break;
