@@ -106,7 +106,7 @@ test-as-op:
 
 
 test-with-placeholder:
-  COMMAND: 'tell: &9Online players: &f{online}/{max_players}; tell: &9Your name: &f{player}; tell: &9The world you are in: &f{world}; tell: &9Money: &f{money}'
+  COMMAND: 'tell: &9Online players: &f{online}/{max_players}; tell: &9Your name: &f{player}; tell: &9The world you are in: &f{world}; tell: &9Money: &f{money}; tell: &9Ping: &f{ping}'
   NAME: '&6This message contains some placeholders'
   LORE:
     - 'Placeholders will be replaced when the item'

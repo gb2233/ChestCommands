@@ -1,6 +1,7 @@
 package com.gmail.filoghost.chestcommands.util;
 
 import com.google.common.collect.ImmutableList;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
@@ -67,6 +68,16 @@ public final class BukkitUtils {
       }
     }
     return null;
+  }
+
+  public static String getPing(Player player) {
+    try {
+      Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
+      return String.valueOf((int) entityPlayer.getClass().getField("ping").get(entityPlayer));
+    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NoSuchFieldException e) {
+      e.printStackTrace();
+      return "ERROR GETTING PING";
+    }
   }
 
 }

@@ -37,7 +37,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public class ItemStackReader {
 
-  private Material material = Material.STONE; // In the worst case (bad exception handling) we just get stone
+  private Material material;
   private int amount = 1;
   private ItemMeta itemMeta;
   private short dataValue = 0;
@@ -51,7 +51,7 @@ public class ItemStackReader {
     Validate.notNull(input, "input cannot be null");
 
     String[] itemData = new String[0];
-    String materialString;
+    String materialString = "STONE"; // In the worst case (bad exception handling) we just get stone
     String amountString = "1";
 
     // Divide data
