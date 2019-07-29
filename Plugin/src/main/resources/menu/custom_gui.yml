@@ -6,7 +6,7 @@ menu-settings:
   # You can use inventory-type instead of rows
   #
   # Supported types: FURNACE, CHEST, HOPPER, WORKBENCH, DISPENSER, DROPPER, ENDER_CHEST
-  inventory-type: HOPPER
+  inventory-type: DISPENSER
 
   command: 'customgui'
   auto-refresh: 5
@@ -45,3 +45,9 @@ slot_5:
   NAME: '&aGive banner'
   ID: banner
   SLOT: 5
+
+slot_6:
+  COMMAND: 'give: firework,1, firework: ball_large|0.255.0-0.0.255|125.255.0|true|false star|255.0.0|0.255.0|false|true'
+  NAME: '&aGive firework'
+  ID: firework
+  SLOT: 6

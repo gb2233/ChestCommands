@@ -16,10 +16,12 @@ package com.gmail.filoghost.chestcommands.util;
 
 import com.gmail.filoghost.chestcommands.exception.FormatException;
 import java.lang.reflect.Method;
+import java.time.MonthDay;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemFlag;
@@ -189,5 +191,41 @@ public final class ItemUtils {
       }
     }
     return patterns;
+  }
+
+  public static FireworkEffect parseFireworkEffect(String input) throws FormatException {
+    String[] data = input.split("\\|", 5);
+    FireworkEffect.Builder builder = FireworkEffect.builder();
+
+    try {
+      builder.with(FireworkEffect.Type.valueOf(data[0].toUpperCase()));
+    } catch (IllegalArgumentException e) {
+      throw new FormatException("invalid firework type \"" + data[0] + "\"");
+    }
+
+    List<Color> color = new ArrayList<>();
+    for (String colorString : data[1].split("-")) {
+      try {
+        color.add(parseColor(colorString.replace(".", ",")));
+      } catch (FormatException e) {
+        throw new FormatException("invalid color \"" + data[1] + "\"");
+      }
+    }
+    builder.withColor(color);
+
+    List<Color> fade = new ArrayList<>();
+    for (String fadeString : data[2].split("-")) {
+      try {
+        fade.add(parseColor(fadeString.replace(".", ",")));
+      } catch (FormatException e) {
+        throw new FormatException("invalid color \"" + data[2] + "\"");
+      }
+    }
+    builder.withFade(fade);
+
+    builder.flicker(Boolean.parseBoolean(data[3]));
+    builder.trail(Boolean.parseBoolean(data[4]));
+
+    return builder.build();
   }
 }

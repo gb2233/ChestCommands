@@ -23,15 +23,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BannerMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -51,7 +49,7 @@ public class ItemStackReader {
     Validate.notNull(input, "input cannot be null");
 
     String[] itemData = new String[0];
-    String materialString = "STONE"; // In the worst case (bad exception handling) we just get stone
+    String materialString;
     String amountString = "1";
 
     // Divide data
@@ -139,7 +137,28 @@ public class ItemStackReader {
         if (data.toLowerCase().startsWith(Nodes.SKULL)) {
           parseSkull(data);
         }
+        if (data.toLowerCase().startsWith(Nodes.FIREWORK)) {
+          parseFirework(data);
+        }
       }
+    }
+  }
+
+  // FIREWORK
+  // <type>|<color>|<fade>|<flicker>|<trail>
+  //
+  // <color> and <fade> : Name or <R>.<G>.<B>
+  // <color1>-<color2>-...
+  private void parseFirework(String input) throws FormatException {
+    String[] split = input.substring(Nodes.FIREWORK.length()).trim().split(" ");
+    if (itemMeta instanceof FireworkMeta) {
+      List<FireworkEffect> effects = new ArrayList<>();
+      for (String firework : split) {
+        effects.add(ItemUtils.parseFireworkEffect(firework));
+      }
+      ((FireworkMeta) itemMeta).addEffects(effects);
+    } else if (itemMeta instanceof FireworkEffectMeta) {
+      ((FireworkEffectMeta) itemMeta).setEffect(ItemUtils.parseFireworkEffect(split[0]));
     }
   }
 
@@ -165,7 +184,7 @@ public class ItemStackReader {
       try {
         itemMeta.addItemFlags(ItemFlag.valueOf(flag.toUpperCase()));
       } catch (Exception e) {
-        throw new FormatException("invalid item flags \"" + input + "\"");
+        throw new FormatException("invalid item flags \"" + flag + "\"");
       }
     }
   }
@@ -315,6 +334,7 @@ public class ItemStackReader {
         ENCHANT = "enchant:",
         POTION = "effect:",
         FLAG = "flag:",
-        COLOR = "color:";
+        COLOR = "color:",
+        FIREWORK = "firework:";
   }
 }
