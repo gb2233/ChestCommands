@@ -207,7 +207,7 @@ public final class ItemUtils {
       try {
         color.add(parseColor(colorString.replace(".", ",")));
       } catch (FormatException e) {
-        throw new FormatException("invalid color \"" + data[1] + "\"");
+        throw new FormatException("invalid color \"" + colorString + "\"");
       }
     }
     builder.withColor(color);
@@ -217,7 +217,7 @@ public final class ItemUtils {
       try {
         fade.add(parseColor(fadeString.replace(".", ",")));
       } catch (FormatException e) {
-        throw new FormatException("invalid color \"" + data[2] + "\"");
+        throw new FormatException("invalid color \"" + fadeString + "\"");
       }
     }
     builder.withFade(fade);
