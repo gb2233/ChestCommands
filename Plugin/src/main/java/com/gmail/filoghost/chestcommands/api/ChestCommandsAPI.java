@@ -31,7 +31,7 @@ public class ChestCommandsAPI {
   /**
    * Opens a menu loaded by ChestCommands to a player. NOTE: this method ignores permissions.
    *
-   * @param player - the player that will see the GUI.
+   * @param player   - the player that will see the GUI.
    * @param yamlFile - the file name of the menu to open. The .yml extension CANNOT be omitted.
    * @return true - if the menu was found and opened, false if not.
    */

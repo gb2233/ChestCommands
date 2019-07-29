@@ -159,8 +159,7 @@ public enum Variable {
     public String getReplacement(Player executor) {
       return BukkitUtils.getPing(executor);
     }
-  }
-  ;
+  };
 
   private String text;
 

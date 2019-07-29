@@ -352,7 +352,7 @@ public final class MojangsonParser {
    *
    * @param c the expected character
    * @throws MojangsonParseException if {@link #currentChar()} does not equal {@code c} or if {@link
-   * #hasNext()} returns false
+   *                                 #hasNext()} returns false
    */
   private void expectChar(char c) throws MojangsonParseException {
     skipWhitespace();
