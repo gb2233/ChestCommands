@@ -28,6 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
@@ -35,6 +36,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
+import org.bukkit.inventory.meta.FireworkEffectMeta;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -53,6 +56,7 @@ public class Icon {
   private String skullOwner;
   private DyeColor bannerColor;
   private List<Pattern> bannerPatterns;
+  private List<FireworkEffect> fireworkEffects;
   private ClickHandler clickLeftHandler;
   private ClickHandler clickRightHandler;
   private ClickHandler clickMiddleHandler;
@@ -365,6 +369,14 @@ public class Icon {
       }
     }
 
+    if (fireworkEffects != null && !fireworkEffects.isEmpty()) {
+      if (itemMeta instanceof FireworkMeta) {
+        ((FireworkMeta) itemMeta).addEffects(fireworkEffects);
+      } else if (itemMeta instanceof FireworkEffectMeta) {
+        ((FireworkEffectMeta) itemMeta).setEffect(fireworkEffects.get(0));
+      }
+    }
+
     itemStack.setItemMeta(itemMeta);
 
     if (enchantments.size() > 0) {
@@ -393,4 +405,11 @@ public class Icon {
     return closeOnClick;
   }
 
+  public List<FireworkEffect> getFireworkEffects() {
+    return fireworkEffects;
+  }
+
+  public void setFireworkEffects(List<FireworkEffect> fireworkEffects) {
+    this.fireworkEffects = fireworkEffects;
+  }
 }

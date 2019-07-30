@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.bukkit.FireworkEffect;
 import org.bukkit.configuration.ConfigurationSection;
 
 public class IconSerializer {
@@ -116,6 +117,25 @@ public class IconSerializer {
       } catch (FormatException e) {
         errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
             + "\" has an invalid PATTERN-LIST: " + e.getMessage());
+      }
+    }
+
+    List<FireworkEffect> fireworkEffects = new ArrayList<>();
+    if (section.isSet(Nodes.FIREWORK)) {
+      try {
+        if (section.isList(Nodes.FIREWORK)) {
+          for (String firework : section.getStringList(Nodes.FIREWORK)) {
+            fireworkEffects.add(ItemUtils.parseFireworkEffect(firework));
+          }
+        } else {
+          for (String firework : section.getString(Nodes.FIREWORK).split(" ")) {
+            fireworkEffects.add(ItemUtils.parseFireworkEffect(firework));
+          }
+        }
+        icon.setFireworkEffects(fireworkEffects);
+      } catch (FormatException e) {
+        errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
+            + "\" has an invalid FIREWORK: " + e.getMessage());
       }
     }
 
@@ -454,7 +474,8 @@ public class IconSerializer {
         KEEP_OPEN = "KEEP-OPEN",
         SLOT = "SLOT",
         POSITION_X = "POSITION-X",
-        POSITION_Y = "POSITION-Y";
+        POSITION_Y = "POSITION-Y",
+        FIREWORK = "FIREWORK";
   }
 
 }
