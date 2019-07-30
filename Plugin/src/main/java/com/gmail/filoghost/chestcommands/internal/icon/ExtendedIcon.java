@@ -281,7 +281,6 @@ public class ExtendedIcon extends Icon {
                   (requiredItem.hasItemMeta() && requiredItem.getItemMeta().hasDisplayName())
                       ? requiredItem.getItemMeta().getDisplayName()
                       : MaterialsRegistry.formatMaterial(requiredItem.getMaterial()))
-              .replace("{id}", Integer.toString(requiredItem.getMaterial().getId()))
               .replace("{amount}", Integer.toString(requiredItem.getAmount()))
               .replace("{datavalue}", requiredItem.hasRestrictiveDataValue() ? Short
                   .toString(requiredItem.getDataValue()) : ChestCommands.getLang().any);
