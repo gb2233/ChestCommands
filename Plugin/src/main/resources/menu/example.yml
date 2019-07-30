@@ -404,6 +404,16 @@ title_with_time:
   POSITION-Y: 4
 
 
+firework_charge:
+  NAME: '&aFirework Charge'
+  LORE:
+    - 'This is a example of firework charge'
+  ID: firework_charge
+  FIREWORK: 'ball|0.255.0|0.255.0|false|false'
+  POSITION-X: 3
+  POSITION-Y: 4
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
