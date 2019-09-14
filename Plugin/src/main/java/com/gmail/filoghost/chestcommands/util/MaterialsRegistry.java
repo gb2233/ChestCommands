@@ -31,15 +31,14 @@ public final class MaterialsRegistry {
   private static final char[] IGNORE_CHARS = {'-', '_', ' '};
 
   // Default material names are ugly
-  private static final Map<String, Material> MATERIALS_BY_ALIAS = new HashMap<String, Material>();
+  private static final Map<String, Material> MATERIALS_BY_ALIAS = new HashMap<>();
 
   // Materials that are considered air (with 1.13+ compatibility)
   private static final Collection<Material> AIR_MATERIALS = getExistingMaterials("AIR", "CAVE_AIR",
       "VOID_AIR");
 
   // Materials that have a "Sign" block state (with 1.13+ compatibility)
-  private static final Collection<Material> SIGN_MATERIALS = getExistingMaterials("SIGN",
-      "SIGN_POST", "WALL_SIGN");
+  private static final Collection<Material> SIGN_MATERIALS = new HashSet<>();
 
   static {
     for (Material material : Material.values()) {
@@ -48,6 +47,10 @@ public final class MaterialsRegistry {
       if (!useNewMaterialNames()) {
         // Add numerical IDs in versions before 1.13
         addMaterialAlias(String.valueOf(material.getId()), material);
+      }
+
+      if (material.name().contains("SIGN")) {
+        SIGN_MATERIALS.add(material);
       }
     }
 
@@ -136,7 +139,7 @@ public final class MaterialsRegistry {
   }
 
   public static Collection<Material> getExistingMaterials(String... materialEnumNames) {
-    Collection<Material> existingMaterials = new HashSet<Material>();
+    Collection<Material> existingMaterials = new HashSet<>();
 
     for (String materialEnumName : materialEnumNames) {
       try {
