@@ -145,8 +145,16 @@ public class ItemStackReader {
         if (data.toLowerCase().startsWith(Nodes.FIREWORK)) {
           parseFirework(data);
         }
+        if (data.toLowerCase().equals(Nodes.UNBREAKABLE)) {
+          parseUnbreakable();
+        }
       }
     }
+  }
+
+  // UNBREAKABLE
+  private void parseUnbreakable() {
+    itemMeta.spigot().setUnbreakable(true);
   }
 
   // FIREWORK
@@ -340,6 +348,7 @@ public class ItemStackReader {
         POTION = "effect:",
         FLAG = "flag:",
         COLOR = "color:",
-        FIREWORK = "firework:";
+        FIREWORK = "firework:",
+        UNBREAKABLE = "unbreakable";
   }
 }
