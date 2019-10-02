@@ -37,6 +37,7 @@ public class CommandsClickHandler implements ClickHandler {
         if (command instanceof OpenIconCommand || command instanceof RefreshIconCommand) {
           // Fix GUI closing if KEEP-OPEN is not set, and a command should open another GUI
           this.closeOnClick = false;
+          break;
         }
       }
     }
