@@ -22,18 +22,18 @@ import java.util.List;
  */
 public class ErrorLogger {
 
-  private List<String> errors = new ArrayList<String>();
+  private List<String> errors = new ArrayList<>();
 
   public void addError(String error) {
     errors.add(error);
   }
 
   public List<String> getErrors() {
-    return new ArrayList<String>(errors);
+    return new ArrayList<>(errors);
   }
 
   public boolean hasErrors() {
-    return errors.size() > 0;
+    return !errors.isEmpty();
   }
 
   public int getSize() {

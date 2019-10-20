@@ -17,7 +17,7 @@ package com.gmail.filoghost.chestcommands;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChainFactory;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
-import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
@@ -76,6 +77,8 @@ public class ChestCommands extends JavaPlugin {
   private static String newVersion;
 
   private static TaskChainFactory taskChainFactory;
+
+  private static Random random = new Random();
 
   public static void closeAllMenus() {
     for (Player player : BukkitUtils.getOnlinePlayers()) {
@@ -137,6 +140,10 @@ public class ChestCommands extends JavaPlugin {
     return taskChainFactory;
   }
 
+  public static Random getRandom() {
+    return random;
+  }
+
   @Override
   public void onEnable() {
     if (instance != null) {
@@ -155,9 +162,14 @@ public class ChestCommands extends JavaPlugin {
 
     taskChainFactory = BukkitTaskChainFactory.create(this);
 
-    if (!EconomyBridge.setupEconomy()) {
+    if (!VaultBridge.setupEconomy()) {
       getLogger().warning(
           "Vault with a compatible economy plugin was not found! Icons with a PRICE or commands that give money will not work.");
+    }
+
+    if (!VaultBridge.setupPermission()) {
+      getLogger().warning(
+              "Vault with a compatible permission plugin was not found! Variable {group} will not work.");
     }
 
     if (BarAPIBridge.setupPlugin()) {

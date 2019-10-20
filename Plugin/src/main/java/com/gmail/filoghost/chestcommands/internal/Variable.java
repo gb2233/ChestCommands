@@ -14,11 +14,13 @@
  */
 package com.gmail.filoghost.chestcommands.internal;
 
-import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.ChestCommands;
+import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
 import com.gmail.filoghost.chestcommands.util.BukkitUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public enum Variable {
@@ -63,8 +65,8 @@ public enum Variable {
 
   MONEY("{money}") {
     public String getReplacement(Player executor) {
-      if (EconomyBridge.hasValidEconomy()) {
-        return EconomyBridge.formatMoney(EconomyBridge.getMoney(executor));
+      if (VaultBridge.hasValidEconomy()) {
+        return VaultBridge.formatMoney(VaultBridge.getMoney(executor));
       } else {
         return "[ECONOMY PLUGIN NOT FOUND]";
       }
@@ -158,6 +160,27 @@ public enum Variable {
   PING("{ping}") {
     public String getReplacement(Player executor) {
       return BukkitUtils.getPing(executor);
+    }
+  },
+
+  GROUP("{money}") {
+    public String getReplacement(Player executor) {
+      if (VaultBridge.hasValidPermission()) {
+        return VaultBridge.getPrimaryGroup(executor);
+      } else {
+        return "[PERMISSION PLUGIN NOT FOUND]";
+      }
+    }
+  },
+
+  RAINBOW("{rainbow}") {
+    public String getReplacement(Player executor) {
+      ChatColor[] values = ChatColor.values();
+      ChatColor color = null;
+      while (color == null || color.equals(ChatColor.BOLD) || color.equals(ChatColor.ITALIC) || color.equals(ChatColor.STRIKETHROUGH) || color.equals(ChatColor.RESET) || color.equals(ChatColor.MAGIC)) {
+        color = values[ChestCommands.getRandom().nextInt(values().length)];
+      }
+      return "&" + color.getChar();
     }
   };
 

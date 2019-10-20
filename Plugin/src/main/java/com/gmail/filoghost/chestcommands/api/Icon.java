@@ -327,7 +327,7 @@ public class Icon {
       try {
         // Note: this method should not throw any exception. It should log directly to the console
         Bukkit.getUnsafe().modifyItemStack(itemStack, nbtData);
-      } catch (Throwable t) {
+      } catch (Exception t) {
         this.nbtData = null;
         ChestCommands.getInstance().getLogger()
             .log(Level.WARNING, "Could not apply NBT-DATA to an item.", t);

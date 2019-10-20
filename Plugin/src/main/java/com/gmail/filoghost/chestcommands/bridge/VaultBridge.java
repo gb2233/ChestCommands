@@ -17,14 +17,19 @@ package com.gmail.filoghost.chestcommands.bridge;
 import com.gmail.filoghost.chestcommands.util.MenuUtils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class EconomyBridge {
+public class VaultBridge {
 
   private static Economy economy;
+  private static Permission permission;
 
+  /*
+  ECONOMY
+   */
   public static boolean setupEconomy() {
     if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
       return false;
@@ -66,7 +71,7 @@ public class EconomyBridge {
 
     double balance = economy.getBalance(player, player.getWorld().getName());
 
-    return !(balance < minimum);
+    return balance >= minimum;
   }
 
   /**
@@ -109,6 +114,34 @@ public class EconomyBridge {
       return economy.format(amount);
     } else {
       return Double.toString(amount);
+    }
+  }
+
+  /*
+  Permission
+   */
+  public static boolean setupPermission() {
+    if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
+      return false;
+    }
+    RegisteredServiceProvider<Permission> rsp = Bukkit.getServicesManager()
+            .getRegistration(Permission.class);
+    if (rsp == null) {
+      return false;
+    }
+    permission = rsp.getProvider();
+    return permission != null;
+  }
+
+  public static boolean hasValidPermission() {
+    return permission != null;
+  }
+
+  public static String getPrimaryGroup(Player player) {
+    if (!hasValidPermission()) {
+      throw new IllegalStateException("Permission plugin not found");
+    } else {
+      return permission.getPrimaryGroup(player); 
     }
   }
 }

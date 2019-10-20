@@ -84,7 +84,7 @@ public final class StringUtils {
     String s = input.toLowerCase();
 
     int strLen = s.length();
-    StringBuffer buffer = new StringBuffer(strLen);
+    StringBuilder buffer = new StringBuilder(strLen);
     boolean capitalizeNext = true;
     for (int i = 0; i < strLen; i++) {
       char ch = s.charAt(i);

@@ -16,7 +16,7 @@ package com.gmail.filoghost.chestcommands.internal.icon;
 
 import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.api.Icon;
-import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
@@ -207,15 +207,15 @@ public class ExtendedIcon extends Icon {
     }
 
     if (moneyPrice > 0) {
-      if (!EconomyBridge.hasValidEconomy()) {
+      if (!VaultBridge.hasValidEconomy()) {
         player.sendMessage(ChatColor.RED
             + "This command has a price, but Vault with a compatible economy plugin was not found. For security, the command has been blocked. Please inform the staff.");
         return closeOnClick;
       }
 
-      if (!EconomyBridge.hasMoney(player, moneyPrice)) {
+      if (!VaultBridge.hasMoney(player, moneyPrice)) {
         player.sendMessage(ChestCommands.getLang().no_money
-            .replace("{money}", EconomyBridge.formatMoney(moneyPrice)));
+            .replace("{money}", VaultBridge.formatMoney(moneyPrice)));
         return closeOnClick;
       }
     }
@@ -314,7 +314,7 @@ public class ExtendedIcon extends Icon {
     boolean changedVariables = false; // To update the placeholders
 
     if (moneyPrice > 0) {
-      if (!EconomyBridge.takeMoney(player, moneyPrice)) {
+      if (!VaultBridge.takeMoney(player, moneyPrice)) {
         player.sendMessage(ChatColor.RED
             + "Error: the transaction couldn't be executed. Please inform the staff.");
         return closeOnClick;

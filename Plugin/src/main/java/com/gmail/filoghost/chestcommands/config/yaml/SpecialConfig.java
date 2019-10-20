@@ -27,9 +27,9 @@ import java.util.Map.Entry;
  */
 public class SpecialConfig {
 
-  private transient PluginConfig config;
-  private transient String header;
-  private transient Map<String, Object> defaultValuesMap;
+  private PluginConfig config;
+  private String header;
+  private Map<String, Object> defaultValuesMap;
 
   public SpecialConfig(PluginConfig config) {
     this.config = config;

@@ -33,7 +33,7 @@ public final class Utils {
   }
 
   public static int makePositive(int i) {
-    return i < 0 ? 0 : i;
+    return Math.max(i, 0);
   }
 
   public static boolean isValidInteger(String input) {
@@ -93,29 +93,29 @@ public final class Utils {
       if (br != null) {
         try {
           br.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
       }
     }
   }
 
   public static <T> Set<T> newHashSet() {
-    return new HashSet<T>();
+    return new HashSet<>();
   }
 
   public static <T, V> Map<T, V> newHashMap() {
-    return new HashMap<T, V>();
+    return new HashMap<>();
   }
 
   public static <T> List<T> newArrayList() {
-    return new ArrayList<T>();
+    return new ArrayList<>();
   }
 
   public static boolean isClassLoaded(String name) {
     try {
       Class.forName(name);
       return true;
-    } catch (Throwable t) {
+    } catch (Exception t) {
       return false;
     }
   }

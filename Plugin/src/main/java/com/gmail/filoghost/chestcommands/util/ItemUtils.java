@@ -104,7 +104,7 @@ public final class ItemUtils {
         }
 
         Object nbtCompound;
-        if ((Boolean) hasTagMethod.invoke(nmsItemstack)) {
+        if ((boolean) hasTagMethod.invoke(nmsItemstack)) {
           nbtCompound = getTagMethod.invoke(nmsItemstack);
         } else {
           nbtCompound = nbtTagCompoundClass.newInstance();
@@ -119,7 +119,7 @@ public final class ItemUtils {
         nbtSetMethod.invoke(nbtCompound, "AttributeModifiers", nbtList);
         return (ItemStack) asCraftMirrorMethod.invoke(null, nmsItemstack);
 
-      } catch (Throwable t) {
+      } catch (Exception t) {
         // Ignore
       }
     }
@@ -134,7 +134,7 @@ public final class ItemUtils {
       Object nmsNbtTagCompoundObj = nbtTagCompoundClass.newInstance();
       Object nmsItemStackObj = asNmsCopyMethod.invoke(null, item);
       itemAsJsonObject = saveNmsItemStackMethod.invoke(nmsItemStackObj, nmsNbtTagCompoundObj);
-    } catch (Throwable t) {
+    } catch (Exception t) {
       new IllegalStateException("Could not convert ItemStack to JSON", t).printStackTrace();
       return null;
     }
@@ -176,7 +176,7 @@ public final class ItemUtils {
   }
 
   public static List<Pattern> parseBannerPatternList(List<String> input) throws FormatException {
-    List<Pattern> patterns = new ArrayList<Pattern>();
+    List<Pattern> patterns = new ArrayList<>();
     for (String str : input) {
       String[] split = str.split(":");
       if (split.length != 2) {
