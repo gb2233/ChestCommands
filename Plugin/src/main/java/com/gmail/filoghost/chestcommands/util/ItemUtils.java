@@ -41,6 +41,7 @@ public final class ItemUtils {
   private static Method hasTagMethod;
   private static Method getTagMethod;
   private static Method setTagMethod;
+  private static Method setIntMethod;
   private static Method nbtSetMethod;
   private static Method saveNmsItemStackMethod;
 
@@ -61,6 +62,7 @@ public final class ItemUtils {
       asCraftMirrorMethod = NMSUtils.getCraftBukkitClass("inventory.CraftItemStack")
           .getMethod("asCraftMirror", nmsItemstackClass);
 
+      setIntMethod = nbtTagCompoundClass.getMethod("setInt", String.class, int.class);
       hasTagMethod = nmsItemstackClass.getMethod("hasTag");
       getTagMethod = nmsItemstackClass.getMethod("getTag");
       setTagMethod = nmsItemstackClass.getMethod("setTag", nbtTagCompoundClass);
@@ -125,6 +127,35 @@ public final class ItemUtils {
     }
 
     // On failure just return the item
+    return item;
+  }
+
+  public static ItemStack setUnbreakable(ItemStack item) {
+    try {
+      Object nmsItemstack = asNmsCopyMethod.invoke(null, item);
+      if (nmsItemstack == null) {
+        return item;
+      }
+
+      Object nbtCompound;
+      if ((boolean) hasTagMethod.invoke(nmsItemstack)) {
+        nbtCompound = getTagMethod.invoke(nmsItemstack);
+      } else {
+        nbtCompound = nbtTagCompoundClass.newInstance();
+        setTagMethod.invoke(nmsItemstack, nbtCompound);
+      }
+
+      if (nbtCompound == null) {
+        return item;
+      }
+
+      setIntMethod.invoke(nbtCompound, "Unbreakable", 1);
+      setTagMethod.invoke(nmsItemstack, nbtCompound);
+
+      return (ItemStack) asCraftMirrorMethod.invoke(null, nmsItemstack);
+    } catch (Exception t) {
+      // Ignore
+    }
     return item;
   }
 

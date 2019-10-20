@@ -44,6 +44,7 @@ public class ItemStackReader {
   private int amount = 1;
   private ItemMeta itemMeta;
   private short dataValue = 0;
+  private boolean unbreakable = false;
   private boolean explicitDataValue = false;
 
   /**
@@ -145,16 +146,11 @@ public class ItemStackReader {
         if (data.toLowerCase().startsWith(Nodes.FIREWORK)) {
           parseFirework(data);
         }
-        if (data.toLowerCase().equals(Nodes.UNBREAKABLE)) {
-          parseUnbreakable();
+        if (data.equalsIgnoreCase(Nodes.UNBREAKABLE)) {
+          unbreakable = true;
         }
       }
     }
-  }
-
-  // UNBREAKABLE
-  private void parseUnbreakable() {
-    itemMeta.spigot().setUnbreakable(true);
   }
 
   // FIREWORK
@@ -313,6 +309,9 @@ public class ItemStackReader {
   public ItemStack createStack() {
     ItemStack item = new ItemStack(material, amount, dataValue);
     item.setItemMeta(itemMeta);
+    if (unbreakable) {
+      item = ItemUtils.setUnbreakable(item);
+    }
     return item;
   }
 

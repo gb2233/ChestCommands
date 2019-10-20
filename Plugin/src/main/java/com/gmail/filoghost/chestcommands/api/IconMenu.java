@@ -15,6 +15,7 @@
 package com.gmail.filoghost.chestcommands.api;
 
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
+import com.gmail.filoghost.chestcommands.internal.VariableManager;
 import com.gmail.filoghost.chestcommands.util.ItemUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import com.gmail.filoghost.chestcommands.util.Validate;
@@ -81,8 +82,12 @@ public class IconMenu {
     return icons.length;
   }
 
-  public String getTitle() {
-    return title;
+  public String getTitle(Player player) {
+    if (VariableManager.hasVariables(title)) {
+      return VariableManager.setVariables(title, player);
+    } else {
+      return title;
+    }
   }
 
   public void open(Player player) {
@@ -91,9 +96,9 @@ public class IconMenu {
     Inventory inventory;
     if (inventoryType.equals(InventoryType.CHEST) && icons.length != 27) {
       inventory = Bukkit
-          .createInventory(new MenuInventoryHolder(this), icons.length, title);
+          .createInventory(new MenuInventoryHolder(this), icons.length, getTitle(player));
     } else {
-      inventory = Bukkit.createInventory(new MenuInventoryHolder(this), inventoryType, title);
+      inventory = Bukkit.createInventory(new MenuInventoryHolder(this), inventoryType, getTitle(player));
     }
 
     for (int i = 0; i < icons.length; i++) {

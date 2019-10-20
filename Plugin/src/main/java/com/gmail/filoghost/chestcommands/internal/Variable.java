@@ -163,7 +163,7 @@ public enum Variable {
     }
   },
 
-  GROUP("{money}") {
+  GROUP("{group}") {
     public String getReplacement(Player executor) {
       if (VaultBridge.hasValidPermission()) {
         return VaultBridge.getPrimaryGroup(executor);
@@ -177,8 +177,8 @@ public enum Variable {
     public String getReplacement(Player executor) {
       ChatColor[] values = ChatColor.values();
       ChatColor color = null;
-      while (color == null || color.equals(ChatColor.BOLD) || color.equals(ChatColor.ITALIC) || color.equals(ChatColor.STRIKETHROUGH) || color.equals(ChatColor.RESET) || color.equals(ChatColor.MAGIC)) {
-        color = values[ChestCommands.getRandom().nextInt(values().length)];
+      while (color == null || color.equals(ChatColor.BOLD) || color.equals(ChatColor.ITALIC) || color.equals(ChatColor.STRIKETHROUGH) || color.equals(ChatColor.RESET) || color.equals(ChatColor.MAGIC) || color.equals(ChatColor.UNDERLINE)) {
+        color = values[ChestCommands.getRandom().nextInt(values().length - 1)];
       }
       return "&" + color.getChar();
     }

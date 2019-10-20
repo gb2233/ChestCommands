@@ -85,10 +85,10 @@ public class ExtendedIconMenu extends IconMenu {
       Inventory inventory;
       if (inventoryType.equals(InventoryType.CHEST) && icons.length != 27) {
         inventory = Bukkit
-            .createInventory(new MenuInventoryHolder(this), getSize(), getTitle());
+            .createInventory(new MenuInventoryHolder(this), getSize(), getTitle(player));
       } else {
         inventory = Bukkit
-            .createInventory(new MenuInventoryHolder(this), inventoryType, getTitle());
+            .createInventory(new MenuInventoryHolder(this), inventoryType, getTitle(player));
       }
 
       for (int i = 0; i < icons.length; i++) {
