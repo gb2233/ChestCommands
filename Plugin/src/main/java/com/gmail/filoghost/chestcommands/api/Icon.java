@@ -15,7 +15,9 @@
 package com.gmail.filoghost.chestcommands.api;
 
 import com.gmail.filoghost.chestcommands.ChestCommands;
+import com.gmail.filoghost.chestcommands.bridge.EpicHeadsBridge;
 import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
+import com.gmail.filoghost.chestcommands.bridge.HeadsPlusBridge;
 import com.gmail.filoghost.chestcommands.internal.VariableManager;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import java.util.Arrays;
@@ -345,6 +347,12 @@ public class Icon {
       if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge
           .hasValidID(skullOwner.replace("hdb-", ""))) {
         itemMeta = HeadDatabaseBridge.getItem(skullOwner.replace("hdb-", "")).getItemMeta();
+      } else if (skullOwner.startsWith("hp-") && HeadsPlusBridge
+          .hasValidID(skullOwner.replace("hp-", ""))) {
+        itemMeta = HeadsPlusBridge.getItem(skullOwner.replace("hp-", "")).getItemMeta();
+      } else if (skullOwner.startsWith("eh-") && EpicHeadsBridge
+          .hasValidID(skullOwner.replace("eh-", ""))) {
+        itemMeta = EpicHeadsBridge.getItem(skullOwner.replace("eh-", "")).getItemMeta();
       } else {
         ((SkullMeta) itemMeta).setOwner(skullOwner);
       }

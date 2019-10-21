@@ -17,7 +17,9 @@ package com.gmail.filoghost.chestcommands;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChainFactory;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
+import com.gmail.filoghost.chestcommands.bridge.EpicHeadsBridge;
 import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
+import com.gmail.filoghost.chestcommands.bridge.HeadsPlusBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.bridge.TitleBridge;
@@ -190,6 +192,14 @@ public class ChestCommands extends JavaPlugin {
 
     if (HeadDatabaseBridge.setupPlugin()) {
       getLogger().info("Hooked HeadDatabase");
+    }
+
+    if (HeadsPlusBridge.setupPlugin()) {
+      getLogger().info("Hooked HeadsPlus");
+    }
+
+    if (EpicHeadsBridge.setupPlugin()) {
+      getLogger().info("Hooked EpicHeads");
     }
 
     if (TitleBridge.setupPlugin()) {
