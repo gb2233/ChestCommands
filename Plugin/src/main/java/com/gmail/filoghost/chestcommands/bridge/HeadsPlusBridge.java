@@ -4,6 +4,7 @@ import io.github.thatsmusic99.headsplus.HeadsPlus;
 import io.github.thatsmusic99.headsplus.api.HeadsPlusAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class HeadsPlusBridge {
 
@@ -14,7 +15,13 @@ public class HeadsPlusBridge {
       return false;
     }
 
-    api = ((HeadsPlus) Bukkit.getServer().getPluginManager().getPlugin("HeadsPlus")).getAPI();
+    Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("HeadsPlus");
+
+    if (plugin == null) {
+      return false;
+    }
+
+    api = ((HeadsPlus) plugin).getAPI();
 
     return true;
   }

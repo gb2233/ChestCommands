@@ -4,6 +4,7 @@ import com.songoda.epicheads.EpicHeads;
 import com.songoda.epicheads.head.HeadManager;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class EpicHeadsBridge {
 
@@ -14,7 +15,13 @@ public class EpicHeadsBridge {
       return false;
     }
 
-    manager = ((EpicHeads) Bukkit.getServer().getPluginManager().getPlugin("EpicHeads")).getHeadManager();
+    Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("EpicHeads");
+
+    if (plugin == null) {
+      return false;
+    }
+
+    manager = ((EpicHeads) plugin).getHeadManager();
 
     return true;
   }
