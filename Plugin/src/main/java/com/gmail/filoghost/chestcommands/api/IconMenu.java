@@ -98,7 +98,8 @@ public class IconMenu {
       inventory = Bukkit
           .createInventory(new MenuInventoryHolder(this), icons.length, getTitle(player));
     } else {
-      inventory = Bukkit.createInventory(new MenuInventoryHolder(this), inventoryType, getTitle(player));
+      inventory = Bukkit
+          .createInventory(new MenuInventoryHolder(this), inventoryType, getTitle(player));
     }
 
     for (int i = 0; i < icons.length; i++) {

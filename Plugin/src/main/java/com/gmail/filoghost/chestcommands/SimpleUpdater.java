@@ -63,7 +63,7 @@ public final class SimpleUpdater {
         JSONArray filesArray = (JSONArray) readJson(
             "https://api.curseforge.com/servermods/files?projectIds=" + projectId);
 
-        if (filesArray.size() == 0) {
+        if (filesArray.isEmpty()) {
           // The array cannot be empty, there must be at least one file.
           // The project ID is not valid or curse returned a wrong response.
           return;
@@ -75,13 +75,8 @@ public final class SimpleUpdater {
         PluginVersion localVersion = new PluginVersion(plugin.getDescription().getVersion());
 
         if (remoteVersion.isNewerThan(localVersion)) {
-          Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-            @Override
-            public void run() {
-              responseHandler.onUpdateFound(remoteVersion.toString());
-            }
-          });
+          Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
+              () -> responseHandler.onUpdateFound(remoteVersion.toString()));
         }
 
       } catch (IOException e) {

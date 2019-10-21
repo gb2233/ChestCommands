@@ -109,7 +109,7 @@ public final class ItemUtils {
         if ((boolean) hasTagMethod.invoke(nmsItemstack)) {
           nbtCompound = getTagMethod.invoke(nmsItemstack);
         } else {
-          nbtCompound = nbtTagCompoundClass.newInstance();
+          nbtCompound = nbtTagCompoundClass.getDeclaredConstructor().newInstance();
           setTagMethod.invoke(nmsItemstack, nbtCompound);
         }
 
@@ -117,7 +117,7 @@ public final class ItemUtils {
           return item;
         }
 
-        Object nbtList = nbtTagListClass.newInstance();
+        Object nbtList = nbtTagListClass.getDeclaredConstructor().newInstance();
         nbtSetMethod.invoke(nbtCompound, "AttributeModifiers", nbtList);
         return (ItemStack) asCraftMirrorMethod.invoke(null, nmsItemstack);
 
@@ -141,7 +141,7 @@ public final class ItemUtils {
       if ((boolean) hasTagMethod.invoke(nmsItemstack)) {
         nbtCompound = getTagMethod.invoke(nmsItemstack);
       } else {
-        nbtCompound = nbtTagCompoundClass.newInstance();
+        nbtCompound = nbtTagCompoundClass.getDeclaredConstructor().newInstance();
         setTagMethod.invoke(nmsItemstack, nbtCompound);
       }
 
@@ -156,13 +156,15 @@ public final class ItemUtils {
     } catch (Exception t) {
       // Ignore
     }
+
+    // On failure just return the item
     return item;
   }
 
   public static String convertItemStackToJson(ItemStack item) {
     Object itemAsJsonObject;
     try {
-      Object nmsNbtTagCompoundObj = nbtTagCompoundClass.newInstance();
+      Object nmsNbtTagCompoundObj = nbtTagCompoundClass.getDeclaredConstructor().newInstance();
       Object nmsItemStackObj = asNmsCopyMethod.invoke(null, item);
       itemAsJsonObject = saveNmsItemStackMethod.invoke(nmsItemStackObj, nmsNbtTagCompoundObj);
     } catch (Exception t) {
@@ -179,7 +181,9 @@ public final class ItemUtils {
       throw new FormatException("it must be in the format \"red, green, blue\".");
     }
 
-    int red, green, blue;
+    int red;
+    int green;
+    int blue;
 
     try {
       red = Integer.parseInt(split[0]);

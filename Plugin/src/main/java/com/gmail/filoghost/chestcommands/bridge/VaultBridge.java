@@ -125,7 +125,7 @@ public class VaultBridge {
       return false;
     }
     RegisteredServiceProvider<Permission> rsp = Bukkit.getServicesManager()
-            .getRegistration(Permission.class);
+        .getRegistration(Permission.class);
     if (rsp == null) {
       return false;
     }
@@ -141,7 +141,7 @@ public class VaultBridge {
     if (!hasValidPermission()) {
       throw new IllegalStateException("Permission plugin not found");
     } else {
-      return permission.getPrimaryGroup(player); 
+      return permission.getPrimaryGroup(player);
     }
   }
 }

@@ -15,9 +15,9 @@
 package com.gmail.filoghost.chestcommands.internal;
 
 import com.gmail.filoghost.chestcommands.ChestCommands;
-import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
+import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -177,7 +177,13 @@ public enum Variable {
     public String getReplacement(Player executor) {
       ChatColor[] values = ChatColor.values();
       ChatColor color = null;
-      while (color == null || color.equals(ChatColor.BOLD) || color.equals(ChatColor.ITALIC) || color.equals(ChatColor.STRIKETHROUGH) || color.equals(ChatColor.RESET) || color.equals(ChatColor.MAGIC) || color.equals(ChatColor.UNDERLINE)) {
+      while (color == null
+          || color.equals(ChatColor.BOLD)
+          || color.equals(ChatColor.ITALIC)
+          || color.equals(ChatColor.STRIKETHROUGH)
+          || color.equals(ChatColor.RESET)
+          || color.equals(ChatColor.MAGIC)
+          || color.equals(ChatColor.UNDERLINE)) {
         color = values[ChestCommands.getRandom().nextInt(values().length - 1)];
       }
       return "&" + color.getChar();
