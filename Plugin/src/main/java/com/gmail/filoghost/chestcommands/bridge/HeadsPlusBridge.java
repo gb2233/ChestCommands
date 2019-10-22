@@ -30,7 +30,7 @@ public class HeadsPlusBridge {
   }
 
   public static boolean hasValidID(String input) {
-    return hasValidPlugin() && plugin.getHeadsXConfig().isHPXSkull(input);
+    return hasValidPlugin() && plugin.getHeadsXConfig().isHPXSkull(input) && getItem(input) != null;
   }
 
   public static ItemStack getItem(String input) {
