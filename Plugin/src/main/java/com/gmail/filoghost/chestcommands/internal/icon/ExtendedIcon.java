@@ -327,9 +327,13 @@ public class ExtendedIcon extends Icon {
       if (leftCooldown > 0) {
         if (cooldownUntil != null && cooldownUntil > now) {
           if (cooldownMessage != null) {
-            player.sendMessage(cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+            player.sendMessage(
+                cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                    .replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
           } else {
-            player.sendMessage(ChestCommands.getLang().default_cooldown_message.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+            player.sendMessage(ChestCommands.getLang().default_cooldown_message
+                .replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                .replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
           }
           return closeOnClick;
         } else {
@@ -343,9 +347,14 @@ public class ExtendedIcon extends Icon {
           if (leftCooldown > 0) {
             if (cooldownUntil != null && cooldownUntil > now) {
               if (cooldownMessage != null) {
-                player.sendMessage(cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+                player.sendMessage(
+                    cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                        .replace("{cooldown_second}",
+                            String.valueOf((cooldownUntil - now) / 1000)));
               } else {
-                player.sendMessage(ChestCommands.getLang().default_cooldown_message.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+                player.sendMessage(ChestCommands.getLang().default_cooldown_message
+                    .replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                    .replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
               }
               return closeOnClick;
             } else {
@@ -358,9 +367,14 @@ public class ExtendedIcon extends Icon {
           if (rightCooldown > 0) {
             if (cooldownUntil != null && cooldownUntil > now) {
               if (cooldownMessage != null) {
-                player.sendMessage(cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+                player.sendMessage(
+                    cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                        .replace("{cooldown_second}",
+                            String.valueOf((cooldownUntil - now) / 1000)));
               } else {
-                player.sendMessage(ChestCommands.getLang().default_cooldown_message.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+                player.sendMessage(ChestCommands.getLang().default_cooldown_message
+                    .replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                    .replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
               }
               return closeOnClick;
             } else {
@@ -373,9 +387,14 @@ public class ExtendedIcon extends Icon {
           if (middleCooldown > 0) {
             if (cooldownUntil != null && cooldownUntil > now) {
               if (cooldownMessage != null) {
-                player.sendMessage(cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+                player.sendMessage(
+                    cooldownMessage.replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                        .replace("{cooldown_second}",
+                            String.valueOf((cooldownUntil - now) / 1000)));
               } else {
-                player.sendMessage(ChestCommands.getLang().default_cooldown_message.replace("{cooldown}", String.valueOf(cooldownUntil - now)).replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
+                player.sendMessage(ChestCommands.getLang().default_cooldown_message
+                    .replace("{cooldown}", String.valueOf(cooldownUntil - now))
+                    .replace("{cooldown_second}", String.valueOf((cooldownUntil - now) / 1000)));
               }
               return closeOnClick;
             } else {

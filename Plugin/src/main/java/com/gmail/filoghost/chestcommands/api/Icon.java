@@ -347,9 +347,8 @@ public class Icon {
       if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge
           .hasValidID(skullOwner.replace("hdb-", ""))) {
         itemMeta = HeadDatabaseBridge.getItem(skullOwner.replace("hdb-", "")).getItemMeta();
-      } else if (skullOwner.startsWith("hp-") && HeadsPlusBridge
-          .hasValidID(skullOwner.replace("hp-", ""))) {
-        itemMeta = HeadsPlusBridge.getItem(skullOwner.replace("hp-", "")).getItemMeta();
+      } else if (HeadsPlusBridge.hasValidID(skullOwner)) {
+        itemMeta = HeadsPlusBridge.getItem(skullOwner).getItemMeta();
       } else if (skullOwner.startsWith("eh-") && EpicHeadsBridge
           .hasValidID(skullOwner.replace("eh-", ""))) {
         itemMeta = EpicHeadsBridge.getItem(skullOwner.replace("eh-", "")).getItemMeta();

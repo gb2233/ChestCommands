@@ -231,8 +231,6 @@ public class IconSerializer {
       icon.setClickHandler(new CommandsClickHandler(commands, closeOnClick));
     }
 
-
-
     double price = section.getDouble(Nodes.PRICE);
     if (price > 0.0) {
       icon.setMoneyPrice(price);
