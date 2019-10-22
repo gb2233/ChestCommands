@@ -231,6 +231,8 @@ public class IconSerializer {
       icon.setClickHandler(new CommandsClickHandler(commands, closeOnClick));
     }
 
+
+
     double price = section.getDouble(Nodes.PRICE);
     if (price > 0.0) {
       icon.setMoneyPrice(price);
@@ -265,6 +267,31 @@ public class IconSerializer {
           "The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative LEVELS: "
               + levels);
     }
+
+    if (section.isConfigurationSection(Nodes.COOLDOWN)) {
+      // LEFT CLICK COOLDOWN
+      if (section.isSet(Nodes.COOLDOWN_LEFT)) {
+        long cooldown = section.getLong(Nodes.COOLDOWN_LEFT);
+        icon.setLeftCooldown(cooldown);
+      }
+      // RIGHT CLICK COOLDOWN
+      if (section.isSet(Nodes.COOLDOWN_RIGHT)) {
+        long cooldown = section.getLong(Nodes.COOLDOWN_RIGHT);
+        icon.setRightCooldown(cooldown);
+      }
+      // MIDDLE CLICK COOLDOWN
+      if (section.isSet(Nodes.COOLDOWN_MIDDLE)) {
+        long cooldown = section.getLong(Nodes.COOLDOWN_MIDDLE);
+        icon.setMiddleCooldown(cooldown);
+      }
+    } else if (section.isSet(Nodes.COOLDOWN)) {
+      long cooldown = section.getLong(Nodes.COOLDOWN);
+      icon.setLeftCooldown(cooldown);
+      icon.setRightCooldown(cooldown);
+      icon.setMiddleCooldown(cooldown);
+      icon.setCooldownAll(true);
+    }
+    icon.setCooldownMessage(section.getString(Nodes.COOLDOWN_MESSAGE));
 
     if (section.isConfigurationSection(Nodes.REQUIRED_ITEM)) {
       // LEFT REQUIRED ITEMS
@@ -475,7 +502,12 @@ public class IconSerializer {
         SLOT = "SLOT",
         POSITION_X = "POSITION-X",
         POSITION_Y = "POSITION-Y",
-        FIREWORK = "FIREWORK";
+        FIREWORK = "FIREWORK",
+        COOLDOWN = "COOLDOWN",
+        COOLDOWN_LEFT = "COOLDOWN.LEFT",
+        COOLDOWN_RIGHT = "COOLDOWN.RIGHT",
+        COOLDOWN_MIDDLE = "COOLDOWN.MIDDLE",
+        COOLDOWN_MESSAGE = "COOLDOWN-MESSAGE";
   }
 
 }
