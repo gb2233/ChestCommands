@@ -271,21 +271,21 @@ public class IconSerializer {
     if (section.isConfigurationSection(Nodes.COOLDOWN)) {
       // LEFT CLICK COOLDOWN
       if (section.isSet(Nodes.COOLDOWN_LEFT)) {
-        long cooldown = section.getLong(Nodes.COOLDOWN_LEFT);
+        long cooldown = (long) (section.getDouble(Nodes.COOLDOWN_LEFT) * 1000);
         icon.setLeftCooldown(cooldown);
       }
       // RIGHT CLICK COOLDOWN
       if (section.isSet(Nodes.COOLDOWN_RIGHT)) {
-        long cooldown = section.getLong(Nodes.COOLDOWN_RIGHT);
+        long cooldown = (long) (section.getDouble(Nodes.COOLDOWN_RIGHT) * 1000);
         icon.setRightCooldown(cooldown);
       }
       // MIDDLE CLICK COOLDOWN
       if (section.isSet(Nodes.COOLDOWN_MIDDLE)) {
-        long cooldown = section.getLong(Nodes.COOLDOWN_MIDDLE);
+        long cooldown = (long) (section.getDouble(Nodes.COOLDOWN_MIDDLE) * 1000);
         icon.setMiddleCooldown(cooldown);
       }
     } else if (section.isSet(Nodes.COOLDOWN)) {
-      long cooldown = section.getLong(Nodes.COOLDOWN);
+      long cooldown = (long) (section.getDouble(Nodes.COOLDOWN) * 1000);
       icon.setLeftCooldown(cooldown);
       icon.setRightCooldown(cooldown);
       icon.setMiddleCooldown(cooldown);
