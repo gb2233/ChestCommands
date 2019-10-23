@@ -87,7 +87,8 @@ public class InventoryListener implements Listener {
       if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
         ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
 
-        if (refreshMenusTaskMap.get(player).getExtMenu().equals(extMenu)) {
+        if (refreshMenusTaskMap.containsKey(player) && refreshMenusTaskMap.get(player).getExtMenu()
+            .equals(extMenu)) {
           refreshMenusTaskMap.remove(player).cancel();
         }
       }
