@@ -414,6 +414,36 @@ firework_charge:
   POSITION-Y: 4
 
 
+cooldown:
+  COMMAND: 'tell: &e You will need to wait 10 seconds to click again'
+  NAME: '&aCooldown'
+  LORE:
+    - 'This is a example of icon with cooldown'
+  COOLDOWN: 10
+  ID: paper
+  POSITION-X: 4
+  POSITION-Y: 4
+
+
+cooldown-per-clicktype:
+  COMMAND:
+    LEFT: 'tell: &e You will need to wait 10 seconds to click again'
+    RIGHT: 'tell: &e You will need to wait 5 seconds to click again'
+    MIDDLE: 'tell: &e You will need to wait 3 seconds to click again'
+  COOLDOWN:
+    LEFT: 10
+    RIGHT: 5
+    MIDDLE: 3
+  COOLDOWN-MESSAGE: "&cHey! Calm down! {cooldown_second} seconds ({cooldown} milliseconds) more"
+  NAME: '&aCooldown per clicktype'
+  LORE:
+    - 'This is a example of icon with cooldown per clicktype'
+  ID: paper
+  ENCHANTMENT: durability, 1
+  POSITION-X: 5
+  POSITION-Y: 4
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp

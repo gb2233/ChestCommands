@@ -289,7 +289,7 @@ public class IconSerializer {
       icon.setMiddleCooldown(cooldown);
       icon.setCooldownAll(true);
     }
-    icon.setCooldownMessage(section.getString(Nodes.COOLDOWN_MESSAGE));
+    icon.setCooldownMessage(FormatUtils.addColors(section.getString(Nodes.COOLDOWN_MESSAGE)));
 
     if (section.isConfigurationSection(Nodes.REQUIRED_ITEM)) {
       // LEFT REQUIRED ITEMS
