@@ -40,7 +40,7 @@ public class RefreshMenusTask extends BukkitRunnable {
       cancel();
     }
 
-    if (extMenu.getRefreshTicks() > 0 && elapsedTenths % extMenu.getRefreshTicks() == 0) {
+    if (elapsedTenths % extMenu.getRefreshTicks() == 0) {
       extMenu.refresh(player, player.getOpenInventory().getTopInventory());
       player.updateInventory();
     }
