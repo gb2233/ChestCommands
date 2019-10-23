@@ -18,8 +18,10 @@ import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.api.Icon;
 import com.gmail.filoghost.chestcommands.api.IconMenu;
 import com.gmail.filoghost.chestcommands.internal.BoundItem;
+import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.task.ExecuteCommandsTask;
+import com.gmail.filoghost.chestcommands.task.RefreshMenusTask;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import java.util.Map;
 import org.bukkit.Bukkit;
@@ -30,12 +32,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 
 public class InventoryListener implements Listener {
 
   private static Map<Player, Long> antiClickSpam = Utils.newHashMap();
+  private static Map<Player, RefreshMenusTask> refreshMenusTaskMap = Utils.newHashMap();
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onInteract(PlayerInteractEvent event) {
@@ -47,6 +53,40 @@ public class InventoryListener implements Listener {
           } else {
             boundItem.getMenu().sendNoPermissionMessage(event.getPlayer());
           }
+        }
+      }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onInventoryOpen(InventoryOpenEvent event) {
+    Player player = (Player) event.getPlayer();
+
+    Inventory inventory = event.getInventory();
+    if (inventory.getHolder() instanceof MenuInventoryHolder) {
+      MenuInventoryHolder menuHolder = (MenuInventoryHolder) inventory.getHolder();
+
+      if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
+        ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
+
+        refreshMenusTaskMap.put(player, new RefreshMenusTask(player, extMenu));
+      }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGHEST)
+  public void onInventoryClose(InventoryCloseEvent event) {
+    Player player = (Player) event.getPlayer();
+
+    Inventory inventory = event.getInventory();
+    if (inventory.getHolder() instanceof MenuInventoryHolder) {
+      MenuInventoryHolder menuHolder = (MenuInventoryHolder) inventory.getHolder();
+
+      if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
+        ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
+
+        if (refreshMenusTaskMap.get(player).getExtMenu().equals(extMenu)) {
+          refreshMenusTaskMap.remove(player).cancel();
         }
       }
     }

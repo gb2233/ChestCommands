@@ -14,45 +14,41 @@
  */
 package com.gmail.filoghost.chestcommands.task;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
-import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
-import com.gmail.filoghost.chestcommands.util.BukkitUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class RefreshMenusTask implements Runnable {
+public class RefreshMenusTask extends BukkitRunnable {
+
+  private Player player;
+  private ExtendedIconMenu extMenu;
 
   private long elapsedTenths;
 
+  public RefreshMenusTask(Player player, ExtendedIconMenu extMenu) {
+    this.player = player;
+    this.extMenu = extMenu;
+    runTaskTimerAsynchronously(ChestCommands.getInstance(), 2L, 2L);
+  }
+
   @Override
   public void run() {
+    InventoryView view = player.getOpenInventory();
+    if (view == null) {
+      cancel();
+    }
 
-    for (Player player : BukkitUtils.getOnlinePlayers()) {
-
-      InventoryView view = player.getOpenInventory();
-      if (view == null) {
-        return;
-      }
-
-      Inventory topInventory = view.getTopInventory();
-      if (topInventory.getHolder() instanceof MenuInventoryHolder) {
-        MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
-
-        if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
-          ExtendedIconMenu extMenu = (ExtendedIconMenu) menuHolder.getIconMenu();
-
-          if (extMenu.getRefreshTicks() > 0) {
-            if (elapsedTenths % extMenu.getRefreshTicks() == 0) {
-              extMenu.refresh(player, topInventory);
-              player.updateInventory();
-            }
-          }
-        }
-      }
+    if (extMenu.getRefreshTicks() > 0 && elapsedTenths % extMenu.getRefreshTicks() == 0) {
+      extMenu.refresh(player, player.getOpenInventory().getTopInventory());
+      player.updateInventory();
     }
 
     elapsedTenths++;
   }
 
+  public ExtendedIconMenu getExtMenu() {
+    return extMenu;
+  }
 }

@@ -42,7 +42,6 @@ import com.gmail.filoghost.chestcommands.listener.SignListener;
 import com.gmail.filoghost.chestcommands.serializer.CommandSerializer;
 import com.gmail.filoghost.chestcommands.serializer.MenuSerializer;
 import com.gmail.filoghost.chestcommands.task.ErrorLoggerTask;
-import com.gmail.filoghost.chestcommands.task.RefreshMenusTask;
 import com.gmail.filoghost.chestcommands.util.BukkitUtils;
 import com.gmail.filoghost.chestcommands.util.CaseInsensitiveMap;
 import com.gmail.filoghost.chestcommands.util.ErrorLogger;
@@ -243,8 +242,6 @@ public class ChestCommands extends JavaPlugin {
     if (errorLogger.hasErrors()) {
       Bukkit.getScheduler().scheduleSyncDelayedTask(this, new ErrorLoggerTask(errorLogger), 10L);
     }
-
-    Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RefreshMenusTask(), 2L, 2L);
   }
 
   @Override
