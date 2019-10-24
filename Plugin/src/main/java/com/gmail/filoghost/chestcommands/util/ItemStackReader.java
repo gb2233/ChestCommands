@@ -190,9 +190,8 @@ public class ItemStackReader {
       } else {
         ((SkullMeta) itemMeta).setOwner(skullOwner);
       }
-      // In case the meta has name and lore, reset it
-      itemMeta.setDisplayName(null);
-      itemMeta.setLore(null);
+      // In case the meta has lore, remove it
+      itemMeta.setLore(Utils.newArrayList());
     }
   }
 
