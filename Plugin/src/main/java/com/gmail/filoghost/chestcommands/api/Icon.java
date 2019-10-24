@@ -357,6 +357,9 @@ public class Icon {
         ((SkullMeta) itemMeta).setOwner(skullOwner);
       }
     }
+    // In case the meta has name and lore, reset it
+    itemMeta.setDisplayName(null);
+    itemMeta.setLore(null);
 
     if (hasName()) {
       itemMeta.setDisplayName(calculateName(pov));
