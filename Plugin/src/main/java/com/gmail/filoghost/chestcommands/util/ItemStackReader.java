@@ -14,7 +14,9 @@
  */
 package com.gmail.filoghost.chestcommands.util;
 
+import com.gmail.filoghost.chestcommands.bridge.EpicHeadsBridge;
 import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
+import com.gmail.filoghost.chestcommands.bridge.HeadsPlusBridge;
 import com.gmail.filoghost.chestcommands.exception.FormatException;
 import com.gmail.filoghost.chestcommands.serializer.EnchantmentSerializer;
 import java.util.ArrayList;
@@ -174,13 +176,19 @@ public class ItemStackReader {
   // Skull
   // <skull>
   private void parseSkull(String input) {
-    String skull = input.substring(Nodes.SKULL.length()).trim();
+    String skullOwner = input.substring(Nodes.SKULL.length()).trim();
     if (itemMeta instanceof SkullMeta) {
-      if (skull.startsWith("hdb-") && HeadDatabaseBridge
-          .hasValidID(skull.replace("hdb-", ""))) {
-        itemMeta = HeadDatabaseBridge.getItem(skull.replace("hdb-", "")).getItemMeta();
+      if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge
+          .hasValidID(skullOwner.replace("hdb-", ""))) {
+        itemMeta = HeadDatabaseBridge.getItem(skullOwner.replace("hdb-", "")).getItemMeta();
+      } else if (skullOwner.startsWith("hp-") && HeadsPlusBridge
+          .hasValidID(skullOwner.replace("hp-", ""))) {
+        itemMeta = HeadsPlusBridge.getItem(skullOwner.replace("hp-", "")).getItemMeta();
+      } else if (skullOwner.startsWith("eh-") && EpicHeadsBridge
+          .hasValidID(skullOwner.replace("eh-", ""))) {
+        itemMeta = EpicHeadsBridge.getItem(skullOwner.replace("eh-", "")).getItemMeta();
       } else {
-        ((SkullMeta) itemMeta).setOwner(skull);
+        ((SkullMeta) itemMeta).setOwner(skullOwner);
       }
     }
   }
