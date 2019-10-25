@@ -14,9 +14,6 @@
  */
 package com.gmail.filoghost.chestcommands.util;
 
-import com.gmail.filoghost.chestcommands.bridge.EpicHeadsBridge;
-import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
-import com.gmail.filoghost.chestcommands.bridge.HeadsPlusBridge;
 import com.gmail.filoghost.chestcommands.exception.FormatException;
 import com.gmail.filoghost.chestcommands.serializer.EnchantmentSerializer;
 import java.util.ArrayList;
@@ -36,7 +33,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -177,22 +173,7 @@ public class ItemStackReader {
   // <skull>
   private void parseSkull(String input) {
     String skullOwner = input.substring(Nodes.SKULL.length()).trim();
-    if (itemMeta instanceof SkullMeta) {
-      if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge
-          .hasValidID(skullOwner.replace("hdb-", ""))) {
-        itemMeta = HeadDatabaseBridge.getItem(skullOwner.replace("hdb-", "")).getItemMeta();
-      } else if (skullOwner.startsWith("hp-") && HeadsPlusBridge
-          .hasValidID(skullOwner.replace("hp-", ""))) {
-        itemMeta = HeadsPlusBridge.getItem(skullOwner.replace("hp-", "")).getItemMeta();
-      } else if (skullOwner.startsWith("eh-") && EpicHeadsBridge
-          .hasValidID(skullOwner.replace("eh-", ""))) {
-        itemMeta = EpicHeadsBridge.getItem(skullOwner.replace("eh-", "")).getItemMeta();
-      } else {
-        ((SkullMeta) itemMeta).setOwner(skullOwner);
-      }
-      // In case the meta has lore, remove it
-      itemMeta.setLore(Utils.newArrayList());
-    }
+    itemMeta = ItemUtils.parseSkull(itemMeta, skullOwner);
   }
 
   // Item flags

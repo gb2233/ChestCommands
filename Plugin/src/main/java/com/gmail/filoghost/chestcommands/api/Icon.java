@@ -15,10 +15,8 @@
 package com.gmail.filoghost.chestcommands.api;
 
 import com.gmail.filoghost.chestcommands.ChestCommands;
-import com.gmail.filoghost.chestcommands.bridge.EpicHeadsBridge;
-import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
-import com.gmail.filoghost.chestcommands.bridge.HeadsPlusBridge;
 import com.gmail.filoghost.chestcommands.internal.VariableManager;
+import com.gmail.filoghost.chestcommands.util.ItemUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -344,18 +342,7 @@ public class Icon {
       if (skullOwnerHasVariables) {
         skullOwner = VariableManager.setVariables(skullOwner, pov);
       }
-      if (skullOwner.startsWith("hdb-") && HeadDatabaseBridge
-          .hasValidID(skullOwner.replace("hdb-", ""))) {
-        itemMeta = HeadDatabaseBridge.getItem(skullOwner.replace("hdb-", "")).getItemMeta();
-      } else if (skullOwner.startsWith("hp-") && HeadsPlusBridge
-          .hasValidID(skullOwner.replace("hp-", ""))) {
-        itemMeta = HeadsPlusBridge.getItem(skullOwner.replace("hp-", "")).getItemMeta();
-      } else if (skullOwner.startsWith("eh-") && EpicHeadsBridge
-          .hasValidID(skullOwner.replace("eh-", ""))) {
-        itemMeta = EpicHeadsBridge.getItem(skullOwner.replace("eh-", "")).getItemMeta();
-      } else {
-        ((SkullMeta) itemMeta).setOwner(skullOwner);
-      }
+      itemMeta = ItemUtils.parseSkull(itemMeta, skullOwner);
     }
     // In case the meta has lore, remove it
     itemMeta.setLore(Utils.newArrayList());
