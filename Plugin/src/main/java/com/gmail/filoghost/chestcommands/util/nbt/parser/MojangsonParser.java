@@ -288,7 +288,7 @@ public final class MojangsonParser {
     }
     expectChar(']');
 
-    return result.toArray(new Number[result.size()]);
+    return result.toArray(new Number[0]);
   }
 
   private boolean advanceToNextArrayElement() {
