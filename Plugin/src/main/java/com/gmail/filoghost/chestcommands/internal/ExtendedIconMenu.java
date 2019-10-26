@@ -117,10 +117,10 @@ public class ExtendedIconMenu extends IconMenu {
         if (icons[i] instanceof ExtendedIcon) {
           ExtendedIcon extIcon = (ExtendedIcon) icons[i];
 
-          if ((extIcon.hasViewPermission() && extIcon.hasViewRequirement()) || extIcon
+          if (extIcon.hasViewPermission() || extIcon.hasViewRequirement() || extIcon
               .hasVariables()) {
             // Then we have to refresh it
-            if (extIcon.hasViewPermission(player) || extIcon.hasViewRequirement(player)) {
+            if (extIcon.hasViewPermission(player) && extIcon.hasViewRequirement(player)) {
 
               if (inventory.getItem(i) == null) {
                 ItemStack newItem = ItemUtils.hideAttributes(extIcon.createItemstack(player));
