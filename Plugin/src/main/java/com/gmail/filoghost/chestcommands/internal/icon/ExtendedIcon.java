@@ -23,12 +23,11 @@ import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.internal.RequiredItem;
 import com.gmail.filoghost.chestcommands.internal.VariableManager;
+import com.gmail.filoghost.chestcommands.util.ExpressionUtils;
 import com.gmail.filoghost.chestcommands.util.ItemUtils;
 import com.gmail.filoghost.chestcommands.util.MaterialsRegistry;
 import com.gmail.filoghost.chestcommands.util.StringUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
-import com.udojava.evalex.Expression;
-import com.udojava.evalex.Expression.ExpressionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,13 +53,13 @@ public class ExtendedIcon extends Icon {
   private boolean permissionNegated;
   private boolean viewPermissionNegated;
 
-  private double moneyPrice;
-  private int expLevelsPrice;
+  private String money;
+  private String expLevels;
   private List<RequiredItem> leftRequiredItems = new ArrayList<>();
   private List<RequiredItem> rightRequiredItems = new ArrayList<>();
   private List<RequiredItem> middleRequiredItems = new ArrayList<>();
-  private int playerPointsPrice;
-  private long tokenManagerPrice;
+  private String playerPoints;
+  private String tokenManager;
 
   private long leftCooldown = 0;
   private long rightCooldown = 0;
@@ -143,36 +142,36 @@ public class ExtendedIcon extends Icon {
     this.viewPermission = viewPermission;
   }
 
-  public double getMoneyPrice() {
-    return moneyPrice;
+  public String getMoneyPrice() {
+    return money;
   }
 
-  public void setMoneyPrice(double moneyPrice) {
-    this.moneyPrice = moneyPrice;
+  public void setMoneyPrice(String moneyPrice) {
+    this.money = moneyPrice;
   }
 
-  public int getPlayerPointsPrice() {
-    return playerPointsPrice;
+  public String getPlayerPointsPrice() {
+    return playerPoints;
   }
 
-  public void setPlayerPointsPrice(int playerPointsPrice) {
-    this.playerPointsPrice = playerPointsPrice;
+  public void setPlayerPointsPrice(String playerPointsPrice) {
+    this.playerPoints = playerPointsPrice;
   }
 
-  public long getTokenManagerPrice() {
-    return tokenManagerPrice;
+  public String getTokenManagerPrice() {
+    return tokenManager;
   }
 
-  public void setTokenManagerPrice(long tokenManagerPrice) {
-    this.tokenManagerPrice = tokenManagerPrice;
+  public void setTokenManagerPrice(String tokenManagerPrice) {
+    this.tokenManager = tokenManagerPrice;
   }
 
-  public int getExpLevelsPrice() {
-    return expLevelsPrice;
+  public String getExpLevelsPrice() {
+    return expLevels;
   }
 
-  public void setExpLevelsPrice(int expLevelsPrice) {
-    this.expLevelsPrice = expLevelsPrice;
+  public void setExpLevelsPrice(String expLevelsPrice) {
+    this.expLevels = expLevelsPrice;
   }
 
   public List<RequiredItem> getLeftRequiredItems() {
@@ -237,6 +236,22 @@ public class ExtendedIcon extends Icon {
       return closeOnClick;
     }
 
+    double moneyPrice;
+    String parsedMoney =
+        VariableManager.hasVariables(money) ? VariableManager.setVariables(money, player) : money;
+    if (ExpressionUtils.isValidExpression(parsedMoney)) {
+      moneyPrice = ExpressionUtils.getResult(parsedMoney).doubleValue();
+    } else {
+      try {
+        moneyPrice = Double.parseDouble(parsedMoney);
+      } catch (NumberFormatException e) {
+        String error =
+            ChatColor.RED + "Error parsing value!" + parsedMoney + " is not a valid number";
+        player.sendMessage(error);
+        ChestCommands.getInstance().getLogger().warning(error);
+        return closeOnClick;
+      }
+    }
     if (moneyPrice > 0) {
       if (!VaultBridge.hasValidEconomy()) {
         player.sendMessage(ChatColor.RED
@@ -251,6 +266,22 @@ public class ExtendedIcon extends Icon {
       }
     }
 
+    int playerPointsPrice;
+    String parsedPoints = VariableManager.hasVariables(playerPoints) ? VariableManager
+        .setVariables(playerPoints, player) : playerPoints;
+    if (ExpressionUtils.isValidExpression(parsedPoints)) {
+      playerPointsPrice = ExpressionUtils.getResult(parsedPoints).intValue();
+    } else {
+      try {
+        playerPointsPrice = Integer.parseInt(parsedPoints);
+      } catch (NumberFormatException e) {
+        String error =
+            ChatColor.RED + "Error parsing value!" + parsedPoints + " is not a valid number";
+        player.sendMessage(error);
+        ChestCommands.getInstance().getLogger().warning(error);
+        return closeOnClick;
+      }
+    }
     if (playerPointsPrice > 0) {
       if (!PlayerPointsBridge.hasValidPlugin()) {
         player.sendMessage(ChatColor.RED
@@ -265,6 +296,22 @@ public class ExtendedIcon extends Icon {
       }
     }
 
+    long tokenManagerPrice;
+    String parsedTokens = VariableManager.hasVariables(tokenManager) ? VariableManager
+        .setVariables(tokenManager, player) : tokenManager;
+    if (ExpressionUtils.isValidExpression(parsedTokens)) {
+      tokenManagerPrice = ExpressionUtils.getResult(parsedTokens).longValue();
+    } else {
+      try {
+        tokenManagerPrice = Long.parseLong(parsedTokens);
+      } catch (NumberFormatException e) {
+        String error =
+            ChatColor.RED + "Error parsing value!" + parsedTokens + " is not a valid number";
+        player.sendMessage(error);
+        ChestCommands.getInstance().getLogger().warning(error);
+        return closeOnClick;
+      }
+    }
     if (tokenManagerPrice > 0) {
       if (!TokenManagerBridge.hasValidPlugin()) {
         player.sendMessage(ChatColor.RED
@@ -279,6 +326,23 @@ public class ExtendedIcon extends Icon {
       }
     }
 
+    int expLevelsPrice;
+    String parsedExp =
+        VariableManager.hasVariables(expLevels) ? VariableManager.setVariables(expLevels, player)
+            : expLevels;
+    if (ExpressionUtils.isValidExpression(parsedExp)) {
+      expLevelsPrice = ExpressionUtils.getResult(parsedExp).intValue();
+    } else {
+      try {
+        expLevelsPrice = Integer.parseInt(parsedExp);
+      } catch (NumberFormatException e) {
+        String error =
+            ChatColor.RED + "Error parsing value!" + parsedExp + " is not a valid number";
+        player.sendMessage(error);
+        ChestCommands.getInstance().getLogger().warning(error);
+        return closeOnClick;
+      }
+    }
     if (expLevelsPrice > 0) {
       if (player.getLevel() < expLevelsPrice) {
         player.sendMessage(
@@ -533,18 +597,12 @@ public class ExtendedIcon extends Icon {
     String parsed = VariableManager.hasVariables(clickRequirement) ? VariableManager
         .setVariables(clickRequirement, player) : clickRequirement;
 
-    Expression condition = new Expression(parsed);
-    try {
-      if (!condition.isBoolean()) {
-        player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
-        return false;
-      }
-    } catch (ExpressionException e) {
+    if (ExpressionUtils.isBoolean(parsed)) {
       player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
       return false;
     }
 
-    return condition.eval().intValue() == 1;
+    return ExpressionUtils.getResult(parsed).intValue() == 1;
   }
 
   public boolean hasViewRequirement(Player player) {
@@ -555,17 +613,11 @@ public class ExtendedIcon extends Icon {
     String parsed = VariableManager.hasVariables(viewRequirement) ? VariableManager
         .setVariables(viewRequirement, player) : viewRequirement;
 
-    Expression condition = new Expression(parsed);
-    try {
-      if (!condition.isBoolean()) {
-        player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
-        return false;
-      }
-    } catch (ExpressionException e) {
+    if (ExpressionUtils.isBoolean(parsed)) {
       player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
       return false;
     }
 
-    return condition.eval().intValue() == 1;
+    return ExpressionUtils.getResult(parsed).intValue() == 1;
   }
 }

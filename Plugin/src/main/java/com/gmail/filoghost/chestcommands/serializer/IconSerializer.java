@@ -236,40 +236,10 @@ public class IconSerializer {
       icon.setClickHandler(new CommandsClickHandler(commands, closeOnClick));
     }
 
-    double price = section.getDouble(Nodes.PRICE);
-    if (price > 0.0) {
-      icon.setMoneyPrice(price);
-    } else if (price < 0.0) {
-      errorLogger.addError("The icon \"" + iconName + "\" in the menu \"" + menuFileName
-          + "\" has a negative PRICE: " + price);
-    }
-
-    int points = section.getInt(Nodes.POINTS);
-    if (points > 0) {
-      icon.setPlayerPointsPrice(points);
-    } else if (points < 0) {
-      errorLogger.addError(
-          "The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative POINTS: "
-              + points);
-    }
-
-    long tokens = section.getLong(Nodes.TOKENS);
-    if (tokens > 0) {
-      icon.setTokenManagerPrice(tokens);
-    } else if (tokens < 0) {
-      errorLogger.addError(
-          "The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative TOKENS: "
-              + points);
-    }
-
-    int levels = section.getInt(Nodes.EXP_LEVELS);
-    if (levels > 0) {
-      icon.setExpLevelsPrice(levels);
-    } else if (levels < 0) {
-      errorLogger.addError(
-          "The icon \"" + iconName + "\" in the menu \"" + menuFileName + "\" has negative LEVELS: "
-              + levels);
-    }
+    icon.setMoneyPrice(section.getString(Nodes.PRICE, "0"));
+    icon.setPlayerPointsPrice(section.getString(Nodes.POINTS, "0"));
+    icon.setTokenManagerPrice(section.getString(Nodes.TOKENS, "0"));
+    icon.setExpLevelsPrice(section.getString(Nodes.EXP_LEVELS, "0"));
 
     if (section.isConfigurationSection(Nodes.COOLDOWN)) {
       // LEFT CLICK COOLDOWN
