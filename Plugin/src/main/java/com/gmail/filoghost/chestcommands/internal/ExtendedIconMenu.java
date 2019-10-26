@@ -94,8 +94,8 @@ public class ExtendedIconMenu extends IconMenu {
       for (int i = 0; i < icons.length; i++) {
         if (icons[i] != null) {
 
-          if (icons[i] instanceof ExtendedIcon && !((ExtendedIcon) icons[i])
-              .hasViewPermission(player) && !((ExtendedIcon) icons[i]).hasViewRequirement(player)) {
+          if (icons[i] instanceof ExtendedIcon && (!((ExtendedIcon) icons[i])
+              .hasViewPermission(player) || !((ExtendedIcon) icons[i]).hasViewRequirement(player))) {
             continue;
           }
 
