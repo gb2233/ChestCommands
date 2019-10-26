@@ -597,7 +597,7 @@ public class ExtendedIcon extends Icon {
     String parsed = VariableManager.hasVariables(clickRequirement) ? VariableManager
         .setVariables(clickRequirement, player) : clickRequirement;
 
-    if (ExpressionUtils.isBoolean(parsed)) {
+    if (!ExpressionUtils.isBoolean(parsed)) {
       player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
       return false;
     }
@@ -613,7 +613,7 @@ public class ExtendedIcon extends Icon {
     String parsed = VariableManager.hasVariables(viewRequirement) ? VariableManager
         .setVariables(viewRequirement, player) : viewRequirement;
 
-    if (ExpressionUtils.isBoolean(parsed)) {
+    if (!ExpressionUtils.isBoolean(parsed)) {
       player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
       return false;
     }

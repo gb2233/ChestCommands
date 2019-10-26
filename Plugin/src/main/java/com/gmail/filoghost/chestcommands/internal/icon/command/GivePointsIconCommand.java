@@ -20,10 +20,10 @@ public class GivePointsIconCommand extends IconCommand {
   public void execute(Player player, TaskChain taskChain) {
     int pointsToGive = 0;
     String parsed = getParsedCommand(player);
-    if (ExpressionUtils.isValidExpression(parsed)) {
-      pointsToGive = ExpressionUtils.getResult(parsed).intValue();
-    } else if (Utils.isValidPositiveInteger(parsed)) {
+    if (Utils.isValidPositiveInteger(parsed)) {
       pointsToGive = Integer.parseInt(parsed);
+    } else if (ExpressionUtils.isValidExpression(parsed)) {
+      pointsToGive = ExpressionUtils.getResult(parsed).intValue();
     } else {
       errorMessage = ChatColor.RED + "Invalid points amount: " + command;
     }

@@ -34,10 +34,10 @@ public class GiveMoneyIconCommand extends IconCommand {
   public void execute(Player player, TaskChain taskChain) {
     double moneyToGive = 0;
     String parsed = getParsedCommand(player);
-    if (ExpressionUtils.isValidExpression(parsed)) {
-      moneyToGive = ExpressionUtils.getResult(parsed).doubleValue();
-    } else if (Utils.isValidPositiveInteger(parsed)) {
+    if (Utils.isValidPositiveInteger(parsed)) {
       moneyToGive = Double.parseDouble(parsed);
+    } else if (ExpressionUtils.isValidExpression(parsed)) {
+      moneyToGive = ExpressionUtils.getResult(parsed).doubleValue();
     } else {
       errorMessage = ChatColor.RED + "Invalid money amount: " + command;
     }

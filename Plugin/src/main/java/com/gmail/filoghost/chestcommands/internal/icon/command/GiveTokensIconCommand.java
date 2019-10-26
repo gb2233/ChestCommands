@@ -20,10 +20,10 @@ public class GiveTokensIconCommand extends IconCommand {
   public void execute(Player player, TaskChain taskChain) {
     long tokensToGive = 0;
     String parsed = getParsedCommand(player);
-    if (ExpressionUtils.isValidExpression(parsed)) {
-      tokensToGive = ExpressionUtils.getResult(parsed).longValue();
-    } else if (Utils.isValidPositiveInteger(parsed)) {
+    if (Utils.isValidPositiveInteger(parsed)) {
       tokensToGive = Integer.parseInt(parsed);
+    } else if (ExpressionUtils.isValidExpression(parsed)) {
+      tokensToGive = ExpressionUtils.getResult(parsed).longValue();
     } else {
       errorMessage = ChatColor.RED + "Invalid tokens amount: " + command;
     }
