@@ -3,36 +3,31 @@ package com.gmail.filoghost.chestcommands.internal.icon.command;
 import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
+import com.gmail.filoghost.chestcommands.util.ExpressionUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class GivePointsIconCommand extends IconCommand {
 
-  private int pointsToGive;
   private String errorMessage;
 
   public GivePointsIconCommand(String command) {
     super(command);
-    if (!hasVariables) {
-      parsePoint(super.command);
-    }
-  }
-
-  private void parsePoint(String command) {
-    if (!Utils.isValidPositiveInteger(command)) {
-      errorMessage = ChatColor.RED + "Invalid points amount: " + command;
-      return;
-    }
-    errorMessage = null;
-    pointsToGive = Integer.parseInt(command);
   }
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    if (hasVariables) {
-      parsePoint(getParsedCommand(player));
+    int pointsToGive = 0;
+    String parsed = getParsedCommand(player);
+    if (ExpressionUtils.isValidExpression(parsed)) {
+      pointsToGive = ExpressionUtils.getResult(parsed).intValue();
+    } else if (Utils.isValidPositiveInteger(parsed)) {
+      pointsToGive = Integer.parseInt(parsed);
+    } else {
+      errorMessage = ChatColor.RED + "Invalid points amount: " + command;
     }
+
     if (errorMessage != null) {
       player.sendMessage(errorMessage);
       return;
@@ -43,7 +38,10 @@ public class GivePointsIconCommand extends IconCommand {
       return;
     }
 
-    taskChain.sync(() -> PlayerPointsBridge.givePoints(player, pointsToGive));
+    if (pointsToGive > 0) {
+      int finalPointsToGive = pointsToGive;
+      taskChain.sync(() -> PlayerPointsBridge.givePoints(player, finalPointsToGive));
+    }
   }
 
 }

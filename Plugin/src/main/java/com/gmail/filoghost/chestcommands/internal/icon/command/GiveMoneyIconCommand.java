@@ -17,36 +17,31 @@ package com.gmail.filoghost.chestcommands.internal.icon.command;
 import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
+import com.gmail.filoghost.chestcommands.util.ExpressionUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class GiveMoneyIconCommand extends IconCommand {
 
-  private double moneyToGive;
   private String errorMessage;
 
   public GiveMoneyIconCommand(String command) {
     super(command);
-    if (!hasVariables) {
-      parseMoney(super.command);
-    }
-  }
-
-  private void parseMoney(String command) {
-    if (!Utils.isValidPositiveDouble(command)) {
-      errorMessage = ChatColor.RED + "Invalid money amount: " + command;
-      return;
-    }
-    errorMessage = null;
-    moneyToGive = Double.parseDouble(command);
   }
 
   @Override
   public void execute(Player player, TaskChain taskChain) {
-    if (hasVariables) {
-      parseMoney(getParsedCommand(player));
+    double moneyToGive = 0;
+    String parsed = getParsedCommand(player);
+    if (ExpressionUtils.isValidExpression(parsed)) {
+      moneyToGive = ExpressionUtils.getResult(parsed).doubleValue();
+    } else if (Utils.isValidPositiveInteger(parsed)) {
+      moneyToGive = Double.parseDouble(parsed);
+    } else {
+      errorMessage = ChatColor.RED + "Invalid money amount: " + command;
     }
+
     if (errorMessage != null) {
       player.sendMessage(errorMessage);
       return;
@@ -57,7 +52,10 @@ public class GiveMoneyIconCommand extends IconCommand {
       return;
     }
 
-    taskChain.sync(() -> VaultBridge.giveMoney(player, moneyToGive));
+    if (moneyToGive > 0) {
+      double finalMoneyToGive = moneyToGive;
+      taskChain.sync(() -> VaultBridge.giveMoney(player, finalMoneyToGive));
+    }
   }
 
 }
