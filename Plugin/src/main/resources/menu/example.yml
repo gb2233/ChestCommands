@@ -460,6 +460,20 @@ requirement:
   POSITION-Y: 4
 
 
+requirement-with-expression:
+  NAME: '&4Requirement with expression'
+  COMMAND: 'tell: &aYou did it'
+  ID: sign
+  LORE:
+    - 'This is an example for expressions on nodes'
+    - ''
+    - 'You can use this icon when your money is higher than'
+    - '100 * ({level} + 1)'
+  PRICE: "100 * ({level} + 1)"
+  POSITION-X: 7
+  POSITION-Y: 4
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
