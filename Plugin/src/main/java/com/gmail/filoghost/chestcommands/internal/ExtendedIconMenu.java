@@ -94,7 +94,8 @@ public class ExtendedIconMenu extends IconMenu {
       for (int i = 0; i < icons.length; i++) {
         if (icons[i] != null) {
 
-          if (icons[i] instanceof ExtendedIcon && !((ExtendedIcon) icons[i]).canViewIcon(player)) {
+          if (icons[i] instanceof ExtendedIcon && !((ExtendedIcon) icons[i])
+              .hasViewPermission(player) && !((ExtendedIcon) icons[i]).hasViewRequirement(player)) {
             continue;
           }
 
@@ -116,9 +117,10 @@ public class ExtendedIconMenu extends IconMenu {
         if (icons[i] instanceof ExtendedIcon) {
           ExtendedIcon extIcon = (ExtendedIcon) icons[i];
 
-          if (extIcon.hasViewPermission() || extIcon.hasVariables()) {
+          if (extIcon.hasViewPermission() || extIcon.hasViewRequirement() || extIcon
+              .hasVariables()) {
             // Then we have to refresh it
-            if (extIcon.canViewIcon(player)) {
+            if (extIcon.hasViewPermission(player) || extIcon.hasViewRequirement(player)) {
 
               if (inventory.getItem(i) == null) {
                 ItemStack newItem = ItemUtils.hideAttributes(extIcon.createItemstack(player));

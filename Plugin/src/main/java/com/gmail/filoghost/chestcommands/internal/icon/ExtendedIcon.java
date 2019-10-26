@@ -22,10 +22,13 @@ import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.internal.RequiredItem;
+import com.gmail.filoghost.chestcommands.internal.VariableManager;
 import com.gmail.filoghost.chestcommands.util.ItemUtils;
 import com.gmail.filoghost.chestcommands.util.MaterialsRegistry;
 import com.gmail.filoghost.chestcommands.util.StringUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
+import com.udojava.evalex.Expression;
+import com.udojava.evalex.Expression.ExpressionException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +46,10 @@ public class ExtendedIcon extends Icon {
   private String permission;
   private String permissionMessage;
   private String viewPermission;
+
+  private String viewRequirement;
+  private String clickRequirement;
+  private String clickRequirementMessage;
 
   private boolean permissionNegated;
   private boolean viewPermissionNegated;
@@ -68,7 +75,7 @@ public class ExtendedIcon extends Icon {
     super();
   }
 
-  public boolean canClickIcon(Player player) {
+  public boolean hasClickPermission(Player player) {
     if (permission == null) {
       return true;
     }
@@ -106,7 +113,11 @@ public class ExtendedIcon extends Icon {
     return viewPermission != null;
   }
 
-  public boolean canViewIcon(Player player) {
+  public boolean hasViewRequirement() {
+    return viewRequirement != null;
+  }
+
+  public boolean hasViewPermission(Player player) {
     if (viewPermission == null) {
       return true;
     }
@@ -208,11 +219,20 @@ public class ExtendedIcon extends Icon {
 
     // Check all the requirements
 
-    if (!canClickIcon(player)) {
+    if (!hasClickPermission(player)) {
       if (permissionMessage != null) {
         player.sendMessage(permissionMessage);
       } else {
         player.sendMessage(ChestCommands.getLang().default_no_icon_permission);
+      }
+      return closeOnClick;
+    }
+
+    if (!hasClickRequirement(player)) {
+      if (clickRequirementMessage != null) {
+        player.sendMessage(clickRequirementMessage);
+      } else {
+        player.sendMessage(ChestCommands.getLang().default_no_requirement_message);
       }
       return closeOnClick;
     }
@@ -483,5 +503,69 @@ public class ExtendedIcon extends Icon {
 
   public void setCooldownAll(boolean cooldownAll) {
     this.cooldownAll = cooldownAll;
+  }
+
+  public void setViewRequirement(String viewRequirement) {
+    if (!StringUtils.isNullOrEmpty(viewRequirement)) {
+      this.viewRequirement = viewRequirement;
+    }
+  }
+
+  public void setClickRequirement(String clickRequirement) {
+    if (!StringUtils.isNullOrEmpty(clickRequirement)) {
+      this.clickRequirement = clickRequirement;
+    }
+  }
+
+  public String getClickRequirementMessage() {
+    return clickRequirementMessage;
+  }
+
+  public void setClickRequirementMessage(String clickRequirementMessage) {
+    this.clickRequirementMessage = clickRequirementMessage;
+  }
+
+  public boolean hasClickRequirement(Player player) {
+    if (StringUtils.isNullOrEmpty(clickRequirement)) {
+      return true;
+    }
+
+    String parsed = VariableManager.hasVariables(clickRequirement) ? VariableManager
+        .setVariables(clickRequirement, player) : clickRequirement;
+
+    Expression condition = new Expression(parsed);
+    try {
+      if (!condition.isBoolean()) {
+        player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
+        return false;
+      }
+    } catch (ExpressionException e) {
+      player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
+      return false;
+    }
+
+    return condition.eval().intValue() == 1;
+  }
+
+  public boolean hasViewRequirement(Player player) {
+    if (StringUtils.isNullOrEmpty(viewRequirement)) {
+      return true;
+    }
+
+    String parsed = VariableManager.hasVariables(viewRequirement) ? VariableManager
+        .setVariables(viewRequirement, player) : viewRequirement;
+
+    Expression condition = new Expression(parsed);
+    try {
+      if (!condition.isBoolean()) {
+        player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
+        return false;
+      }
+    } catch (ExpressionException e) {
+      player.sendMessage(ChatColor.RED + "Invalid condition! Please inform the staff");
+      return false;
+    }
+
+    return condition.eval().intValue() == 1;
   }
 }

@@ -22,6 +22,7 @@ public class Lang extends SpecialConfig {
   public String no_open_permission = "&cYou don't have permission &e{permission} &cto use this menu.";
   public String default_no_icon_permission = "&cYou don't have permission for this icon.";
   public String default_cooldown_message = "&cYou need to wait {cooldown} ({cooldown_second} secs) to do that";
+  public String default_no_requirement_message = "&cYou don't meet the requirement for this icon";
   public String no_required_item = "&cYou must have &e{amount}x {item} &c(data value: {datavalue}) for this.";
   public String no_money = "&cYou need {money}$ for this.";
   public String no_exp = "&cYou need {levels} XP levels for this.";

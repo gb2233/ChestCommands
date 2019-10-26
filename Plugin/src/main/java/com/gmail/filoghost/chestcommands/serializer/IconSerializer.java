@@ -143,6 +143,11 @@ public class IconSerializer {
     icon.setPermissionMessage(FormatUtils.addColors(section.getString(Nodes.PERMISSION_MESSAGE)));
     icon.setViewPermission(section.getString(Nodes.VIEW_PERMISSION));
 
+    icon.setViewRequirement(section.getString(Nodes.VIEW_REQUIREMENT));
+    icon.setClickRequirement(section.getString(Nodes.CLICK_REQUIREMENT));
+    icon.setClickRequirementMessage(
+        FormatUtils.addColors(section.getString(Nodes.CLICK_REQUIREMENT_MESSAGE)));
+
     boolean closeOnClick = !section.getBoolean(Nodes.KEEP_OPEN);
     icon.setCloseOnClick(closeOnClick);
 
@@ -505,7 +510,10 @@ public class IconSerializer {
         COOLDOWN_LEFT = "COOLDOWN.LEFT",
         COOLDOWN_RIGHT = "COOLDOWN.RIGHT",
         COOLDOWN_MIDDLE = "COOLDOWN.MIDDLE",
-        COOLDOWN_MESSAGE = "COOLDOWN-MESSAGE";
+        COOLDOWN_MESSAGE = "COOLDOWN-MESSAGE",
+        VIEW_REQUIREMENT = "VIEW-REQUIREMENT",
+        CLICK_REQUIREMENT = "CLICK-REQUIREMENT",
+        CLICK_REQUIREMENT_MESSAGE = "CLICK-REQUIREMENT-MESSAGE";
   }
 
 }
