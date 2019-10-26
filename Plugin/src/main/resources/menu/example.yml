@@ -444,6 +444,22 @@ cooldown-per-clicktype:
   POSITION-Y: 4
 
 
+requirement:
+  NAME: '&6View/Click Requirement'
+  COMMAND: 'tell: &aYou did it'
+  ID: redstone
+  LORE:
+    - 'This is an example for view/click requirement'
+    - ''
+    - 'You will see this icon if your money is not less than 10'
+    - 'You can click this icon if your money is not less than 20'
+  VIEW-REQUIREMENT: "{money} >= 10"
+  CLICK-REQUIREMENT: "{money} >= 20"
+  CLICK-REQUIREMENT-MESSAGE: "&cHey! Earn more money and click again if your money is not less than 20"
+  POSITION-X: 6
+  POSITION-Y: 4
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
