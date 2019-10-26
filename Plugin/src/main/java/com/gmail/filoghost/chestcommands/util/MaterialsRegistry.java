@@ -109,6 +109,7 @@ public final class MaterialsRegistry {
     tryAddMaterialAlias("banner", "PINK_BANNER");
     tryAddMaterialAlias("clock", "WATCH");
     tryAddMaterialAlias("firework", "FIREWORK_ROCKET");
+    tryAddMaterialAlias("sign", "ACACIA_SIGN");
   }
 
   private MaterialsRegistry() {
