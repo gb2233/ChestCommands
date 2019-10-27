@@ -14,6 +14,8 @@
  */
 package com.gmail.filoghost.chestcommands.util;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.util.Collection;
@@ -50,6 +52,7 @@ public final class MaterialsRegistry {
 		try {
 			addMaterialAlias(name, Material.valueOf(materialEnumName));
 		} catch (IllegalArgumentException e) {
+		    //e.printStackTrace();
 			// Ignore, do not add a new alias
 		}
 	}
@@ -129,11 +132,11 @@ public final class MaterialsRegistry {
 		tryAddMaterialAlias("piston", "PISTON_BASE");
 		tryAddMaterialAlias("sticky piston", "PISTON_STICKY_BASE");
 		tryAddMaterialAlias("flower pot", "FLOWER_POT_ITEM");
-		tryAddMaterialAlias("wood showel", "WOOD_SPADE");
-		tryAddMaterialAlias("stone showel", "STONE_SPADE");
-		tryAddMaterialAlias("gold showel", "GOLD_SPADE");
-		tryAddMaterialAlias("iron showel", "IRON_SPADE");
-		tryAddMaterialAlias("diamond showel", "DIAMOND_SPADE");
+		tryAddMaterialAlias("wood shovel", "WOOD_SPADE");
+		tryAddMaterialAlias("stone shovel", "STONE_SPADE");
+		tryAddMaterialAlias("gold shovel", "GOLD_SPADE");
+		tryAddMaterialAlias("iron shovel", "IRON_SPADE");
+		tryAddMaterialAlias("diamond shovel", "DIAMOND_SPADE");
 		tryAddMaterialAlias("steak", "COOKED_BEEF");
 		tryAddMaterialAlias("cooked porkchop", "GRILLED_PORK");
 		tryAddMaterialAlias("raw porkchop", "PORK");
@@ -153,7 +156,12 @@ public final class MaterialsRegistry {
 		tryAddMaterialAlias("gunpowder", "SULPHUR");
 		tryAddMaterialAlias("lilypad", "WATER_LILY");
 		tryAddMaterialAlias("command block", "COMMAND");
-		tryAddMaterialAlias("dye", "INK_SACK");
+        tryAddMaterialAlias("dye", "INK_SACK");
+        tryAddMaterialAlias("clock", "INK_SACK");
+        if (Bukkit.getBukkitVersion().contains("1.14")){
+            ChestCommands.getSettings().name_forward_conversion
+                .forEach((k,v) -> tryAddMaterialAlias(k,v.toUpperCase()));
+        }
 	}
 
 }

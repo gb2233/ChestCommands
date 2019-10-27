@@ -2,9 +2,11 @@ package com.gmail.filoghost.chestcommands.util;
 
 
 import com.gmail.filoghost.chestcommands.ChestCommands;
+import com.google.common.io.Files;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -16,28 +18,30 @@ public class DBHandler{
     private static HikariDataSource ds;
     private static String EXPORT;
     private static String IMPORT;
+    private static String LIKE_IMPORT;
     private static String tableName;
     private static ChestCommands plugin;
 
     static{
         plugin = ChestCommands.getInstance();
-        tableName = plugin.getConfig().getString("db.table-name","chestcommands");
+        tableName = ChestCommands.getSettings().db__table_name;
         EXPORT = "INSERT INTO `" + tableName + "`(`FILENAME`, `CFGSTRING`) VALUES (?,?) " +
             "ON DUPLICATE KEY UPDATE `CFGSTRING` = VALUES(`CFGSTRING`);";
         IMPORT = "SELECT * FROM `" + tableName + "` WHERE `FILENAME` = ?;";
+        LIKE_IMPORT = "SELECT * FROM `" + tableName + "` WHERE `FILENAME` LIKE ?;";
 
         HikariConfig config = new HikariConfig();
-        config.setPoolName("captchagui");
+        config.setPoolName("chestcommands");
         config.setJdbcUrl("jdbc:mysql://" +
-            plugin.getConfig().getString("db.host","localhost") +
+            ChestCommands.getSettings().db__host +
             ":" +
-            plugin.getConfig().getInt("db.port",3306) +
+            ChestCommands.getSettings().db__port +
             "/" +
-            plugin.getConfig().getString("db.database","minecraft") +
+            ChestCommands.getSettings().db__database +
             "?useSSL=false"
         );
-        config.setUsername(plugin.getConfig().getString("db.username","root"));
-        config.setPassword(plugin.getConfig().getString("db.password","root"));
+        config.setUsername(ChestCommands.getSettings().db__username);
+        config.setPassword(ChestCommands.getSettings().db__password);
         //config.setDriverClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
         config.setDriverClassName("com.mysql.jdbc.Driver");
         config.addDataSourceProperty("cachePrepStmts", "true");
@@ -86,36 +90,53 @@ public class DBHandler{
         return connection;
     }
 
-    public static void Export(List<String> menuList) {
+    public static void Export(List<String> menuList, CommandSender sender) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 Connection connection = getConnection();
-                File menuFolder = new File(ChestCommands.GetInstance().getDataFolder(), "menu");
+                File menuFolder = new File(ChestCommands.getInstance().getDataFolder(), "menu");
                 for(String fName : menuList) {
-                    String txtConfig = "";
-                    try {
-                        BufferedReader reader = new BufferedReader(new FileReader(new File(menuFolder,fName + ".yml")));
-                        String line = null;
-                        StringBuilder stringBuilder = new StringBuilder();
-                        String ls = System.getProperty("line.separator");
-                        while((line = reader.readLine()) != null) {
-                            stringBuilder.append(line);
-                            stringBuilder.append(ls);
+                    Set<String> fNames = new HashSet<>();
+                    if (fName.startsWith("R/")){
+                        String finalFName = fName.substring(2);
+                        File[] fList = menuFolder.listFiles((dir, name) -> {
+                            if (name.startsWith(finalFName)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                        Arrays.stream(Objects.requireNonNull(fList)).forEach(file -> fNames.add(Files.getNameWithoutExtension(file.getName())));
+                    } else{
+                        fNames.add(fName);
+                    }
+                    for (String file : fNames){
+                        String txtConfig = "";
+                        try {
+                            BufferedReader reader = new BufferedReader(new FileReader(new File(menuFolder,file + ".yml")));
+                            String line = null;
+                            StringBuilder stringBuilder = new StringBuilder();
+                            String ls = System.getProperty("line.separator");
+                            while((line = reader.readLine()) != null) {
+                                stringBuilder.append(line);
+                                stringBuilder.append(ls);
+                            }
+                            reader.close();
+                            txtConfig = stringBuilder.toString();
                         }
-                        reader.close();
-                        txtConfig = stringBuilder.toString();
+                        catch ( IOException e)
+                        {
+                        }
+                        byte[] encodedBytes = Base64.getEncoder().encode(txtConfig.getBytes());
+                        String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
+                        PreparedStatement ps = connection.prepareStatement(EXPORT);
+                        ps.setString(1,file);
+                        ps.setString(2,encodedString);
+                        ps.executeUpdate();
+                        ps.close();
                     }
-                    catch ( IOException e)
-                    {
-                    }
-                    byte[] encodedBytes = Base64.getEncoder().encode(txtConfig.getBytes());
-                    String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
-                    PreparedStatement ps = connection.prepareStatement(EXPORT);
-                    ps.setString(1,fName);
-                    ps.setString(2,encodedString);
-                    ps.executeUpdate();
-                    ps.close();
                 }
+                ChestCommands.getInstance().doReload(sender);
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -124,45 +145,54 @@ public class DBHandler{
 
     }
 
-    public static void Import(List<String> menuList) {
+    public static void Import(List<String> menuList, CommandSender sender) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             String decodedConfig = "";
             try {
                 Connection connection = getConnection();
-                File menuFolder = new File(ChestCommands.GetInstance().getDataFolder(), "menu");
+                File menuFolder = new File(ChestCommands.getInstance().getDataFolder(), "menu");
                 for(String fName : menuList) {
-                    PreparedStatement ps = connection.prepareStatement(IMPORT);
+                    PreparedStatement ps;
+                    if (fName.startsWith("R/")){
+                        ps = connection.prepareStatement(LIKE_IMPORT);
+                        fName = fName.substring(2) + "%";
+                    }else{
+                        ps = connection.prepareStatement(IMPORT);
+                    }
                     ps.setString(1,fName);
                     ResultSet result = ps.executeQuery();
-                    result.first();
-                    String base64Config = result.getString("CFGSTRING");
-                    byte[] decodedBytes = Base64.getDecoder().decode(base64Config.getBytes());
-                    decodedConfig = new String(decodedBytes, StandardCharsets.UTF_8);
-                    BufferedWriter writer = null;
-                    try
-                    {
-                        writer = new BufferedWriter( new FileWriter(new File(menuFolder,fName + ".yml")));
-                        writer.write(decodedConfig);
-
-                    }
-                    catch ( IOException e)
-                    {
-                    }
-                    finally
-                    {
+                    while(result.next()){
+                        String file = result.getString("FILENAME");
+                        String base64Config = result.getString("CFGSTRING");
+                        byte[] decodedBytes = Base64.getDecoder().decode(base64Config.getBytes());
+                        decodedConfig = new String(decodedBytes, StandardCharsets.UTF_8);
+                        BufferedWriter writer = null;
                         try
                         {
-                            if ( writer != null)
-                                writer.close( );
+                            writer = new BufferedWriter( new FileWriter(new File(menuFolder,file + ".yml")));
+                            writer.write(decodedConfig);
+
+
                         }
                         catch ( IOException e)
                         {
                         }
+                        finally
+                        {
+                            try
+                            {
+                                if ( writer != null)
+                                    writer.close( );
+                            }
+                            catch ( IOException e)
+                            {
+                            }
+                        }
                     }
                     ps.close();
                     result.close();
-
                 }
+                ChestCommands.getInstance().doReload(sender);
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();

@@ -20,6 +20,7 @@ import com.gmail.filoghost.chestcommands.command.framework.CommandFramework;
 import com.gmail.filoghost.chestcommands.command.framework.CommandValidate;
 import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.task.ErrorLoggerTask;
+import com.gmail.filoghost.chestcommands.util.DBHandler;
 import com.gmail.filoghost.chestcommands.util.ErrorLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -58,24 +59,8 @@ public class CommandHandler extends CommandFramework {
 
 		if (args[0].equalsIgnoreCase("reload")) {
 			CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "reload"), "You don't have permission.");
-
-			ChestCommands.closeAllMenus();
-
-			ErrorLogger errorLogger = new ErrorLogger();
-			ChestCommands.getInstance().load(errorLogger);
-
-			ChestCommands.setLastReloadErrors(errorLogger.getSize());
-
-			if (!errorLogger.hasErrors()) {
-				sender.sendMessage(ChestCommands.CHAT_PREFIX + "Plugin reloaded.");
-			} else {
-				new ErrorLoggerTask(errorLogger).run();
-				sender.sendMessage(ChestCommands.CHAT_PREFIX + ChatColor.RED + "Plugin reloaded with " + errorLogger.getSize() + " error(s).");
-				if (!(sender instanceof ConsoleCommandSender)) {
-					sender.sendMessage(ChestCommands.CHAT_PREFIX + ChatColor.RED + "Please check the console.");
-				}
-			}
-			return;
+            ChestCommands.getInstance().doReload(sender);
+            return;
 		}
 
 
@@ -135,19 +120,19 @@ public class CommandHandler extends CommandFramework {
 		}
 
 
-		if (args[0].equalsIgnoreCase("migrate") && ChestCommands.getInstance().getConfig().getBoolean("use-mysql",false)) {
+		if (args[0].equalsIgnoreCase("migrate") && ChestCommands.getSettings().use_mysql) {
 			CommandValidate.dbEnabled("Please enable 'use-mysql' to use this feature");
 			CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "migrate"), "You don't have permission.");
 			CommandValidate.minLength(args, 2, "Correct usage: /" + label + "migrate <import/export>");
 			if (args[1].equalsIgnoreCase("export")) {
-				DBHandler.Export(ChestCommands.GetMenuList());
+				DBHandler.Export(ChestCommands.getMenuList(),sender);
 				sender.sendMessage(ChatColor.RED + "Export Completed!");
 			}
 			else if(args[1].equalsIgnoreCase("import")) {
-				DBHandler.Import(ChestCommands.GetMenuList());
+				DBHandler.Import(ChestCommands.getMenuList(),sender);
 				sender.sendMessage(ChatColor.RED + "Import Completed!");
 			}
-			return;
+            return;
 		}
 		
 		sender.sendMessage(ChatColor.RED + "Unknown sub-command \"" + args[0] + "\".");

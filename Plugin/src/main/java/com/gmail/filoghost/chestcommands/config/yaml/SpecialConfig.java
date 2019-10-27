@@ -15,12 +15,14 @@
 package com.gmail.filoghost.chestcommands.config.yaml;
 
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -77,7 +79,12 @@ public class SpecialConfig {
 		for (Entry<String, Object> entry : defaultValuesMap.entrySet()) {
 			if (!config.isSet(entry.getKey())) {
 				needsSave = true;
-				config.set(entry.getKey(), entry.getValue());
+				if (entry.getValue() instanceof Map){
+                    Map<String,String> tmp = (Map<String, String>) entry.getValue();
+                    tmp.keySet().forEach(k -> config.set(entry.getKey() + "." + k,tmp.get(k)));
+                } else {
+                    config.set(entry.getKey(), entry.getValue());
+                }
 			}
 		}
 
@@ -110,6 +117,18 @@ public class SpecialConfig {
 
 				} else if (type == String.class) {
 					field.set(this, FormatUtils.addColors(config.getString(configKey))); // Always add colors
+
+				} else if (type == List.class) {
+					field.set(this, config.getStringList(configKey));
+
+				} else if (type == Map.class) {
+				    Map<String,String> tmp = new HashMap<>();
+                    if (config.getConfigurationSection(configKey) != null){
+                        config.getConfigurationSection(configKey).getKeys(false).forEach(key ->
+                            tmp.put(key,config.getString(configKey + "." + key))
+                        );
+                    }
+					field.set(this, tmp);
 
 				} else {
 					config.getPlugin().getLogger().warning("Unknown field type: " + field.getType().getName() + " (" + field.getName() + "). Please inform the developer.");

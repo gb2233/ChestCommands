@@ -36,22 +36,20 @@ import com.gmail.filoghost.chestcommands.serializer.CommandSerializer;
 import com.gmail.filoghost.chestcommands.serializer.MenuSerializer;
 import com.gmail.filoghost.chestcommands.task.ErrorLoggerTask;
 import com.gmail.filoghost.chestcommands.task.RefreshMenusTask;
-import com.gmail.filoghost.chestcommands.util.BukkitUtils;
-import com.gmail.filoghost.chestcommands.util.CaseInsensitiveMap;
-import com.gmail.filoghost.chestcommands.util.ErrorLogger;
-import com.gmail.filoghost.chestcommands.util.Utils;
+import com.gmail.filoghost.chestcommands.util.*;
 import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.sql.SQLException;
+import java.util.*;
 
 public class ChestCommands extends JavaPlugin {
 
@@ -68,6 +66,8 @@ public class ChestCommands extends JavaPlugin {
 
 	private static int lastReloadErrors;
 	private static String newVersion;
+	public static DBHandler handler;
+    private static List<String> menuStringList;
 
 	@Override
 	public void onEnable() {
@@ -124,10 +124,28 @@ public class ChestCommands extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
 		Bukkit.getPluginManager().registerEvents(new SignListener(), this);
 
+		if(settings.use_mysql) {
+			try {
+				handler = new DBHandler();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+
 		CommandFramework.register(this, new CommandHandler("chestcommands"));
 
 		ErrorLogger errorLogger = new ErrorLogger();
 		load(errorLogger);
+
+        if(settings.action_on_start.equalsIgnoreCase("import")) {
+            DBHandler.Import(menuStringList,Bukkit.getConsoleSender());
+            instance.getLogger().info("Import on startup was successful");
+        }
+        else if(settings.action_on_start.equalsIgnoreCase("export")) {
+            DBHandler.Export(menuStringList,Bukkit.getConsoleSender());
+            instance.getLogger().info("Export on startup was successful");
+        }
 
 		lastReloadErrors = errorLogger.getSize();
 		if (errorLogger.hasErrors()) {
@@ -141,6 +159,7 @@ public class ChestCommands extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		closeAllMenus();
+		DBHandler.shutdown();
 	}
 
 
@@ -217,6 +236,8 @@ public class ChestCommands extends JavaPlugin {
 				errorLogger.addError("Two menus have the same file name \"" + menuConfig.getFileName() + "\" with different cases. There will be problems opening one of these two menus.");
 			}
 			fileNameToMenuMap.put(menuConfig.getFileName(), iconMenu);
+
+            menuStringList = settings.menus;
 
 			if (data.hasCommands()) {
 				for (String command : data.getCommands()) {
@@ -300,9 +321,9 @@ public class ChestCommands extends JavaPlugin {
 		return newVersion;
 	}
 
-	public static Map<String, ExtendedIconMenu> getFileNameToMenuMap() {
-		return fileNameToMenuMap;
-	}
+    public static Map<String, ExtendedIconMenu> getFileNameToMenuMap() {
+        return fileNameToMenuMap;
+    }
 
 	public static Map<String, ExtendedIconMenu> getCommandToMenuMap() {
 		return commandsToMenuMap;
@@ -319,5 +340,28 @@ public class ChestCommands extends JavaPlugin {
 	public static void setLastReloadErrors(int lastReloadErrors) {
 		ChestCommands.lastReloadErrors = lastReloadErrors;
 	}
+
+    public static List<String> getMenuList() {
+        return menuStringList;
+    }
+    public void doReload(CommandSender sender) {
+
+        closeAllMenus();
+
+        ErrorLogger errorLogger = new ErrorLogger();
+        load(errorLogger);
+
+        setLastReloadErrors(errorLogger.getSize());
+
+        if (!errorLogger.hasErrors()) {
+            sender.sendMessage(ChestCommands.CHAT_PREFIX + "Plugin reloaded.");
+        } else {
+            new ErrorLoggerTask(errorLogger).run();
+            sender.sendMessage(ChestCommands.CHAT_PREFIX + ChatColor.RED + "Plugin reloaded with " + errorLogger.getSize() + " error(s).");
+            if (!(sender instanceof ConsoleCommandSender)) {
+                sender.sendMessage(ChestCommands.CHAT_PREFIX + ChatColor.RED + "Please check the console.");
+            }
+        }
+    }
 
 }
