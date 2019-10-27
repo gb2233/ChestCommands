@@ -7,3 +7,11 @@ License: GNU Lesser General Public License v3.0
 [EisenNBT]
 URL: https://github.com/Eisenwave/eisen-nbt
 License: MIT License
+
+[TaskChain]
+URL: https://github.com/aikar/TaskChain
+License: MIT License
+
+[EvalEx]
+URL: https://github.com/uklimaschewski/EvalEx
+License: MIT License

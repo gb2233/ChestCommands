@@ -14,10 +14,17 @@
  */
 package com.gmail.filoghost.chestcommands;
 
-import com.gmail.filoghost.chestcommands.SimpleUpdater.ResponseHandler;
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChainFactory;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
-import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import com.gmail.filoghost.chestcommands.bridge.EpicHeadsBridge;
+import com.gmail.filoghost.chestcommands.bridge.HeadDatabaseBridge;
+import com.gmail.filoghost.chestcommands.bridge.HeadsPlusBridge;
 import com.gmail.filoghost.chestcommands.bridge.PlaceholderAPIBridge;
+import com.gmail.filoghost.chestcommands.bridge.PlayerPointsBridge;
+import com.gmail.filoghost.chestcommands.bridge.TitleBridge;
+import com.gmail.filoghost.chestcommands.bridge.TokenManagerBridge;
+import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.command.CommandHandler;
 import com.gmail.filoghost.chestcommands.command.framework.CommandFramework;
 import com.gmail.filoghost.chestcommands.config.AsciiPlaceholders;
@@ -37,6 +44,16 @@ import com.gmail.filoghost.chestcommands.serializer.MenuSerializer;
 import com.gmail.filoghost.chestcommands.task.ErrorLoggerTask;
 import com.gmail.filoghost.chestcommands.task.RefreshMenusTask;
 import com.gmail.filoghost.chestcommands.util.*;
+import com.gmail.filoghost.chestcommands.util.BukkitUtils;
+import com.gmail.filoghost.chestcommands.util.CaseInsensitiveMap;
+import com.gmail.filoghost.chestcommands.util.ErrorLogger;
+import com.gmail.filoghost.chestcommands.util.Utils;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 import org.bstats.bukkit.MetricsLite;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,76 +70,127 @@ import java.util.*;
 
 public class ChestCommands extends JavaPlugin {
 
-	public static final String CHAT_PREFIX = ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "ChestCommands" + ChatColor.DARK_GREEN + "] " + ChatColor.GREEN;
+  public static final String CHAT_PREFIX =
+      ChatColor.DARK_GREEN + "[" + ChatColor.GREEN + "ChestCommands" + ChatColor.DARK_GREEN + "] "
+          + ChatColor.GREEN;
 
-	private static ChestCommands instance;
-	private static Settings settings;
-	private static Lang lang;
+  private static ChestCommands instance;
+  private static Settings settings;
+  private static Lang lang;
 
-	private static Map<String, ExtendedIconMenu> fileNameToMenuMap;
-	private static Map<String, ExtendedIconMenu> commandsToMenuMap;
+  private static Map<String, ExtendedIconMenu> fileNameToMenuMap;
+  private static Map<String, ExtendedIconMenu> commandsToMenuMap;
 
-	private static Set<BoundItem> boundItems;
+  private static Set<BoundItem> boundItems;
 
 	private static int lastReloadErrors;
 	private static String newVersion;
 	public static DBHandler handler;
     private static List<String> menuStringList;
 
-	@Override
-	public void onEnable() {
-		if (instance != null) {
-			getLogger().warning("Please do not use /reload or plugin reloaders. Do \"/cc reload\" instead.");
-			return;
-		}
+  private static TaskChainFactory taskChainFactory;
 
-		instance = this;
-		fileNameToMenuMap = CaseInsensitiveMap.create();
-		commandsToMenuMap = CaseInsensitiveMap.create();
-		boundItems = Utils.newHashSet();
+  private static Random random = new Random();
 
-		settings = new Settings(new PluginConfig(this, "config.yml"));
-		lang = new Lang(new PluginConfig(this, "lang.yml"));
+  public static boolean isSpigot() {
+    return Utils.isClassLoaded("org.bukkit.entity.Player$Spigot");
+  }
 
-		if (!EconomyBridge.setupEconomy()) {
-			getLogger().warning("Vault with a compatible economy plugin was not found! Icons with a PRICE or commands that give money will not work.");
-		}
+  public static TaskChainFactory getTaskChainFactory() {
+    return taskChainFactory;
+  }
 
-		if (BarAPIBridge.setupPlugin()) {
-			getLogger().info("Hooked BarAPI");
-		}
+  public static Random getRandom() {
+    return random;
+  }
 
-		if (PlaceholderAPIBridge.setupPlugin()) {
-			getLogger().info("Hooked PlaceholderAPI");
-		}
+  @Override
+  public void onEnable() {
+    if (instance != null) {
+      getLogger()
+          .warning("Please do not use /reload or plugin reloaders. Do \"/cc reload\" instead.");
+      return;
+    }
 
-		if (settings.update_notifications) {
-			new SimpleUpdater(this, 56919).checkForUpdates(new ResponseHandler() {
+    instance = this;
+    fileNameToMenuMap = CaseInsensitiveMap.create();
+    commandsToMenuMap = CaseInsensitiveMap.create();
+    boundItems = Utils.newHashSet();
 
-				@Override
-				public void onUpdateFound(String newVersion) {
-					ChestCommands.newVersion = newVersion;
+    settings = new Settings(new PluginConfig(this, "config.yml"));
+    lang = new Lang(new PluginConfig(this, "lang.yml"));
 
-					if (settings.use_console_colors) {
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + "Found a new version: " + newVersion + ChatColor.WHITE + " (yours: v" + getDescription().getVersion() + ")");
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "Download it on Bukkit Dev:");
-						Bukkit.getConsoleSender().sendMessage(CHAT_PREFIX + ChatColor.WHITE + "dev.bukkit.org/bukkit-plugins/chest-commands");
-					} else {
-						getLogger().info("Found a new version available: " + newVersion);
-						getLogger().info("Download it on Bukkit Dev:");
-						getLogger().info("dev.bukkit.org/bukkit-plugins/chest-commands");
-					}
-				}
-			});
-		}
+    taskChainFactory = BukkitTaskChainFactory.create(this);
 
-		// Start bStats metrics
-		new MetricsLite(this);
+    if (!VaultBridge.setupEconomy()) {
+      getLogger().warning(
+          "Vault with a compatible economy plugin was not found! Icons with a PRICE or commands that give money will not work.");
+    }
 
-		Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
-		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
-		Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
-		Bukkit.getPluginManager().registerEvents(new SignListener(), this);
+    if (!VaultBridge.setupPermission()) {
+      getLogger().warning(
+          "Vault with a compatible permission plugin was not found! Variable {group} will not work.");
+    }
+
+    if (BarAPIBridge.setupPlugin()) {
+      getLogger().info("Hooked BarAPI");
+    }
+
+    if (PlaceholderAPIBridge.setupPlugin()) {
+      getLogger().info("Hooked PlaceholderAPI");
+    }
+
+    if (PlayerPointsBridge.setupPlugin()) {
+      getLogger().info("Hooked PlayerPoints");
+    }
+
+    if (TokenManagerBridge.setupPlugin()) {
+      getLogger().info("Hooked TokenManager");
+    }
+
+    if (HeadDatabaseBridge.setupPlugin()) {
+      getLogger().info("Hooked HeadDatabase");
+    }
+
+    if (HeadsPlusBridge.setupPlugin()) {
+      getLogger().info("Hooked HeadsPlus");
+    }
+
+    if (EpicHeadsBridge.setupPlugin()) {
+      getLogger().info("Hooked EpicHeads");
+    }
+
+    if (TitleBridge.setupPlugin()) {
+      getLogger().info("Enabled Title features");
+    }
+
+    if (settings.update_notifications) {
+      new SimpleUpdater(this, 56919).checkForUpdates(newVersion -> {
+        ChestCommands.newVersion = newVersion;
+
+        if (settings.use_console_colors) {
+          Bukkit.getConsoleSender().sendMessage(
+              CHAT_PREFIX + "Found a new version: " + newVersion + ChatColor.WHITE + " (yours: v"
+                  + getDescription().getVersion() + ")");
+          Bukkit.getConsoleSender()
+              .sendMessage(CHAT_PREFIX + ChatColor.WHITE + "Download it on Bukkit Dev:");
+          Bukkit.getConsoleSender().sendMessage(
+              CHAT_PREFIX + ChatColor.WHITE + "dev.bukkit.org/bukkit-plugins/chest-commands");
+        } else {
+          getLogger().info("Found a new version available: " + newVersion);
+          getLogger().info("Download it on Bukkit Dev:");
+          getLogger().info("dev.bukkit.org/bukkit-plugins/chest-commands");
+        }
+      });
+    }
+
+    // Start bStats metrics
+    new MetricsLite(this);
+
+    Bukkit.getPluginManager().registerEvents(new CommandListener(), this);
+    Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
+    Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+    Bukkit.getPluginManager().registerEvents(new SignListener(), this);
 
 		if(settings.use_mysql) {
 			try {
@@ -135,8 +203,8 @@ public class ChestCommands extends JavaPlugin {
 
 		CommandFramework.register(this, new CommandHandler("chestcommands"));
 
-		ErrorLogger errorLogger = new ErrorLogger();
-		load(errorLogger);
+    ErrorLogger errorLogger = new ErrorLogger();
+    load(errorLogger);
 
         if(settings.action_on_start.equalsIgnoreCase("import")) {
             DBHandler.Import(menuStringList,Bukkit.getConsoleSender());
@@ -152,7 +220,7 @@ public class ChestCommands extends JavaPlugin {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(this, new ErrorLoggerTask(errorLogger), 10L);
 		}
 
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new RefreshMenusTask(), 2L, 2L);
+		//.getScheduler().scheduleSyncRepeatingTask(this, new RefreshMenusTask(), 2L, 2L);
 	}
 
 
@@ -162,80 +230,90 @@ public class ChestCommands extends JavaPlugin {
 		DBHandler.shutdown();
 	}
 
+  public void load(ErrorLogger errorLogger) {
+    fileNameToMenuMap.clear();
+    commandsToMenuMap.clear();
+    boundItems.clear();
 
-	public void load(ErrorLogger errorLogger) {
-		fileNameToMenuMap.clear();
-		commandsToMenuMap.clear();
-		boundItems.clear();
+    CommandSerializer.checkClassConstructors(errorLogger);
 
-		CommandSerializer.checkClassConstructors(errorLogger);
+    try {
+      settings.load();
+    } catch (IOException e) {
+      e.printStackTrace();
+      getLogger().warning("I/O error while using the configuration. Default values will be used.");
+    } catch (InvalidConfigurationException e) {
+      e.printStackTrace();
+      getLogger().warning(
+          "The config.yml was not a valid YAML, please look at the error above. Default values will be used.");
+    } catch (Exception e) {
+      e.printStackTrace();
+      getLogger().warning(
+          "Unhandled error while reading the values for the configuration! Please inform the developer.");
+    }
 
-		try {
-			settings.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-			getLogger().warning("I/O error while using the configuration. Default values will be used.");
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-			getLogger().warning("The config.yml was not a valid YAML, please look at the error above. Default values will be used.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			getLogger().warning("Unhandled error while reading the values for the configuration! Please inform the developer.");
-		}
+    try {
+      lang.load();
+    } catch (IOException e) {
+      e.printStackTrace();
+      getLogger().warning("I/O error while using the language file. Default values will be used.");
+    } catch (InvalidConfigurationException e) {
+      e.printStackTrace();
+      getLogger().warning(
+          "The lang.yml was not a valid YAML, please look at the error above. Default values will be used.");
+    } catch (Exception e) {
+      e.printStackTrace();
+      getLogger().warning(
+          "Unhandled error while reading the values for the configuration! Please inform the developer.");
+    }
 
-		try {
-			lang.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-			getLogger().warning("I/O error while using the language file. Default values will be used.");
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-			getLogger().warning("The lang.yml was not a valid YAML, please look at the error above. Default values will be used.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			getLogger().warning("Unhandled error while reading the values for the configuration! Please inform the developer.");
-		}
+    try {
+      AsciiPlaceholders.load(errorLogger);
+    } catch (IOException e) {
+      e.printStackTrace();
+      getLogger().warning("I/O error while reading the placeholders. They will not work.");
+    } catch (Exception e) {
+      e.printStackTrace();
+      getLogger()
+          .warning("Unhandled error while reading the placeholders! Please inform the developer.");
+    }
 
-		try {
-			AsciiPlaceholders.load(errorLogger);
-		} catch (IOException e) {
-			e.printStackTrace();
-			getLogger().warning("I/O error while reading the placeholders. They will not work.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			getLogger().warning("Unhandled error while reading the placeholders! Please inform the developer.");
-		}
+    // Load the menus
+    File menusFolder = new File(getDataFolder(), "menu");
 
-		// Load the menus
-		File menusFolder = new File(getDataFolder(), "menu");
+    if (!menusFolder.isDirectory()) {
+      // Create the directory with the default menu
+      menusFolder.mkdirs();
+      BukkitUtils.saveResourceSafe(this, "menu" + File.separator + "example.yml");
+      BukkitUtils.saveResourceSafe(this, "menu" + File.separator + "custom_gui.yml");
+    }
 
-		if (!menusFolder.isDirectory()) {
-			// Create the directory with the default menu
-			menusFolder.mkdirs();
-			BukkitUtils.saveResourceSafe(this, "menu" + File.separator + "example.yml");
-		}
+    List<PluginConfig> menusList = loadMenus(menusFolder);
+    for (PluginConfig menuConfig : menusList) {
+      try {
+        menuConfig.load();
+      } catch (IOException e) {
+        e.printStackTrace();
+        errorLogger.addError("I/O error while loading the menu \"" + menuConfig.getFileName()
+            + "\". Is the file in use?");
+        continue;
+      } catch (InvalidConfigurationException e) {
+        e.printStackTrace();
+        errorLogger.addError("Invalid YAML configuration for the menu \"" + menuConfig.getFileName()
+            + "\". Please look at the error above, or use an online YAML parser (google is your friend).");
+        continue;
+      }
 
-		List<PluginConfig> menusList = loadMenus(menusFolder);
-		for (PluginConfig menuConfig : menusList) {
-			try {
-				menuConfig.load();
-			} catch (IOException e) {
-				e.printStackTrace();
-				errorLogger.addError("I/O error while loading the menu \"" + menuConfig.getFileName() + "\". Is the file in use?");
-				continue;
-			} catch (InvalidConfigurationException e) {
-				e.printStackTrace();
-				errorLogger.addError("Invalid YAML configuration for the menu \"" + menuConfig.getFileName() + "\". Please look at the error above, or use an online YAML parser (google is your friend).");
-				continue;
-			}
+      MenuData data = MenuSerializer.loadMenuData(menuConfig, errorLogger);
+      ExtendedIconMenu iconMenu = MenuSerializer
+          .loadMenu(menuConfig, data.getTitle(), data.getSlots(), data.getInventoryType(),
+              errorLogger);
 
-			MenuData data = MenuSerializer.loadMenuData(menuConfig, errorLogger);
-			ExtendedIconMenu iconMenu = MenuSerializer.loadMenu(menuConfig, data.getTitle(), data.getRows(), errorLogger);
-
-			if (fileNameToMenuMap.containsKey(menuConfig.getFileName())) {
-				errorLogger.addError("Two menus have the same file name \"" + menuConfig.getFileName() + "\" with different cases. There will be problems opening one of these two menus.");
-			}
-			fileNameToMenuMap.put(menuConfig.getFileName(), iconMenu);
+      if (fileNameToMenuMap.containsKey(menuConfig.getFileName())) {
+        errorLogger.addError("Two menus have the same file name \"" + menuConfig.getFileName()
+            + "\" with different cases. There will be problems opening one of these two menus.");
+      }
+      fileNameToMenuMap.put(menuConfig.getFileName(), iconMenu);
 
             menuStringList = settings.menus;
 
@@ -250,44 +328,43 @@ public class ChestCommands extends JavaPlugin {
 				}
 			}
 
-			iconMenu.setRefreshTicks(data.getRefreshTenths());
+      iconMenu.setRefreshTicks(data.getRefreshTenths());
 
-			if (data.getOpenActions() != null) {
-				iconMenu.setOpenActions(data.getOpenActions());
-			}
+      if (data.getOpenActions() != null) {
+        iconMenu.setOpenActions(data.getOpenActions());
+      }
 
-			if (data.hasBoundMaterial() && data.getClickType() != null) {
-				BoundItem boundItem = new BoundItem(iconMenu, data.getBoundMaterial(), data.getClickType());
-				if (data.hasBoundDataValue()) {
-					boundItem.setRestrictiveData(data.getBoundDataValue());
-				}
-				boundItems.add(boundItem);
-			}
-		}
+      if (data.hasBoundMaterial() && data.getClickType() != null) {
+        BoundItem boundItem = new BoundItem(iconMenu, data.getBoundMaterial(), data.getClickType());
+        if (data.hasBoundDataValue()) {
+          boundItem.setRestrictiveData(data.getBoundDataValue());
+        }
+        boundItems.add(boundItem);
+      }
+    }
 
-		// Register the BungeeCord plugin channel
-		if (!Bukkit.getMessenger().isOutgoingChannelRegistered(this, "BungeeCord")) {
-			Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-		}
-	}
+    // Register the BungeeCord plugin channel
+    if (!Bukkit.getMessenger().isOutgoingChannelRegistered(this, "BungeeCord")) {
+      Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+    }
+  }
 
-
-	/**
-	 * Loads all the configuration files recursively into a list.
-	 */
-	private List<PluginConfig> loadMenus(File file) {
-		List<PluginConfig> list = Utils.newArrayList();
-		if (file.isDirectory()) {
-			for (File subFile : file.listFiles()) {
-				list.addAll(loadMenus(subFile));
-			}
-		} else if (file.isFile()) {
-			if (file.getName().endsWith(".yml")) {
-				list.add(new PluginConfig(this, file));
-			}
-		}
-		return list;
-	}
+  /**
+   * Loads all the configuration files recursively into a list.
+   */
+  private List<PluginConfig> loadMenus(File file) {
+    List<PluginConfig> list = Utils.newArrayList();
+    if (file.isDirectory()) {
+      for (File subFile : file.listFiles()) {
+        list.addAll(loadMenus(subFile));
+      }
+    } else if (file.isFile()) {
+      if (file.getName().endsWith(".yml")) {
+        list.add(new PluginConfig(this, file));
+      }
+    }
+    return list;
+  }
 
 
 	public static void closeAllMenus() {

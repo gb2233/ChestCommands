@@ -14,99 +14,116 @@
  */
 package com.gmail.filoghost.chestcommands.internal;
 
+import com.gmail.filoghost.chestcommands.ChestCommands;
+import com.gmail.filoghost.chestcommands.util.ItemStackReader;
 import com.gmail.filoghost.chestcommands.util.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class RequiredItem {
 
-	private Material material;
-	private int amount;
-	private short dataValue;
-	private boolean isDurabilityRestrictive = false;
+  private ItemStackReader itemReader;
+  private boolean isDurabilityRestrictive = false;
 
-	public RequiredItem(Material material, int amount) {
-		Validate.notNull(material, "Material cannot be null");
-		Validate.isTrue(material != Material.AIR, "Material cannot be air");
+  public RequiredItem(ItemStackReader itemReader) {
+    Validate.notNull(itemReader.getMaterial(), "Material cannot be null");
+    Validate.isTrue(itemReader.getMaterial() != Material.AIR, "Material cannot be air");
 
-		this.material = material;
-		this.amount = amount;
-	}
+    this.itemReader = itemReader;
 
-	public ItemStack createItemStack() {
-		return new ItemStack(material, amount, dataValue);
-	}
+    if (itemReader.hasExplicitDataValue()) {
+      Validate.isTrue(itemReader.getDataValue() >= 0, "Data value cannot be negative");
 
-	public Material getMaterial() {
-		return material;
-	}
+      isDurabilityRestrictive = true;
+    }
+  }
 
-	public int getAmount() {
-		return amount;
-	}
+  public ItemStack createItemStack() {
+    return itemReader.createStack();
+  }
 
-	public short getDataValue() {
-		return dataValue;
-	}
+  public Material getMaterial() {
+    return itemReader.getMaterial();
+  }
 
-	public void setRestrictiveDataValue(short data) {
-		Validate.isTrue(data >= 0, "Data value cannot be negative");
+  public int getAmount() {
+    return itemReader.getAmount();
+  }
 
-		this.dataValue = data;
-		isDurabilityRestrictive = true;
-	}
+  public short getDataValue() {
+    return itemReader.getDataValue();
+  }
 
-	public boolean hasRestrictiveDataValue() {
-		return isDurabilityRestrictive;
-	}
+  public boolean hasItemMeta() {
+    return createItemStack().hasItemMeta();
+  }
 
-	public boolean isValidDataValue(short data) {
-		if (!isDurabilityRestrictive) return true;
-		return data == this.dataValue;
-	}
+  public ItemMeta getItemMeta() {
+    return createItemStack().getItemMeta();
+  }
 
-	public boolean hasItem(Player player) {
-		int amountFound = 0;
+  public boolean hasRestrictiveDataValue() {
+    return isDurabilityRestrictive;
+  }
 
-		for (ItemStack item : player.getInventory().getContents()) {
-			if (item != null && item.getType() == material && isValidDataValue(item.getDurability())) {
-				amountFound += item.getAmount();
-			}
-		}
+  public boolean isValidDataValue(short data) {
+    if (!isDurabilityRestrictive) {
+      return true;
+    }
+    return data == this.itemReader.getDataValue();
+  }
 
-		return amountFound >= amount;
-	}
+  public boolean isValidItemMeta(ItemStack item) {
+    return ChestCommands.getInstance().getServer().getItemFactory()
+        .equals(item.getItemMeta(), createItemStack().getItemMeta());
+  }
 
-	public boolean takeItem(Player player) {
-		if (amount <= 0) {
-			return true;
-		}
+  public boolean hasItem(Player player) {
+    int amountFound = 0;
 
-		int itemsToTake = amount; //start from amount and decrease
+    for (ItemStack item : player.getInventory().getContents()) {
+      if (item != null && item.getType() == getMaterial() && isValidDataValue(item.getDurability())
+          && isValidItemMeta(item)) {
+        amountFound += item.getAmount();
+      }
+    }
 
-		ItemStack[] contents = player.getInventory().getContents();
-		ItemStack current = null;
+    return amountFound >= getAmount();
+  }
 
+  public boolean takeItem(Player player) {
+    if (getAmount() <= 0) {
+      return true;
+    }
 
-		for (int i = 0; i < contents.length; i++) {
+    int itemsToTake = getAmount(); //start from amount and decrease
 
-			current = contents[i];
+    ItemStack[] contents = player.getInventory().getContents();
+    ItemStack current;
 
-			if (current != null && current.getType() == material && isValidDataValue(current.getDurability())) {
-				if (current.getAmount() > itemsToTake) {
-					current.setAmount(current.getAmount() - itemsToTake);
-					return true;
-				} else {
-					itemsToTake -= current.getAmount();
-					player.getInventory().setItem(i, new ItemStack(Material.AIR));
-				}
-			}
+    for (int i = 0; i < contents.length; i++) {
 
-			// The end
-			if (itemsToTake <= 0) return true;
-		}
+      current = contents[i];
 
-		return false;
-	}
+      if (current != null && current.getType() == getMaterial() && isValidDataValue(
+          current.getDurability()) && isValidItemMeta(current)) {
+        if (current.getAmount() > itemsToTake) {
+          current.setAmount(current.getAmount() - itemsToTake);
+          return true;
+        } else {
+          itemsToTake -= current.getAmount();
+          player.getInventory().setItem(i, new ItemStack(Material.AIR));
+        }
+      }
+
+      // The end
+      if (itemsToTake <= 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

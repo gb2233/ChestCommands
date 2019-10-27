@@ -14,104 +14,114 @@
  */
 package com.gmail.filoghost.chestcommands.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public final class Utils {
 
-	private Utils() {
-	}
+  private Utils() {
+  }
 
-	public static int makePositive(int i) {
-		return i < 0 ? 0 : i;
-	}
+  public static int makePositive(int i) {
+    return Math.max(i, 0);
+  }
 
-	public static boolean isValidInteger(String input) {
-		try {
-			Integer.parseInt(input);
-			return true;
-		} catch (NumberFormatException ex) {
-			return false;
-		}
-	}
+  public static boolean isValidInteger(String input) {
+    try {
+      Integer.parseInt(input);
+      return true;
+    } catch (NumberFormatException ex) {
+      return false;
+    }
+  }
 
-	public static boolean isValidPositiveInteger(String input) {
-		try {
-			return Integer.parseInt(input) > 0;
-		} catch (NumberFormatException ex) {
-			return false;
-		}
-	}
+  public static boolean isValidPositiveInteger(String input) {
+    try {
+      return Integer.parseInt(input) > 0;
+    } catch (NumberFormatException ex) {
+      return false;
+    }
+  }
 
-	public static boolean isValidShort(String input) {
-		try {
-			Short.parseShort(input);
-			return true;
-		} catch (NumberFormatException ex) {
-			return false;
-		}
-	}
+  public static boolean isValidShort(String input) {
+    try {
+      Short.parseShort(input);
+      return true;
+    } catch (NumberFormatException ex) {
+      return false;
+    }
+  }
 
-	public static boolean isValidPositiveDouble(String input) {
-		try {
-			return Double.parseDouble(input) > 0.0;
-		} catch (NumberFormatException ex) {
-			return false;
-		}
-	}
+  public static boolean isValidPositiveDouble(String input) {
+    try {
+      return Double.parseDouble(input) > 0.0;
+    } catch (NumberFormatException ex) {
+      return false;
+    }
+  }
 
-	public static List<String> readLines(File file) throws IOException, Exception {
-		BufferedReader br = null;
+  public static List<String> readLines(File file) throws Exception {
+    BufferedReader br = null;
 
-		try {
-			List<String> lines = newArrayList();
+    try {
+      List<String> lines = newArrayList();
 
-			if (!file.exists()) {
-				throw new FileNotFoundException();
-			}
+      if (!file.exists()) {
+        throw new FileNotFoundException();
+      }
 
-			br = new BufferedReader(new FileReader(file));
-			String line = br.readLine();
+      br = new BufferedReader(new FileReader(file));
+      String line = br.readLine();
 
-			while (line != null) {
-				lines.add(line);
-				line = br.readLine();
-			}
+      while (line != null) {
+        lines.add(line);
+        line = br.readLine();
+      }
 
-			return lines;
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
+      return lines;
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException ignored) {
+        }
+      }
+    }
+  }
 
-	public static <T> Set<T> newHashSet() {
-		return new HashSet<T>();
-	}
+  public static <T> Set<T> newHashSet() {
+    return new HashSet<>();
+  }
 
-	public static <T, V> Map<T, V> newHashMap() {
-		return new HashMap<T, V>();
-	}
+  public static <T, V> Map<T, V> newHashMap() {
+    return new HashMap<>();
+  }
 
-	public static <T> List<T> newArrayList() {
-		return new ArrayList<T>();
-	}
+  public static <T> List<T> newArrayList() {
+    return new ArrayList<>();
+  }
 
-	public static boolean isClassLoaded(String name) {
-		try {
-			Class.forName(name);
-			return true;
-		} catch (Throwable t) {
-			return false;
-		}
-	}
+  public static boolean isClassLoaded(String name) {
+    try {
+      Class.forName(name);
+      return true;
+    } catch (Exception t) {
+      return false;
+    }
+  }
 
-	public static boolean isNullOrEmpty(Collection<?> collection) {
-		return collection == null || collection.isEmpty();
-	}
+  public static boolean isNullOrEmpty(Collection<?> collection) {
+    return collection == null || collection.isEmpty();
+  }
 
 }

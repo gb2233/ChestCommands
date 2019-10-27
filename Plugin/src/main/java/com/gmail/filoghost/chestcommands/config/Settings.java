@@ -38,6 +38,7 @@ public class Settings extends SpecialConfig {
 	public List<String> menus = Arrays.asList("exampleMenuTwo","R/beginWithThisName");
 	public Map<String,String> name_forward_conversion = new HashMap<>();
 	public String action_on_start = "none";
+  public boolean use_hover_event_on_required_item_message = true;
 
 	public Settings(PluginConfig config) {
 		super(config);

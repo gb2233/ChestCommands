@@ -14,48 +14,48 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
-import com.gmail.filoghost.chestcommands.bridge.EconomyBridge;
+import co.aikar.taskchain.TaskChain;
+import com.gmail.filoghost.chestcommands.bridge.VaultBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
+import com.gmail.filoghost.chestcommands.util.ExpressionUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class GiveMoneyIconCommand extends IconCommand {
 
-	private double moneyToGive;
-	private String errorMessage;
+  private String errorMessage;
 
-	public GiveMoneyIconCommand(String command) {
-		super(command);
-		if (!hasVariables) {
-			parseMoney(super.command);
-		}
-	}
+  public GiveMoneyIconCommand(String command) {
+    super(command);
+  }
 
-	private void parseMoney(String command) {
-		if (!Utils.isValidPositiveDouble(command)) {
-			errorMessage = ChatColor.RED + "Invalid money amount: " + command;
-			return;
-		}
-		errorMessage = null;
-		moneyToGive = Double.parseDouble(command);
-	}
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    double moneyToGive = 0;
+    String parsed = getParsedCommand(player);
+    if (Utils.isValidPositiveInteger(parsed)) {
+      moneyToGive = Double.parseDouble(parsed);
+    } else if (ExpressionUtils.isValidExpression(parsed)) {
+      moneyToGive = ExpressionUtils.getResult(parsed).doubleValue();
+    } else {
+      errorMessage = ChatColor.RED + "Invalid money amount: " + command;
+    }
 
-	@Override
-	public void execute(Player player) {
-		if (hasVariables) {
-			parseMoney(getParsedCommand(player));
-		}
-		if (errorMessage != null) {
-			player.sendMessage(errorMessage);
-			return;
-		}
+    if (errorMessage != null) {
+      player.sendMessage(errorMessage);
+      return;
+    }
+    if (!VaultBridge.hasValidEconomy()) {
+      player.sendMessage(ChatColor.RED
+          + "Vault with a compatible economy plugin not found. Please inform the staff.");
+      return;
+    }
 
-		if (EconomyBridge.hasValidEconomy()) {
-			EconomyBridge.giveMoney(player, moneyToGive);
-		} else {
-			player.sendMessage(ChatColor.RED + "Vault with a compatible economy plugin not found. Please inform the staff.");
-		}
-	}
+    if (moneyToGive > 0) {
+      double finalMoneyToGive = moneyToGive;
+      taskChain.sync(() -> VaultBridge.giveMoney(player, finalMoneyToGive));
+    }
+  }
 
 }

@@ -21,27 +21,33 @@ import org.bukkit.plugin.Plugin;
 
 public class BarAPIBridge {
 
-	private static BarAPI barAPI;
+  private static BarAPI barAPI;
 
-	public static boolean setupPlugin() {
-		Plugin barPlugin = Bukkit.getPluginManager().getPlugin("BarAPI");
+  public static boolean setupPlugin() {
+    if (!Bukkit.getServer().getPluginManager().isPluginEnabled("BarAPI")) {
+      return false;
+    }
 
-		if (barPlugin == null) {
-			return false;
-		}
+    Plugin barPlugin = Bukkit.getPluginManager().getPlugin("BarAPI");
 
-		barAPI = (BarAPI) barPlugin;
-		return true;
-	}
+    if (barPlugin == null) {
+      return false;
+    }
 
-	public static boolean hasValidPlugin() {
-		return barAPI != null;
-	}
+    barAPI = (BarAPI) barPlugin;
+    return true;
+  }
 
-	public static void setMessage(Player player, String message, int seconds) {
-		if (!hasValidPlugin()) throw new IllegalStateException("BarAPI plugin was not found!");
+  public static boolean hasValidPlugin() {
+    return barAPI != null;
+  }
 
-		BarAPI.setMessage(player, message, seconds);
-	}
+  public static void setMessage(Player player, String message, int seconds) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("BarAPI plugin was not found!");
+    }
+
+    BarAPI.setMessage(player, message, seconds);
+  }
 
 }

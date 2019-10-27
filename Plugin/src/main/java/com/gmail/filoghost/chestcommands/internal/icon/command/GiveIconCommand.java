@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.exception.FormatException;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.ItemStackReader;
@@ -23,37 +24,37 @@ import org.bukkit.inventory.ItemStack;
 
 public class GiveIconCommand extends IconCommand {
 
-	private ItemStack itemToGive;
-	private String errorMessage;
+  private ItemStack itemToGive;
+  private String errorMessage;
 
-	public GiveIconCommand(String command) {
-		super(command);
-		if (!hasVariables) {
-			parseItem(super.command);
-		}
-	}
+  public GiveIconCommand(String command) {
+    super(command);
+    if (!hasVariables) {
+      parseItem(super.command);
+    }
+  }
 
-	private void parseItem(String command) {
-		try {
-			ItemStackReader reader = new ItemStackReader(command, true);
-			itemToGive = reader.createStack();
-			errorMessage = null;
-		} catch (FormatException e) {
-			errorMessage = ChatColor.RED + "Invalid item to give: " + e.getMessage();
-		}
-	}
+  private void parseItem(String command) {
+    try {
+      ItemStackReader reader = new ItemStackReader(command, true);
+      itemToGive = reader.createStack();
+      errorMessage = null;
+    } catch (FormatException e) {
+      errorMessage = ChatColor.RED + "Invalid item to give: " + e.getMessage();
+    }
+  }
 
-	@Override
-	public void execute(Player player) {
-		if (hasVariables) {
-			parseItem(getParsedCommand(player));
-		}
-		if (errorMessage != null) {
-			player.sendMessage(errorMessage);
-			return;
-		}
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    if (hasVariables) {
+      parseItem(getParsedCommand(player));
+    }
+    if (errorMessage != null) {
+      player.sendMessage(errorMessage);
+      return;
+    }
 
-		player.getInventory().addItem(itemToGive.clone());
-	}
+    taskChain.sync(() -> player.getInventory().addItem(itemToGive.clone()));
+  }
 
 }

@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
 import org.bukkit.Bukkit;
@@ -21,13 +22,13 @@ import org.bukkit.entity.Player;
 
 public class BroadcastIconCommand extends IconCommand {
 
-	public BroadcastIconCommand(String command) {
-		super(FormatUtils.addColors(command));
-	}
+  public BroadcastIconCommand(String command) {
+    super(FormatUtils.addColors(command));
+  }
 
-	@Override
-	public void execute(Player player) {
-		Bukkit.broadcastMessage(getParsedCommand(player));
-	}
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> Bukkit.broadcastMessage(getParsedCommand(player)));
+  }
 
 }

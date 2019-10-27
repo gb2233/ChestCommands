@@ -15,14 +15,15 @@
 package com.gmail.filoghost.chestcommands.api;
 
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
+import com.gmail.filoghost.chestcommands.internal.VariableManager;
 import com.gmail.filoghost.chestcommands.util.ItemUtils;
 import com.gmail.filoghost.chestcommands.util.Utils;
 import com.gmail.filoghost.chestcommands.util.Validate;
+import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-
-import java.util.Arrays;
 
 /*
  *    MEMO: Raw slot numbers
@@ -34,73 +35,84 @@ import java.util.Arrays;
  */
 public class IconMenu {
 
-	protected final String title;
-	protected final Icon[] icons;
+  protected final String title;
+  protected final InventoryType inventoryType;
+  protected final Icon[] icons;
 
 
-	public IconMenu(String title, int rows) {
-		this.title = title;
-		icons = new Icon[rows * 9];
-	}
+  public IconMenu(String title, int slots, InventoryType inventoryType) {
+    this.title = title;
+    this.inventoryType = inventoryType;
+    icons = new Icon[slots];
+  }
 
-	public void setIcon(int x, int y, Icon icon) {
-		int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
-		if (slot >= 0 && slot < icons.length) {
-			icons[slot] = icon;
-		}
-	}
+  public void setIcon(int x, int y, Icon icon) {
+    int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
+    setIconRaw(slot, icon);
+  }
 
-	public void setIconRaw(int slot, Icon icon) {
-		if (slot >= 0 && slot < icons.length) {
-			icons[slot] = icon;
-		}
-	}
+  public void setIconRaw(int slot, Icon icon) {
+    if (slot >= 0 && slot < icons.length) {
+      icons[slot] = icon;
+    }
+  }
 
-	public Icon getIcon(int x, int y) {
-		int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
-		if (slot >= 0 && slot < icons.length) {
-			return icons[slot];
-		}
+  public Icon getIcon(int x, int y) {
+    int slot = Utils.makePositive(y - 1) * 9 + Utils.makePositive(x - 1);
+    if (slot >= 0 && slot < icons.length) {
+      return icons[slot];
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	public Icon getIconRaw(int slot) {
-		if (slot >= 0 && slot < icons.length) {
-			return icons[slot];
-		}
+  public Icon getIconRaw(int slot) {
+    if (slot >= 0 && slot < icons.length) {
+      return icons[slot];
+    }
 
-		return null;
-	}
+    return null;
+  }
 
-	public int getRows() {
-		return icons.length / 9;
-	}
+  public int getRows() {
+    return icons.length / 9;
+  }
 
-	public int getSize() {
-		return icons.length;
-	}
+  public int getSize() {
+    return icons.length;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public String getTitle(Player player) {
+    if (VariableManager.hasVariables(title)) {
+      return VariableManager.setVariables(title, player);
+    } else {
+      return title;
+    }
+  }
 
-	public void open(Player player) {
-		Validate.notNull(player, "Player cannot be null");
+  public void open(Player player) {
+    Validate.notNull(player, "Player cannot be null");
 
-		Inventory inventory = Bukkit.createInventory(new MenuInventoryHolder(this), icons.length, title);
+    Inventory inventory;
+    if (inventoryType.equals(InventoryType.CHEST) && icons.length != 27) {
+      inventory = Bukkit
+          .createInventory(new MenuInventoryHolder(this), icons.length, getTitle(player));
+    } else {
+      inventory = Bukkit
+          .createInventory(new MenuInventoryHolder(this), inventoryType, getTitle(player));
+    }
 
-		for (int i = 0; i < icons.length; i++) {
-			if (icons[i] != null) {
-				inventory.setItem(i, ItemUtils.hideAttributes(icons[i].createItemstack(player)));
-			}
-		}
+    for (int i = 0; i < icons.length; i++) {
+      if (icons[i] != null) {
+        inventory.setItem(i, ItemUtils.hideAttributes(icons[i].createItemstack(player)));
+      }
+    }
 
-		player.openInventory(inventory);
-	}
+    player.openInventory(inventory);
+  }
 
-	@Override
-	public String toString() {
-		return "IconMenu [title=" + title + ", icons=" + Arrays.toString(icons) + "]";
-	}
+  @Override
+  public String toString() {
+    return "IconMenu [title=" + title + ", icons=" + Arrays.toString(icons) + "]";
+  }
 }

@@ -22,21 +22,24 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import org.bukkit.Material;
 
 @SuppressWarnings("deprecation")
 public final class MaterialsRegistry {
 
-	// Material names have been changed in 1.13, when dolphins were added
-	private static final boolean USE_NEW_MATERIAL_NAMES = Utils.isClassLoaded("org.bukkit.entity.Dolphin");
+  // Material names have been changed in 1.13, when dolphins were added
+  private static final boolean USE_NEW_MATERIAL_NAMES = Utils
+      .isClassLoaded("org.bukkit.entity.Dolphin");
 
-	// Characters to ignore when searching materials by name
-	private static final char[] IGNORE_CHARS = {'-', '_', ' '};
+  // Characters to ignore when searching materials by name
+  private static final char[] IGNORE_CHARS = {'-', '_', ' '};
 
-	// Default material names are ugly
-	private static final Map<String, Material> MATERIALS_BY_ALIAS = new HashMap<String, Material>();
+  // Default material names are ugly
+  private static final Map<String, Material> MATERIALS_BY_ALIAS = new HashMap<>();
 
-	// Materials that are considered air (with 1.13+ compatibility)
-	private static final Collection<Material> AIR_MATERIALS = getExistingMaterials("AIR", "CAVE_AIR", "VOID_AIR");
+  // Materials that are considered air (with 1.13+ compatibility)
+  private static final Collection<Material> AIR_MATERIALS = getExistingMaterials("AIR", "CAVE_AIR",
+      "VOID_AIR");
 
 	// Materials that have a "Sign" block state (with 1.13+ compatibility)
 	private static final Collection<Material> SIGN_MATERIALS = getExistingMaterials("SIGN", "SIGN_POST", "WALL_SIGN");
@@ -95,15 +98,19 @@ public final class MaterialsRegistry {
 		return USE_NEW_MATERIAL_NAMES;
 	}
 
-	static {
-		for (Material material : Material.values()) {
-			addMaterialAlias(material.toString(), material);
+  static {
+    for (Material material : Material.values()) {
+      addMaterialAlias(material.toString(), material);
 
-			if (!useNewMaterialNames()) {
-				// Add numerical IDs in versions before 1.13
-				addMaterialAlias(String.valueOf(material.getId()), material);
-			}
-		}
+      if (!useNewMaterialNames()) {
+        // Add numerical IDs in versions before 1.13
+        addMaterialAlias(String.valueOf(material.getId()), material);
+      }
+
+      if (material.name().contains("SIGN")) {
+        SIGN_MATERIALS.add(material);
+      }
+    }
 
 		// Add some default useful aliases (when present)
 		tryAddMaterialAlias("iron bar", "IRON_FENCE");

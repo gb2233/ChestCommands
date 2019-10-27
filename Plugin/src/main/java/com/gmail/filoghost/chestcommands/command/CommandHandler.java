@@ -30,20 +30,22 @@ import org.bukkit.entity.Player;
 
 public class CommandHandler extends CommandFramework {
 
-	public CommandHandler(String label) {
-		super(label);
-	}
+  public CommandHandler(String label) {
+    super(label);
+  }
 
-	@Override
-	public void execute(CommandSender sender, String label, String[] args) {
-		if (args.length == 0) {
-			// This info is accessible to anyone. Please don't remove it, remember that Chest Commands is developed for free
-			sender.sendMessage(ChestCommands.CHAT_PREFIX);
-			sender.sendMessage(ChatColor.GREEN + "Version: " + ChatColor.GRAY + ChestCommands.getInstance().getDescription().getVersion());
-			sender.sendMessage(ChatColor.GREEN + "Developer: " + ChatColor.GRAY + "filoghost");
-			sender.sendMessage(ChatColor.GREEN + "Commands: " + ChatColor.GRAY + "/" + label + " help");
-			return;
-		}
+  @Override
+  public void execute(CommandSender sender, String label, String[] args) {
+    if (args.length == 0) {
+      // This info is accessible to anyone. Please don't remove it, remember that Chest Commands is developed for free
+      sender.sendMessage(ChestCommands.CHAT_PREFIX);
+      sender.sendMessage(
+          ChatColor.GREEN + "Version: " + ChatColor.GRAY + ChestCommands.getInstance()
+              .getDescription().getVersion());
+      sender.sendMessage(ChatColor.GREEN + "Developer: " + ChatColor.GRAY + "filoghost");
+      sender.sendMessage(ChatColor.GREEN + "Commands: " + ChatColor.GRAY + "/" + label + " help");
+      return;
+    }
 
 
 		if (args[0].equalsIgnoreCase("help")) {
@@ -63,58 +65,60 @@ public class CommandHandler extends CommandFramework {
             return;
 		}
 
+    if (args[0].equalsIgnoreCase("open")) {
+      CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "open"),
+          "You don't have permission.");
+      CommandValidate.minLength(args, 2, "Usage: /" + label + " open <menu> [player]");
 
-		if (args[0].equalsIgnoreCase("open")) {
-			CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "open"), "You don't have permission.");
-			CommandValidate.minLength(args, 2, "Usage: /" + label + " open <menu> [player]");
+      Player target;
 
-			Player target = null;
+      if (!(sender instanceof Player)) {
+        CommandValidate.minLength(args, 3, "You must specify a player from the console.");
+        target = Bukkit.getPlayerExact(args[2]);
+      } else {
+        if (args.length > 2) {
+          CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "open.others"),
+              "You don't have permission to open menus for others.");
+          target = Bukkit.getPlayerExact(args[2]);
+        } else {
+          target = (Player) sender;
+        }
 
-			if (!(sender instanceof Player)) {
-				CommandValidate.minLength(args, 3, "You must specify a player from the console.");
-				target = Bukkit.getPlayerExact(args[2]);
-			} else {
-				if (args.length > 2) {
-					CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "open.others"), "You don't have permission to open menus for others.");
-					target = Bukkit.getPlayerExact(args[2]);
-				} else {
-					target = (Player) sender;
-				}
+      }
 
-			}
+      CommandValidate.notNull(target, "That player is not online.");
 
-			CommandValidate.notNull(target, "That player is not online.");
+      String menuName = args[1].toLowerCase().endsWith(".yml") ? args[1] : args[1] + ".yml";
+      ExtendedIconMenu menu = ChestCommands.getFileNameToMenuMap().get(menuName);
+      CommandValidate.notNull(menu, "The menu \"" + menuName + "\" was not found.");
 
-			String menuName = args[1].toLowerCase().endsWith(".yml") ? args[1] : args[1] + ".yml";
-			ExtendedIconMenu menu = ChestCommands.getFileNameToMenuMap().get(menuName);
-			CommandValidate.notNull(menu, "The menu \"" + menuName + "\" was not found.");
+      if (!sender.hasPermission(menu.getPermission())) {
+        menu.sendNoPermissionMessage(sender);
+        return;
+      }
 
-			if (!sender.hasPermission(menu.getPermission())) {
-				menu.sendNoPermissionMessage(sender);
-				return;
-			}
+      if (sender.getName().equalsIgnoreCase(target.getName())) {
+        if (!ChestCommands.getLang().open_menu.isEmpty()) {
+          sender.sendMessage(ChestCommands.getLang().open_menu.replace("{menu}", menuName));
+        }
+      } else {
+        if (!ChestCommands.getLang().open_menu_others.isEmpty()) {
+          sender.sendMessage(ChestCommands.getLang().open_menu_others.replace("{menu}", menuName)
+              .replace("{player}", target.getName()));
+        }
+      }
 
-			if (sender.getName().equalsIgnoreCase(target.getName())) {
-				if (!ChestCommands.getLang().open_menu.isEmpty()) {
-					sender.sendMessage(ChestCommands.getLang().open_menu.replace("{menu}", menuName));
-				}
-			} else {
-				if (!ChestCommands.getLang().open_menu_others.isEmpty()) {
-					sender.sendMessage(ChestCommands.getLang().open_menu_others.replace("{menu}", menuName).replace("{player}", target.getName()));
-				}
-			}
+      menu.open(target);
+      return;
+    }
 
-			menu.open(target);
-			return;
-		}
-
-
-		if (args[0].equalsIgnoreCase("list")) {
-			CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "list"), "You don't have permission.");
-			sender.sendMessage(ChestCommands.CHAT_PREFIX + " Loaded menus:");
-			for (String file : ChestCommands.getFileNameToMenuMap().keySet()) {
-				sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.WHITE + file);
-			}
+    if (args[0].equalsIgnoreCase("list")) {
+      CommandValidate.isTrue(sender.hasPermission(Permissions.COMMAND_BASE + "list"),
+          "You don't have permission.");
+      sender.sendMessage(ChestCommands.CHAT_PREFIX + " Loaded menus:");
+      for (String file : ChestCommands.getFileNameToMenuMap().keySet()) {
+        sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.WHITE + file);
+      }
 
 			return;
 		}
@@ -134,7 +138,7 @@ public class CommandHandler extends CommandFramework {
 			}
             return;
 		}
-		
+
 		sender.sendMessage(ChatColor.RED + "Unknown sub-command \"" + args[0] + "\".");
 	}
 

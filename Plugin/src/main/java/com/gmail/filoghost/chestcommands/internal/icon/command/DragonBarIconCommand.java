@@ -14,6 +14,7 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.bridge.BarAPIBridge;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
@@ -22,37 +23,38 @@ import org.bukkit.entity.Player;
 
 public class DragonBarIconCommand extends IconCommand {
 
-	private String message;
-	private int seconds;
+  private String message;
+  private int seconds;
 
-	public DragonBarIconCommand(String command) {
-		super(command);
-		if (!hasVariables) {
-			parseBar(super.command);
-		}
-	}
+  public DragonBarIconCommand(String command) {
+    super(command);
+    if (!hasVariables) {
+      parseBar(super.command);
+    }
+  }
 
-	private void parseBar(String command) {
-		seconds = 1;
-		message = command;
+  private void parseBar(String command) {
+    seconds = 1;
+    message = command;
 
-		String[] split = command.split("\\|", 2); // Max of 2 pieces
-		if (split.length > 1 && Utils.isValidPositiveInteger(split[0].trim())) {
-			seconds = Integer.parseInt(split[0].trim());
-			message = split[1].trim();
-		}
+    String[] split = command.split("\\|", 2); // Max of 2 pieces
+    if (split.length > 1 && Utils.isValidPositiveInteger(split[0].trim())) {
+      seconds = Integer.parseInt(split[0].trim());
+      message = split[1].trim();
+    }
 
-		message = FormatUtils.addColors(message);
-	}
+    message = FormatUtils.addColors(message);
+  }
 
-	@Override
-	public void execute(Player player) {
-		if (hasVariables) {
-			parseBar(getParsedCommand(player));
-		}
-		if (BarAPIBridge.hasValidPlugin()) {
-			BarAPIBridge.setMessage(player, message, seconds);
-		}
-	}
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    if (hasVariables) {
+      parseBar(getParsedCommand(player));
+    }
+
+    if (BarAPIBridge.hasValidPlugin()) {
+      taskChain.sync(() -> BarAPIBridge.setMessage(player, message, seconds));
+    }
+  }
 
 }

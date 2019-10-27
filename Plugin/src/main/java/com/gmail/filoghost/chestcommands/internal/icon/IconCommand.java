@@ -14,24 +14,25 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.config.AsciiPlaceholders;
 import com.gmail.filoghost.chestcommands.internal.VariableManager;
 import org.bukkit.entity.Player;
 
 public abstract class IconCommand {
 
-	protected String command;
-	protected boolean hasVariables;
+  protected String command;
+  protected boolean hasVariables;
 
-	public IconCommand(String command) {
-		this.command = AsciiPlaceholders.placeholdersToSymbols(command).trim();
-		this.hasVariables = VariableManager.hasVariables(command);
-	}
+  public IconCommand(String command) {
+    this.command = AsciiPlaceholders.placeholdersToSymbols(command).trim();
+    this.hasVariables = VariableManager.hasVariables(command);
+  }
 
-	public String getParsedCommand(Player executor) {
-		return hasVariables ? VariableManager.setVariables(command, executor) : command;
-	}
+  public String getParsedCommand(Player executor) {
+    return hasVariables ? VariableManager.setVariables(command, executor) : command;
+  }
 
-	public abstract void execute(Player player);
+  public abstract void execute(Player player, TaskChain taskChain);
 
 }

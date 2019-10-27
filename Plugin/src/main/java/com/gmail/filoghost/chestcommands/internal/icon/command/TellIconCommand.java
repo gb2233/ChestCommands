@@ -14,19 +14,20 @@
  */
 package com.gmail.filoghost.chestcommands.internal.icon.command;
 
+import co.aikar.taskchain.TaskChain;
 import com.gmail.filoghost.chestcommands.internal.icon.IconCommand;
 import com.gmail.filoghost.chestcommands.util.FormatUtils;
 import org.bukkit.entity.Player;
 
 public class TellIconCommand extends IconCommand {
 
-	public TellIconCommand(String command) {
-		super(FormatUtils.addColors(command));
-	}
+  public TellIconCommand(String command) {
+    super(FormatUtils.addColors(command));
+  }
 
-	@Override
-	public void execute(Player player) {
-		player.sendMessage(getParsedCommand(player));
-	}
+  @Override
+  public void execute(Player player, TaskChain taskChain) {
+    taskChain.sync(() -> player.sendMessage(getParsedCommand(player)));
+  }
 
 }

@@ -1,0 +1,53 @@
+menu-settings:
+
+  name: '&1Custom menu'
+
+  # REQUIRED
+  # You can use inventory-type instead of rows
+  #
+  # Supported types: FURNACE, CHEST, HOPPER, WORKBENCH, DISPENSER, DROPPER, ENDER_CHEST
+  inventory-type: DISPENSER
+
+  command: 'customgui'
+  auto-refresh: 5
+  open-action: 'tell: &eYou opened the custom menu.'
+
+slot_1:
+  REQUIRED-ITEM:
+    RIGHT: 'paper,1, enchant: unbreaking|1, name: &c&lSmall_Paper, lore: &7This_is_a_simple_paper &7By_&8ADMIN, flag: HIDE_ATTRIBUTES'
+  COMMAND:
+    LEFT: 'give: paper,1, name: &c&lSmall_Paper, lore: &7This_is_a_simple_paper &7By_&8ADMIN, enchant: unbreaking|1,flag: HIDE_ATTRIBUTES'
+    RIGHT: 'tell: &aThank you :)'
+  NAME: '&cGive/take paper.'
+  ID: paper
+  SLOT: 1
+
+slot_2:
+  COMMAND: 'give: diamond_sword,1, name: &c&lStarter_Sword, lore: &7This_is_a_simple_sword &7By_&8ADMIN,enchant: Knockback|1 DAMAGE_ALL|1, flag: HIDE_ATTRIBUTES HIDE_ENCHANTS'
+  NAME: '&cGive diamond sword.'
+  ID: diamond sword
+  SLOT: 2
+
+slot_3:
+  COMMAND: 'give: potion,1, name: &c&lMystery_Potion, effect: SPEED|300|1 NIGHT_VISION|300|1, flag: HIDE_ATTRIBUTES HIDE_POTION_EFFECTS'
+  NAME: '&cGive mystery potion.'
+  ID: potion
+  SLOT: 3
+
+slot_4:
+  COMMAND: 'give: LEATHER_CHESTPLATE,1, color: 0 50 50'
+  NAME: '&aColored leather armor'
+  ID: leather chestplate
+  SLOT: 4
+
+slot_5:
+  COMMAND: 'give: banner,1, base-color: PINK, pattern: CREEPER|GREEN DIAGONAL_LEFT|BLACK'
+  NAME: '&aGive banner'
+  ID: banner
+  SLOT: 5
+
+slot_6:
+  COMMAND: 'give: firework,1, firework: ball_large|0.255.0-0.0.255|125.255.0|true|false star|255.0.0|0.255.0|false|true'
+  NAME: '&aGive firework'
+  ID: firework
+  SLOT: 6

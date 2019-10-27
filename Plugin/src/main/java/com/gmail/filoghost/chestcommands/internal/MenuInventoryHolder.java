@@ -25,30 +25,30 @@ import org.bukkit.inventory.InventoryHolder;
  */
 public class MenuInventoryHolder implements InventoryHolder {
 
-	private IconMenu iconMenu;
+  private IconMenu iconMenu;
 
-	public MenuInventoryHolder(IconMenu iconMenu) {
-		this.iconMenu = iconMenu;
-	}
+  public MenuInventoryHolder(IconMenu iconMenu) {
+    this.iconMenu = iconMenu;
+  }
 
-	@Override
-	public Inventory getInventory() {
-		/*
-		 * This inventory will not do anything.
-		 * I'm 90% sure that it doesn't break any other plugin,
-		 * because the only way you can get here is using InventoryClickEvent,
-		 * that is cancelled by ChestCommands, or using InventoryOpenEvent.
-		 */
-		return Bukkit.createInventory(null, iconMenu.getSize());
-	}
+  @Override
+  public Inventory getInventory() {
+    /*
+     * This inventory will not do anything.
+     * I'm 90% sure that it doesn't break any other plugin,
+     * because the only way you can get here is using InventoryClickEvent,
+     * that is cancelled by ChestCommands, or using InventoryOpenEvent.
+     */
+    return Bukkit.createInventory(null, iconMenu.getSize());
+  }
 
-	public IconMenu getIconMenu() {
-		return iconMenu;
-	}
+  public IconMenu getIconMenu() {
+    return iconMenu;
+  }
 
-	public void setIconMenu(IconMenu iconMenu) {
-		Validate.notNull(iconMenu, "IconMenu cannot be null");
-		this.iconMenu = iconMenu;
-	}
+  public void setIconMenu(IconMenu iconMenu) {
+    Validate.notNull(iconMenu, "IconMenu cannot be null");
+    this.iconMenu = iconMenu;
+  }
 
 }

@@ -12,7 +12,7 @@ menu-settings:
 
   # REQUIRED
   # The number of rows in the menu.
-  rows: 3
+  rows: 4
 
   # OPTIONAL (you can remove this or set it to '')
   # Bind multiple commands using ; (command: 'menu; m; me')
@@ -106,7 +106,7 @@ test-as-op:
 
 
 test-with-placeholder:
-  COMMAND: 'tell: &9Online players: &f{online}/{max_players}; tell: &9Your name: &f{player}; tell: &9The world you are in: &f{world}; tell: &9Money: &f{money}'
+  COMMAND: 'tell: &9Online players: &f{online}/{max_players}; tell: &9Your name: &f{player}; tell: &9The world you are in: &f{world}; tell: &9Money: &f{money}; tell: &9Ping: &f{ping}'
   NAME: '&6This message contains some placeholders'
   LORE:
     - 'Placeholders will be replaced when the item'
@@ -213,6 +213,267 @@ nbt-tags:
   POSITION-Y: 2
 
 
+condition:
+  NAME: '&aCondition'
+  LORE:
+    - 'The command will run when the level is higher than 5.'
+  ID: grass
+  COMMAND: "condition: %player_level% > 5; tell: &aYou did it"
+  POSITION-X: 7
+  POSITION-Y: 2
+
+
+banner:
+  NAME: '&bBanner'
+  LORE:
+    - 'An introduction with banners'
+  ID: banner
+  BANNER-COLOUR: PINK
+  BANNER-PATTERNS:
+    - "CREEPER:BLACK"
+  POSITION-X: 8
+  POSITION-Y: 2
+
+
+tokens-give:
+  COMMAND: 'tell: &aYou have paid 50 tokens for this command!; give: diamond_block'
+  NAME: '&bTokens'
+  LORE:
+    - 'This command will be executed'
+    - 'only if you have at least 50 tokens!'
+    - 'It gives you a diamond block.'
+  ID: diamond_block
+  TOKENS: 50
+  POSITION-X: 9
+  POSITION-Y: 2
+
+
+tokens-take:
+  REQUIRED-ITEM: 'diamond_block'
+  COMMAND: 'tell: &aYou have been paid 50 tokens; givetokens: 50'
+  NAME: '&bTokens & Required item'
+  LORE:
+    - 'This command is the opposite of the previous.'
+    - 'It will take you a diamond block and give you 50 tokens.'
+  ID: diamond_block
+  POSITION-X: 1
+  POSITION-Y: 3
+
+
+points-give:
+  COMMAND: 'tell: &aYou have paid 50 points for this command!; give: gold_block'
+  NAME: '&ePoints'
+  LORE:
+    - 'This command will be executed'
+    - 'only if you have at least 50 points!'
+    - 'It gives you a gold block.'
+  ID: gold_block
+  POINTS: 50
+  POSITION-X: 2
+  POSITION-Y: 3
+
+
+points-take:
+  REQUIRED-ITEM: 'gold_block'
+  COMMAND: 'tell: &aYou have been paid 50 points; givepoints: 50'
+  NAME: '&ePoints & Required item'
+  LORE:
+    - 'This command is the opposite of the previous.'
+    - 'It will take you a gold block and give you 50 points.'
+  ID: gold_block
+  POSITION-X: 3
+  POSITION-Y: 3
+
+
+multiple-required-items:
+  REQUIRED-ITEM: 'gold_block;diamond_block'
+  COMMAND: 'tell: &aThank you :)'
+  NAME: '&dMultiple required items'
+  LORE:
+    - 'This command only runs when you have a diamond block and a golden block.'
+  ID: diamond
+  POSITION-X: 4
+  POSITION-Y: 3
+  ENCHANTMENT: durability, 1
+
+
+test-per-click-command:
+  COMMAND:
+    LEFT: 'console: Say You left-clicked'
+    RIGHT: 'console: Say You right-clicked'
+    MIDDLE: 'console: Say You middle-clicked'
+  NAME: '&aCommands per clicktype'
+  LORE:
+    - 'You left-click.'
+    - 'You right-click.'
+    - 'You middle-click'
+    - 'And you get different messages.'
+  ID: redstone_block
+  POSITION-X: 5
+  POSITION-Y: 3
+
+
+test-delay-command:
+  COMMAND: 'tell: &aThis is current; delay: 60; tell: &aThis is 3 seconds later'
+  NAME: '&eDelay Command'
+  LORE:
+    - 'This is a test of delay command.'
+  ID: clock
+  POSITION-X: 6
+  POSITION-Y: 3
+
+
+simple-buy-sell:
+  REQUIRED-ITEM:
+    RIGHT: 'wheat'
+    MIDDLE: 'wheat,64'
+  COMMAND:
+    LEFT: 'condition: {money} >= 5; console: eco take {player} 5; give: wheat,1'
+    RIGHT: 'give-money: 3.5'
+    MIDDLE: 'give-money: 15'
+  NAME: '&dSimple Buy/Sell Item'
+  LORE:
+    - 'A simple example for a shop item'
+    - ''
+    - 'Left click to buy one for 5$'
+    - 'Right click to sell one for 3.5$'
+    - 'Middle click to sell a stack for 15$'
+    - ''
+    - 'Stinks :)'
+  ID: wheat
+  POSITION-X: 7
+  POSITION-Y: 3
+  KEEP-OPEN: true
+
+
+multiply-money:
+  COMMAND: 'condition: {money} > 0; givemoney: {money}; refresh: 0'
+  NAME: '&eMultiply Money'
+  LORE:
+    - 'This is a example of placeholders on "give-money:"'
+    - 'This will multiply your money by 2'
+    - 'Your money need to be higher than 0 to use this'
+    - ''
+    - 'Current money: {money}'
+  KEEP-OPEN: true
+  ID: paper
+  POSITION-X: 8
+  POSITION-Y: 3
+  ENCHANTMENT: durability, 1
+
+
+head:
+  COMMAND:
+    LEFT: 'give: skull:3,1,skull: hdb-1'
+    RIGHT: 'tell: &aThank you :)'
+  REQUIRED-ITEM:
+    RIGHT: 'skull:3,1,skull: hdb-1'
+  NAME: '&eHeadDatabase'
+  LORE:
+    - 'This is a test for HeadDatabase hooking'
+    - 'You can use ''hdb-<head_id>'' to use HeadDatabase heads'
+    - ''
+    - 'This only works if you install HeadDatabase'
+  KEEP-OPEN: true
+  ID: 'skull:3'
+  SKULL-OWNER: 'hdb-1'
+  POSITION-X: 9
+  POSITION-Y: 3
+  ENCHANTMENT: durability, 1
+
+
+title:
+  COMMAND: 'title: &a&lHey Hello|&eGood to see you'
+  NAME: '&3Title'
+  LORE:
+    - '&7Send title to you.'
+  ID: paper
+  POSITION-X: 1
+  POSITION-Y: 4
+
+
+title_with_time:
+  COMMAND: 'title: &a&lHey Hello|&eGood to see you|10|80|10'
+  NAME: '&3Title'
+  LORE:
+    - '&7Send title to you.'
+    - '&7Custom fade in, stay and fade out'
+  ID: paper
+  ENCHANTMENT: durability, 1
+  POSITION-X: 2
+  POSITION-Y: 4
+
+
+firework_charge:
+  NAME: '&aFirework Charge'
+  LORE:
+    - 'This is a example of firework charge'
+  ID: firework_charge
+  FIREWORK: 'ball|0.255.0|0.255.0|false|false'
+  POSITION-X: 3
+  POSITION-Y: 4
+
+
+cooldown:
+  COMMAND: 'tell: &e You will need to wait 10 seconds to click again'
+  NAME: '&aCooldown'
+  LORE:
+    - 'This is a example of icon with cooldown'
+  COOLDOWN: 10
+  ID: paper
+  POSITION-X: 4
+  POSITION-Y: 4
+
+
+cooldown-per-clicktype:
+  COMMAND:
+    LEFT: 'tell: &e You will need to wait 10 seconds to click again'
+    RIGHT: 'tell: &e You will need to wait 5 seconds to click again'
+    MIDDLE: 'tell: &e You will need to wait 3 seconds to click again'
+  COOLDOWN:
+    LEFT: 10
+    RIGHT: 5
+    MIDDLE: 3
+  COOLDOWN-MESSAGE: "&cHey! Calm down! {cooldown_second} seconds ({cooldown} milliseconds) more"
+  NAME: '&aCooldown per clicktype'
+  LORE:
+    - 'This is a example of icon with cooldown per clicktype'
+  ID: paper
+  ENCHANTMENT: durability, 1
+  POSITION-X: 5
+  POSITION-Y: 4
+
+
+requirement:
+  NAME: '&6View/Click Requirement'
+  COMMAND: 'tell: &aYou did it'
+  ID: redstone
+  LORE:
+    - 'This is an example for view/click requirement'
+    - ''
+    - 'You will see this icon if your money is not less than 10'
+    - 'You can click this icon if your money is not less than 20'
+  VIEW-REQUIREMENT: "{money} >= 10"
+  CLICK-REQUIREMENT: "{money} >= 20"
+  CLICK-REQUIREMENT-MESSAGE: "&cHey! Earn more money and click again if your money is not less than 20"
+  POSITION-X: 6
+  POSITION-Y: 4
+
+
+requirement-with-expression:
+  NAME: '&4Requirement with expression'
+  COMMAND: 'tell: &aYou did it'
+  ID: sign
+  LORE:
+    - 'This is an example for expressions on nodes'
+    - ''
+    - 'You can use this icon when your money is higher than'
+    - '100 * ({level} + 1)'
+  PRICE: "100 * ({level} + 1)"
+  POSITION-X: 7
+  POSITION-Y: 4
+
+
 menu-close-no-commands-no-lore:
   NAME: '&6Close the menu'
   ID: redstone lamp
@@ -220,4 +481,4 @@ menu-close-no-commands-no-lore:
     - 'Create an item without command,'
     - 'the GUI will just close.'
   POSITION-X: 9
-  POSITION-Y: 3
+  POSITION-Y: 4

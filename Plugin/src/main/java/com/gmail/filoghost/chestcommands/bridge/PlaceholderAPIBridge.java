@@ -8,37 +8,41 @@ import org.bukkit.plugin.Plugin;
 
 public class PlaceholderAPIBridge {
 
-	private static PlaceholderAPIPlugin placeholderAPI;
+  private static PlaceholderAPIPlugin placeholderAPI;
 
-	public static boolean setupPlugin() {
-		Plugin placeholderPlugin = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
+  public static boolean setupPlugin() {
+    if (!Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+      return false;
+    }
 
-		if (placeholderPlugin == null) {
-			return false;
-		}
+    Plugin placeholderPlugin = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
 
-		placeholderAPI = (PlaceholderAPIPlugin) placeholderPlugin;
-		return true;
-	}
+    if (placeholderPlugin == null) {
+      return false;
+    }
 
-	public static boolean hasValidPlugin() {
-		return placeholderAPI != null;
-	}
+    placeholderAPI = (PlaceholderAPIPlugin) placeholderPlugin;
+    return true;
+  }
 
-	public static boolean hasPlaceholders(String message) {
-		if (!hasValidPlugin()) {
-			throw new IllegalStateException("PlaceholderAPI plugin was not found!");
-		}
+  public static boolean hasValidPlugin() {
+    return placeholderAPI != null;
+  }
 
-		return PlaceholderAPI.containsPlaceholders(message);
-	}
+  public static boolean hasPlaceholders(String message) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("PlaceholderAPI plugin was not found!");
+    }
 
-	public static String setPlaceholders(String message, Player executor) {
-		if (!hasValidPlugin()) {
-			throw new IllegalStateException("PlaceholderAPI plugin was not found!");
-		}
+    return PlaceholderAPI.containsPlaceholders(message);
+  }
 
-		return PlaceholderAPI.setPlaceholders(executor, message);
-	}
+  public static String setPlaceholders(String message, Player executor) {
+    if (!hasValidPlugin()) {
+      throw new IllegalStateException("PlaceholderAPI plugin was not found!");
+    }
+
+    return PlaceholderAPI.setPlaceholders(executor, message);
+  }
 
 }
