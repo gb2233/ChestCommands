@@ -23,11 +23,8 @@ import com.gmail.filoghost.chestcommands.internal.ExtendedIconMenu;
 import com.gmail.filoghost.chestcommands.internal.MenuInventoryHolder;
 import com.gmail.filoghost.chestcommands.internal.RequiredItem;
 import com.gmail.filoghost.chestcommands.internal.VariableManager;
-import com.gmail.filoghost.chestcommands.util.ExpressionUtils;
-import com.gmail.filoghost.chestcommands.util.ItemUtils;
-import com.gmail.filoghost.chestcommands.util.MaterialsRegistry;
-import com.gmail.filoghost.chestcommands.util.StringUtils;
-import com.gmail.filoghost.chestcommands.util.Utils;
+import com.gmail.filoghost.chestcommands.util.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -529,17 +526,7 @@ public class ExtendedIcon extends Icon {
     }
 
     if (changedVariables) {
-      InventoryView view = player.getOpenInventory();
-      if (view != null) {
-        Inventory topInventory = view.getTopInventory();
-        if (topInventory.getHolder() instanceof MenuInventoryHolder) {
-          MenuInventoryHolder menuHolder = (MenuInventoryHolder) topInventory.getHolder();
-
-          if (menuHolder.getIconMenu() instanceof ExtendedIconMenu) {
-            ((ExtendedIconMenu) menuHolder.getIconMenu()).refresh(player, topInventory);
-          }
-        }
-      }
+      MenuUtils.refreshMenu(player);
     }
 
     return super.onClick(player, clickType);

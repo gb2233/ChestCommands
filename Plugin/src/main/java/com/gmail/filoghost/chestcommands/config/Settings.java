@@ -34,11 +34,11 @@ public class Settings extends SpecialConfig {
 	public String db__database = "minecraft";
 	public String db__username = "root";
 	public String db__password = "1234";
-	public String db__table_name = "chestcommands";
+	public String db__table_name = "ChestCommandsBlob";
 	public List<String> menus = Arrays.asList("exampleMenuTwo","R/beginWithThisName");
 	public Map<String,String> name_forward_conversion = new HashMap<>();
 	public String action_on_start = "none";
-  public boolean use_hover_event_on_required_item_message = true;
+  	public boolean use_hover_event_on_required_item_message = true;
 
 	public Settings(PluginConfig config) {
 		super(config);

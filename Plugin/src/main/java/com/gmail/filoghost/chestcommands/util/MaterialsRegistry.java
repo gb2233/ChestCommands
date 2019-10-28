@@ -164,8 +164,12 @@ public final class MaterialsRegistry {
 		tryAddMaterialAlias("lilypad", "WATER_LILY");
 		tryAddMaterialAlias("command block", "COMMAND");
         tryAddMaterialAlias("dye", "INK_SACK");
-        tryAddMaterialAlias("clock", "INK_SACK");
-        if (Bukkit.getBukkitVersion().contains("1.14")){
+		tryAddMaterialAlias("banner", "PINK_BANNER");
+		tryAddMaterialAlias("clock", "WATCH");
+		tryAddMaterialAlias("firework", "FIREWORK_ROCKET");
+		tryAddMaterialAlias("sign", "OAK_SIGN");
+        if (useNewMaterialNames()){
+        	//when used with older material names, convert forward
             ChestCommands.getSettings().name_forward_conversion
                 .forEach((k,v) -> tryAddMaterialAlias(k,v.toUpperCase()));
         }

@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -65,13 +64,14 @@ public class DBHandler{
         ds = new HikariDataSource(config);
     }
 
+    @SuppressWarnings("SqlResolve")
     public DBHandler() throws SQLException {
         if (!tableExists(tableName)){
             Connection connection = getConnection();
             Statement s = connection.createStatement(); // "`id` INT AUTO_INCREMENT NOT NULL," +
             String statement = "CREATE TABLE `" + tableName + "` ( " +
                 "`FILENAME` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , " +
-                "`CFGSTRING` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL , " +
+                "`CFGSTRING` BLOB NOT NULL , " +
                 "PRIMARY KEY (`FILENAME`));";
             String statement2 = "CREATE INDEX `fname` ON `" + tableName + "` (`FILENAME`);";
             s.execute(statement);
@@ -79,7 +79,6 @@ public class DBHandler{
             s.close();
             connection.close();
         }
-
     }
 
     private static Connection getConnection() throws SQLException {
@@ -92,52 +91,30 @@ public class DBHandler{
 
     public static void Export(List<String> menuList, CommandSender sender) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            try {
-                Connection connection = getConnection();
+            try (Connection connection = getConnection()) {
                 File menuFolder = new File(ChestCommands.getInstance().getDataFolder(), "menu");
                 for(String fName : menuList) {
                     Set<String> fNames = new HashSet<>();
                     if (fName.startsWith("R/")){
                         String finalFName = fName.substring(2);
-                        File[] fList = menuFolder.listFiles((dir, name) -> {
-                            if (name.startsWith(finalFName)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        });
+                        File[] fList = menuFolder.listFiles((dir, name) -> name.startsWith(finalFName));
                         Arrays.stream(Objects.requireNonNull(fList)).forEach(file -> fNames.add(Files.getNameWithoutExtension(file.getName())));
                     } else{
                         fNames.add(fName);
                     }
                     for (String file : fNames){
-                        String txtConfig = "";
-                        try {
-                            BufferedReader reader = new BufferedReader(new FileReader(new File(menuFolder,file + ".yml")));
-                            String line = null;
-                            StringBuilder stringBuilder = new StringBuilder();
-                            String ls = System.getProperty("line.separator");
-                            while((line = reader.readLine()) != null) {
-                                stringBuilder.append(line);
-                                stringBuilder.append(ls);
-                            }
-                            reader.close();
-                            txtConfig = stringBuilder.toString();
+                        try (InputStream in = new FileInputStream(new File(menuFolder,file + ".yml"));
+                             PreparedStatement ps = connection.prepareStatement(EXPORT)
+                        ) {
+                            ps.setString(1,file);
+                            ps.setBlob(2,in);
+                            ps.executeUpdate();
+                        } catch (IOException | SQLException e) {
+                            e.printStackTrace();
                         }
-                        catch ( IOException e)
-                        {
-                        }
-                        byte[] encodedBytes = Base64.getEncoder().encode(txtConfig.getBytes());
-                        String encodedString = new String(encodedBytes, StandardCharsets.UTF_8);
-                        PreparedStatement ps = connection.prepareStatement(EXPORT);
-                        ps.setString(1,file);
-                        ps.setString(2,encodedString);
-                        ps.executeUpdate();
-                        ps.close();
                     }
                 }
                 ChestCommands.getInstance().doReload(sender);
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -147,9 +124,7 @@ public class DBHandler{
 
     public static void Import(List<String> menuList, CommandSender sender) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            String decodedConfig = "";
-            try {
-                Connection connection = getConnection();
+            try (Connection connection = getConnection()) {
                 File menuFolder = new File(ChestCommands.getInstance().getDataFolder(), "menu");
                 for(String fName : menuList) {
                     PreparedStatement ps;
@@ -163,37 +138,18 @@ public class DBHandler{
                     ResultSet result = ps.executeQuery();
                     while(result.next()){
                         String file = result.getString("FILENAME");
-                        String base64Config = result.getString("CFGSTRING");
-                        byte[] decodedBytes = Base64.getDecoder().decode(base64Config.getBytes());
-                        decodedConfig = new String(decodedBytes, StandardCharsets.UTF_8);
-                        BufferedWriter writer = null;
-                        try
-                        {
-                            writer = new BufferedWriter( new FileWriter(new File(menuFolder,file + ".yml")));
-                            writer.write(decodedConfig);
-
-
-                        }
-                        catch ( IOException e)
-                        {
-                        }
-                        finally
-                        {
-                            try
-                            {
-                                if ( writer != null)
-                                    writer.close( );
-                            }
-                            catch ( IOException e)
-                            {
-                            }
+                        Blob blob = result.getBlob("CFGSTRING");
+                        byte[] byteArray = blob.getBytes(1, (int) blob.length());
+                        try (FileOutputStream outPutStream = new FileOutputStream(new File(menuFolder, file + ".yml"))) {
+                            outPutStream.write(byteArray);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                     ps.close();
                     result.close();
                 }
                 ChestCommands.getInstance().doReload(sender);
-                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -203,7 +159,7 @@ public class DBHandler{
     private boolean tableExists(String table) throws SQLException {
         boolean ex = false;
         Connection connection = getConnection();
-        ResultSet rs = connection.getMetaData().getTables(null, null, "%", null);
+        ResultSet rs = connection.getMetaData().getTables(null, null, tableName, null);
         while (rs.next()) {
             if (rs.getString(3).equalsIgnoreCase(table)) {
                 ex = true;

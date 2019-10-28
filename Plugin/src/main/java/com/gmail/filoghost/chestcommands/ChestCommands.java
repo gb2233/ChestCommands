@@ -63,11 +63,9 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
 
+// TODO: PREQ FillEmpty Non-closeable menus
 public class ChestCommands extends JavaPlugin {
 
   public static final String CHAT_PREFIX =
@@ -192,33 +190,34 @@ public class ChestCommands extends JavaPlugin {
     Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
     Bukkit.getPluginManager().registerEvents(new SignListener(), this);
 
-		if(settings.use_mysql) {
-			try {
-				handler = new DBHandler();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-
-		}
-
-		CommandFramework.register(this, new CommandHandler("chestcommands"));
 
     ErrorLogger errorLogger = new ErrorLogger();
     load(errorLogger);
 
-        if(settings.action_on_start.equalsIgnoreCase("import")) {
-            DBHandler.Import(menuStringList,Bukkit.getConsoleSender());
-            instance.getLogger().info("Import on startup was successful");
-        }
-        else if(settings.action_on_start.equalsIgnoreCase("export")) {
-            DBHandler.Export(menuStringList,Bukkit.getConsoleSender());
-            instance.getLogger().info("Export on startup was successful");
-        }
+    if(settings.use_mysql) {
+      try {
+          handler = new DBHandler();
+      } catch (SQLException e) {
+          e.printStackTrace();
+      }
 
-		lastReloadErrors = errorLogger.getSize();
-		if (errorLogger.hasErrors()) {
-			Bukkit.getScheduler().scheduleSyncDelayedTask(this, new ErrorLoggerTask(errorLogger), 10L);
-		}
+    }
+
+    CommandFramework.register(this, new CommandHandler("chestcommands"));
+
+    if(settings.action_on_start.equalsIgnoreCase("import")) {
+        DBHandler.Import(menuStringList,Bukkit.getConsoleSender());
+        instance.getLogger().info("Import on startup was successful");
+    }
+    else if(settings.action_on_start.equalsIgnoreCase("export")) {
+        DBHandler.Export(menuStringList,Bukkit.getConsoleSender());
+        instance.getLogger().info("Export on startup was successful");
+    }
+
+    lastReloadErrors = errorLogger.getSize();
+    if (errorLogger.hasErrors()) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new ErrorLoggerTask(errorLogger), 10L);
+    }
 
 		//.getScheduler().scheduleSyncRepeatingTask(this, new RefreshMenusTask(), 2L, 2L);
 	}
